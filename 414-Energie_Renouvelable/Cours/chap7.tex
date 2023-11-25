@@ -1,0 +1,254 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+
+\emph{Cette partie du cours est construit collaborativement avec M. Hoang et les élèves de l'UE 414.}
+
+
+\section*{Construction du plan du cours}
+On s'interesse d'abord au réseau électrique
+\begin{itemize}
+\item Smart grid
+\item Gestion du  réseau
+  \begin{itemize}
+  \item pertes
+  \item Transfert P Q
+  \item Équilibrage (phase, tension, courant)
+  \end{itemize}
+\item (adaptation des lois de Kirchhoff)
+\item DC vs (et ?) AC
+\end{itemize}
+Lien de recherches:
+\begin{itemize}
+\item \url{http://server.idemdito.org/electro/elec/gen/couplage.htm}
+\item \url{https://fr.wikipedia.org/wiki/Transform\%C3\%A9e_de_Park}
+\item \url{}
+\end{itemize}
+\paragraph{Objectif du cours :} Pouvoir comprendre et expliquer ce qui constitue le schéma distribué.
+
+\section{Cours 1 - Introduction}
+\emph{Beaucoup de questions et de réponses pour cerner les besoins et interrogations de la classe}
+
+\paragraph{La terre  électrique} 
+
+
+\begin{tikzpicture}
+  \draw (0,0) rectangle (4,4) (2,2) node{Carcasse};
+  \draw (1,0)node[below left]{PE}--  ++(0,-1) to[R]++(-2,0) node[ground]{};
+  \draw (3,0) to[open,v<=$v$] ++(0,-2) node[ground]{};
+  \draw (5,-1) node[ground]{} to[R,l_=$1k\Omega$] ++(0,3) -- ++(0,2)coordinate(A)-- ++(0,1)++(0,0.5) circle(0.5);
+  \draw (A) -- (4,3);
+\end{tikzpicture}
+
+{\centering\Huge 30 mA : courant mortel pour l'homme}
+
+\emph{E. H est très chagriné que nous quittions le département EEA avec nos faibles connaissances en conversion d'énergie que nous constatons aujourd'hui}
+
+\paragraph{De la création de l'alternatif}
+Tesla, Westing House, Edison,
+L'alternatif à pris le dessus, notamment grace à l'industrialisation de la fabrication des transformateurs, qui permettent de convertir (abaisser ou élever) tensions et  courants de manière simple et reproductible. L'alternatif a également un interet pour l'ouverture/fermeture des interrupteurs.
+
+\paragraph{De la création du neutre}
+dessin a rajouter.
+La création du neutre a lieu dans les transformateurs d'adaption du réseau:
+\begin{itemize}
+\item primaire : triphasé ``triangle'' .
+\item secondaire : triphasé étoile avec un 4ème fil qui ressort : le neutre.
+\end{itemize}
+\paragraph{Des voitures éléctriques}
+C'est le futur. Beaucoup d'application de l'EEA (traitement du signal prédiction ).
+Technologies à suivres: Vehicule2Grid Vehicule2Home.
+\paragraph{De l'importance des TPs} Les TP ont pour but de vérifier expérimentalement les notions théoriques vues en cours, les comparer, chercher à étudier la différence entre modèle théoriques, simulation numériques et relevé expérimentaux.
++ suite du cours 2
+
+
+\section{Cours 2}
+
+\paragraph{Problématique}
+Quelles sont les propriétés du courant au abords des maisons ? Comment modéliser le réseau alternatif basse tension (réseau domestique) ?
+
+
+Il n'ya pas ou peu de capteur de courant sur le ``réseau''. 
+Le reseau : 220 000 transformateurs ``domestiques'' , on alimente les foyers francais en boucle ouverte. Il existe aussi 4000 poste sources
+(très huate tension vers moyenne haute tension)
+Sur le réseau l'enjeu est de connaitre en temps réel l'état du système pour adapter la gestion de puissance .
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw (0,0) to[short,o-] ++(-1,0) to[V,v=$v(t)$ ] ++(0,2) to[short,-o] ++(1,0);
+  \end{tikzpicture}
+  \[
+    V \sqrt{2}\sin(\omega t)
+  \]
+  \caption{Réseau alternatif BF}
+\end{figure}
+\subsection{Convertisseur DC- AC}
+Comment transfere l'énergie d'une batterie au réseau ?
+\emph{cf cours de 411 (NB: le poly de 411 n'est pas encore fini)}
+
+Un convertisseur d'électronique de puissance ne permet que de relier des sources de natures différentes (cf règle d'associations des sources)\\
+
+
+schéma onduleur. schéma bloc asservissement\\
+
+
+Structure de commande : Hysterisis (en TP) ou autre
+
+\subsection{Convertisseur DC-DC}
+\emph{cf cours de 233  pour plus d'équations}
+
+Application: convertisseur panneau photovoltaïque / bus DC
+
+
+Il existe deux grandes familles de structures selon la nature "électrique"  des sources et des charges.
+\begin{itemize}
+	
+
+\item[$\bullet$] \textbf{Structure à transfert direct d'énergie}\\
+
+	On associe deux "sources" de nature différentes (source de tension et de courant ou l'inverse).
+	
+% \begin{figure}[H]
+% 	\centering
+% 	\includegraphics[width = 0.6 \linewidth]{transfertDirect}
+% 	\caption{Convertisseur statique à transfert d'énergie direct}
+% \end{figure}
+	
+\item[$\bullet$]  \textbf{Structure à transfert indirect d'énergie}\\
+
+	On associe deux "sources" de même natures. L'énergie de la première "source" est stockée dans un élément de stockage puis destockée dans la deuxième "source".
+	
+	% \begin{figure}[H]
+	% 	\centering
+	% 	\includegraphics[width = 0.6 \linewidth]{transfertInDirect}
+	% 	\caption{Convertisseur statique à transfert d'énergie indirect}
+	% \end{figure}
+	
+\end{itemize}
+\subsection{Synthèse de convertisseur}
+\begin{center}
+	\begin{tabular}{|c|p{7cm}|p{7cm}|}
+		\hline
+		E/S & courant & tension \\
+		\hline
+      tension & \textbf{hacheur série} (buck)
+
+
+		 \begin{circuitikz}[scale=1]
+			\draw (0,0) to[V, v=$V_e$,i=$i_v$] (0,2);
+			\draw (0,2)to [switch] (1,2) to[L] (3,2)(3,0)--(0,0);
+			\draw(3,0) --(4,0) (4,2) to [battery, v<=$V_{DC}$, i=$i_s$] (4,0)(4,2)-- (3,2) ;
+			\draw (1,2) to [switch] (1,0);
+		  	\end{circuitikz}
+	  	\begin{center}
+	  	$V_{DC} \leq V_e$
+	  	\end{center}
+             & \textbf{Hacheur à stockage inductif} (Buck-boost)
+
+
+		 \begin{circuitikz}[scale=1]
+			   	\draw (0,0) to[V, v=$V_e$,i=$i_v$] (0,2);
+			   	\draw (0,2)to [switch] (1,2) to[switch] (3,2)(3,0)--(0,0);
+			   	\draw(3,0) --(4,0) (4,2)to [battery, v<=$V_{DC}$, i=$i_s$] (4,0) (4,2) -- (3,2) ;
+			   	\draw (1,2) to [L] (1,0);
+			   \end{circuitikz}
+		   \[ |V_{DC}| < V_e \text{ ou } > V_e \]
+				   \\
+		\hline
+      courant
+      & \textbf{Hacheur à stockage capacitif} (Cuck)
+
+
+		 \begin{circuitikz}[scale=1]
+			\draw (0,0) to[V, v=$V_e$,i=$i_v$] (0,2);
+			\draw (0,2)to [L] (1,2) to[C] (2,2) to [L] (3,2);
+			\draw (2,2) to [switch] (2,0);
+			\draw (3,0)--(0,0);
+			\draw(3,0) --(4,0) (4,2)to [battery, v<=$V_{DC}$, i=$i_s$] (4,0)(4,2)-- (3,2) ;
+			\draw (1,2) to [switch] (1,0);
+		\end{circuitikz}
+	\[ |V_{DC}| < V_e \text{ ou } > V_e \]
+	  & \textbf{hacheur parallèle} (boost )
+
+
+        \begin{circuitikz}[scale=1]
+	  	\draw (0,0) to[V, v=$V_e$,i=$i_v$] (0,2);
+	  	\draw (0,2)to [L] (1,2) to[switch] (3,2)(3,0)--(0,0);
+	  	\draw(3,0) --(4,0) (4,2)to [battery, v<=$V_{DC}$, i=$i_s$](4,0) (4,2)-- (3,2) ;
+	  	\draw (1,2) to [switch] (1,0);
+	  \end{circuitikz}
+  \[ V_{DC} \geq V_e \]\\
+		\hline
+	\end{tabular}
+\end{center}
+\begin{rem}
+
+	Si la cellule de  commutation est non réversible en courant ( association transistor+diode), il existe deux mode de fonctionnement (mode de conduction):
+	\begin{itemize}
+		\item[$\bullet$] Conduction continue (CC)
+		\item[$\bullet$] Conduction discontinue (CD)
+	\end{itemize}
+  \end{rem}
+    \begin{rem}
+      Dans notre étude la charge est remplacée par une
+      \emph{batterie}, connecté à  un bus DC, ainsi la tension
+      $V_{DC}$ est imposée ! $R \simeq 0$.
+
+      
+    \end{rem}
+
+\subsubsection{Hacheur (buck)}
+    \begin{prop}
+      Dans le cas d'un hacheur buck on a :
+      \[
+        <V_e> = \frac{V_{DC}}{\alpha}
+      \]
+    \end{prop}
+\subsubsection{Hacheur (boost)}
+\paragraph{M. Hoang} sort du cours a 9h10 pour 10min pour que nous decidions ce que l'on doit faire.  9h33 il n'est toujours pas la
+
+
+
+ \begin{prop}
+      Dans le cas d'un hacheur boost on a :
+      \[
+        <V_e> = (1-\alpha) V_{DC}
+      \]
+    \end{prop}
+
+    \begin{figure}[H]
+      \centering
+      \begin{circuitikz}
+        \begin{axis}
+          [axis lines = left,
+          xmin = 0,xmax = 5,ymin = 0,ymax =5,ticks=none,ylabel=$I$,xlabel=$v$]
+          \addplot[no marks,smooth]{2-exp((x-4)*3)};
+          \addplot[no marks,smooth]{3-exp((x-4)*3)};
+          \addplot[no marks,smooth]{4-exp((x-4)*3)};
+          \addplot[no marks,dashed]plot coordinates {(3,0) (3,5)};
+        \end{axis}
+      \end{circuitikz}
+      \caption{Point de fonctionnement}
+    \end{figure}
+\section{Cours 4 }
+
+
+
+
+
+\section{Ressources intéressantes:}
+\begin{itemize}
+\item \url{http://www.epsic.ch/cours/electronique/techn99/elnthcircuit/cidectxt.html}
+\item Podcast France culture mercredi 20/03 : ``la méthode scientifique''
+\item Équilibrage du réseau:\\
+\url{http://www8.umoncton.ca/umcm-cormier_gabriel/Electrotechnique/Chap4.pdf}
+\item Des éclairs, Jean Echenoz
+\item Les énergies renouvelables pour la production d'électricité, Leon Freris,Dabid Infield, Dunod
+\end{itemize}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

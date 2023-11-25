@@ -1,0 +1,42 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k}{def} \PYG{n+nf}{calcul\PYGZus{}acc\PYGZus{}cercles}\PYG{p}{(}\PYG{n}{img\PYGZus{}s}\PYG{p}{,} \PYG{n}{rad\PYGZus{}min}\PYG{o}{=}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{n}{rad\PYGZus{}max}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{):}
+    \PYG{c+c1}{\PYGZsh{}init acc :}
+    \PYG{p}{[}\PYG{n}{c\PYGZus{}max}\PYG{p}{,} \PYG{n}{r\PYGZus{}max}\PYG{p}{]} \PYG{o}{=} \PYG{n}{img\PYGZus{}s}\PYG{o}{.}\PYG{n}{shape}
+    \PYG{n}{r\PYGZus{}min}\PYG{o}{=}\PYG{l+m+mi}{1}
+    \PYG{n}{delta\PYGZus{}r} \PYG{o}{=} \PYG{l+m+mi}{1}
+    \PYG{n}{N\PYGZus{}r} \PYG{o}{=}  \PYG{n+nb}{int}\PYG{p}{((}\PYG{n}{r\PYGZus{}max}\PYG{o}{\PYGZhy{}}\PYG{n}{r\PYGZus{}min}\PYG{o}{+}\PYG{n}{delta\PYGZus{}r}\PYG{p}{)}\PYG{o}{/}\PYG{n}{delta\PYGZus{}r}\PYG{p}{)}
+    \PYG{n}{delta\PYGZus{}c} \PYG{o}{=} \PYG{l+m+mi}{1}
+    \PYG{n}{c\PYGZus{}min} \PYG{o}{=} \PYG{l+m+mi}{1}
+    \PYG{n}{N\PYGZus{}c} \PYG{o}{=}  \PYG{n+nb}{int}\PYG{p}{((}\PYG{n}{c\PYGZus{}max}\PYG{o}{\PYGZhy{}}\PYG{n}{c\PYGZus{}min}\PYG{o}{+}\PYG{n}{delta\PYGZus{}c}\PYG{p}{)}\PYG{o}{/}\PYG{n}{delta\PYGZus{}c}\PYG{p}{)}
+    \PYG{n}{delta\PYGZus{}rad} \PYG{o}{=} \PYG{l+m+mi}{1}
+    \PYG{n}{N\PYGZus{}rad} \PYG{o}{=}  \PYG{n+nb}{int}\PYG{p}{((}\PYG{n}{rad\PYGZus{}max}\PYG{o}{\PYGZhy{}}\PYG{n}{rad\PYGZus{}min}\PYG{o}{+}\PYG{n}{delta\PYGZus{}rad}\PYG{p}{)}\PYG{o}{/}\PYG{n}{delta\PYGZus{}rad}\PYG{p}{)}
+    \PYG{n}{acc} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{n}{N\PYGZus{}rad}\PYG{p}{,}\PYG{n}{N\PYGZus{}r}\PYG{p}{,}\PYG{n}{N\PYGZus{}c}\PYG{p}{))}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Taille de l\PYGZsq{}accumulateur\PYGZdq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{acc}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{))}
+    \PYG{n}{x}\PYG{p}{,}\PYG{n}{y} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{nonzero}\PYG{p}{(}\PYG{n}{img\PYGZus{}s}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)):}
+        \PYG{k}{for} \PYG{n}{r} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{r\PYGZus{}min}\PYG{p}{,} \PYG{n}{r\PYGZus{}max}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{delta\PYGZus{}r}\PYG{p}{):}
+            \PYG{k}{for} \PYG{n}{c} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{c\PYGZus{}min}\PYG{p}{,} \PYG{n}{c\PYGZus{}max}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{delta\PYGZus{}c}\PYG{p}{):}
+                \PYG{k}{if} \PYG{p}{(}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])} \PYG{o}{!=} \PYG{p}{(}\PYG{n}{r}\PYG{p}{,}\PYG{n}{c}\PYG{p}{):}
+                    \PYG{n}{rad} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{((}\PYG{n}{r}\PYG{o}{\PYGZhy{}}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}\PYG{o}{**}\PYG{l+m+mi}{2} \PYG{o}{+} \PYG{p}{(}\PYG{n}{c}\PYG{o}{\PYGZhy{}}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}
+                    \PYG{k}{if} \PYG{n}{rad} \PYG{o}{\PYGZlt{}} \PYG{n}{rad\PYGZus{}max} \PYG{o+ow}{and} \PYG{n}{rad} \PYG{o}{\PYGZgt{}} \PYG{n}{rad\PYGZus{}min}\PYG{p}{:}
+                        \PYG{n}{i\PYGZus{}id} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{((}\PYG{n}{r}\PYG{o}{\PYGZhy{}}\PYG{n}{r\PYGZus{}min}\PYG{p}{)}\PYG{o}{/}\PYG{n}{delta\PYGZus{}r}\PYG{p}{)}
+                        \PYG{n}{j\PYGZus{}id} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{((}\PYG{n}{c}\PYG{o}{\PYGZhy{}}\PYG{n}{c\PYGZus{}min}\PYG{p}{)}\PYG{o}{/}\PYG{n}{delta\PYGZus{}c}\PYG{p}{)}
+                        \PYG{n}{k\PYGZus{}id} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{((}\PYG{n}{rad}\PYG{o}{\PYGZhy{}}\PYG{n}{rad\PYGZus{}min}\PYG{p}{)}\PYG{o}{/}\PYG{n}{delta\PYGZus{}rad}\PYG{p}{)}
+                        \PYG{n}{acc}\PYG{p}{[}\PYG{n}{k\PYGZus{}id}\PYG{p}{,}\PYG{n}{i\PYGZus{}id}\PYG{p}{,}\PYG{n}{j\PYGZus{}id}\PYG{p}{]} \PYG{o}{+=} \PYG{l+m+mi}{1} \PYG{o}{/}\PYG{n}{rad}
+    \PYG{k}{return} \PYG{n}{acc}
+\PYG{k}{def} \PYG{n+nf}{cherche\PYGZus{}N\PYGZus{}maxima\PYGZus{}cercles}\PYG{p}{(}\PYG{n}{accumulateur}\PYG{p}{,} \PYG{n}{exclusion\PYGZus{}xy}\PYG{p}{,}
+\PYG{n}{exclusion\PYGZus{}rayon}\PYG{p}{,} \PYG{n}{N}\PYG{p}{):}
+    \PYG{n}{accu2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{copy}\PYG{p}{(}\PYG{n}{accumulateur}\PYG{p}{)}
+    \PYG{p}{[}\PYG{n}{rad\PYGZus{}max0}\PYG{p}{,} \PYG{n}{c\PYGZus{}max0}\PYG{p}{,} \PYG{n}{r\PYGZus{}max0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{accumulateur}\PYG{o}{.}\PYG{n}{shape}
+    \PYG{n}{liste\PYGZus{}max} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{k}{for} \PYG{n}{cercle} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{N}\PYG{p}{):}
+        \PYG{p}{[}\PYG{n}{rayon}\PYG{p}{,} \PYG{n}{w\PYGZus{}0}\PYG{p}{,} \PYG{n}{h\PYGZus{}0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{unravel\PYGZus{}index}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{argmax}\PYG{p}{(}\PYG{n}{accu2}\PYG{p}{),}\PYG{n}{accu2}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{)}
+        \PYG{n}{rayon} \PYG{o}{+=} \PYG{l+m+mi}{5}
+        \PYG{n}{w\PYGZus{}0} \PYG{o}{+=} \PYG{l+m+mi}{1}
+        \PYG{n}{h\PYGZus{}0} \PYG{o}{+=} \PYG{l+m+mi}{1}
+        \PYG{n}{accu2}\PYG{p}{[}\PYG{n}{rayon} \PYG{o}{\PYGZhy{}} \PYG{n}{exclusion\PYGZus{}rayon} \PYG{p}{:} \PYG{n}{rayon} \PYG{o}{+} \PYG{n}{exclusion\PYGZus{}rayon}\PYG{p}{,}
+              \PYG{n}{w\PYGZus{}0} \PYG{o}{\PYGZhy{}}\PYG{n}{exclusion\PYGZus{}xy} \PYG{p}{:} \PYG{n}{w\PYGZus{}0} \PYG{o}{+} \PYG{n}{exclusion\PYGZus{}xy}\PYG{p}{,}
+              \PYG{n}{h\PYGZus{}0} \PYG{o}{\PYGZhy{}} \PYG{n}{exclusion\PYGZus{}xy} \PYG{p}{:} \PYG{n}{h\PYGZus{}0} \PYG{o}{+} \PYG{n}{exclusion\PYGZus{}xy}\PYG{p}{]} \PYG{o}{=}\PYG{l+m+mi}{0}
+        \PYG{n}{liste\PYGZus{}max}\PYG{o}{.}\PYG{n}{append}\PYG{p}{([}\PYG{n}{rayon}\PYG{p}{,} \PYG{n}{w\PYGZus{}0}\PYG{p}{,} \PYG{n}{h\PYGZus{}0}\PYG{p}{])}
+    \PYG{k}{return} \PYG{n}{liste\PYGZus{}max}
+\end{Verbatim}

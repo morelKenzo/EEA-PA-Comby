@@ -1,0 +1,44 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+ch}{\PYGZsh{}!/usr/bin/env python3}
+
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+
+\PYG{n}{univers} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}a\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}b\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}c\PYGZsq{}}\PYG{p}{]}
+\PYG{n}{message} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}aabababac\PYGZdq{}}
+
+\PYG{k}{def} \PYG{n+nf}{code\PYGZus{}LZW}\PYG{p}{(}\PYG{n}{message}\PYG{p}{,} \PYG{n}{univers}\PYG{p}{):}
+    \PYG{n}{msg} \PYG{o}{=} \PYG{n}{message}
+    \PYG{n}{dictionnaire} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{(}\PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{univers}\PYG{p}{,[}\PYG{n}{i} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range} \PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{univers}\PYG{p}{))]))}
+    \PYG{n}{w}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{code} \PYG{o}{=}\PYG{p}{[]}
+    \PYG{k}{for} \PYG{n}{c} \PYG{o+ow}{in} \PYG{n}{msg}\PYG{p}{:}
+        \PYG{n}{wc} \PYG{o}{=} \PYG{n}{w}\PYG{o}{+}\PYG{n}{c}
+        \PYG{k}{if} \PYG{n}{wc} \PYG{o+ow}{in} \PYG{n}{dictionnaire}\PYG{p}{:}
+            \PYG{n}{w} \PYG{o}{=}\PYG{n}{wc}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{code}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{dictionnaire}\PYG{p}{[}\PYG{n}{w}\PYG{p}{])}
+            \PYG{n}{dictionnaire}\PYG{p}{[}\PYG{n}{wc}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{dictionnaire}\PYG{p}{)}
+            \PYG{n}{w} \PYG{o}{=} \PYG{n}{c}
+    \PYG{k}{if} \PYG{n}{w}\PYG{p}{:}
+        \PYG{n}{code}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{dictionnaire}\PYG{p}{[}\PYG{n}{w}\PYG{p}{])}
+    \PYG{k}{return} \PYG{n}{code}\PYG{p}{,}\PYG{n}{dictionnaire}
+
+\PYG{k}{def} \PYG{n+nf}{decode\PYGZus{}LZW}\PYG{p}{(}\PYG{n}{code}\PYG{p}{,}\PYG{n}{univers}\PYG{p}{):}
+    \PYG{n}{dictionnaire} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{(}\PYG{n+nb}{zip}\PYG{p}{([}\PYG{n}{i} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{univers}\PYG{p}{))],}\PYG{n}{univers}\PYG{p}{))}
+    \PYG{n}{w} \PYG{o}{=} \PYG{n}{dictionnaire}\PYG{p}{[}\PYG{n}{code}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)]}
+    \PYG{n}{msg} \PYG{o}{=} \PYG{p}{[}\PYG{n}{w}\PYG{p}{]}
+    \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n}{code}\PYG{p}{:}
+        \PYG{k}{if} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n}{dictionnaire}\PYG{p}{:}
+            \PYG{n}{entry} \PYG{o}{=} \PYG{n}{dictionnaire}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}
+        \PYG{k}{elif} \PYG{n}{k} \PYG{o}{==} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{dictionnaire}\PYG{p}{):}
+            \PYG{n}{entry} \PYG{o}{=} \PYG{n}{w} \PYG{o}{+}\PYG{n}{w}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{n}{msg}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{entry}\PYG{p}{)}
+        \PYG{n}{dictionnaire}\PYG{p}{[}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{dictionnaire}\PYG{p}{)]} \PYG{o}{=} \PYG{n}{w}\PYG{o}{+}\PYG{n}{entry}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{n}{w} \PYG{o}{=} \PYG{n}{entry}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{dictionnaire}\PYG{p}{)}
+    \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{o}{.}\PYG{n}{join}\PYG{p}{(}\PYG{n}{msg}\PYG{p}{)}
+
+\PYG{n}{code}\PYG{p}{,}\PYG{n}{dictionnaire} \PYG{o}{=} \PYG{n}{code\PYGZus{}LZW}\PYG{p}{(}\PYG{n}{message}\PYG{p}{,}\PYG{n}{univers}\PYG{p}{)}
+\PYG{n}{msg} \PYG{o}{=} \PYG{n}{decode\PYGZus{}LZW}\PYG{p}{(}\PYG{n}{code}\PYG{p}{,} \PYG{n}{univers}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{code}\PYG{p}{,} \PYG{n}{dictionnaire}\PYG{p}{,} \PYG{n}{msg}\PYG{p}{)}
+\end{Verbatim}

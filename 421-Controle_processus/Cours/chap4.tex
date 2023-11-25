@@ -1,0 +1,1442 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+
+\section{Concept du modèle d'état}
+
+\subsection{Définitions}
+Soit un système $\Sigma$, à temps continu, linéaire ou non :
+\[ u \rightarrow \boxed{\Sigma} \rightarrow y\]
+
+$u(t) \in \R^m$ commande
+
+$y(t)\in \R^p $ sortie mesurée
+
+$x(t) \in \R^n$ vecteur d'état, et ses composantes $x_i(t)\in \mathbb{R}$ variables d'état\\
+\begin{defin}
+On appelle \textbf{équation d'état} du système $(\Sigma)$ :
+\[ \dot{x}(t) = f(x(t),u(t),t) \]
+
+$f : \R^n \times \R^m \times R_+ \rightarrow \R^n$ : champs de vecteurs, relation non linéaire en $x,u,t$.
+
+$x_0=x(0) \in \R^n$ : vecteur des conditions initiales.
+
+$x(t)$ contient des grandeurs physiques ou non.\\
+
+On appelle \textbf{équation d'observation }du système $(\Sigma)$ :
+\[ y(t) = h(x(t),u(t),t) \quad \text{(équation algébrique)} \]
+
+Un \textbf{modèle d'état} est composé d'une équation d'état et d'une équation d'observation :
+
+\[
+(\Sigma)
+\left\{
+\begin{array}{ll}
+\dot{x}(t) & = f(x(t),u(t),t), \quad x_0=x(0) \\
+y(t) & = h(x(t),u(t),t)
+\end{array}
+\right.
+\]
+
+Dans le cas discret :
+
+\[
+(\Sigma)
+\left\{
+\begin{array}{ll}
+x_{k+1} & = f_d(x_k,u_k,k), \quad x_0=x(0) \\
+y_k & = h_d(x_k,u_k,k)
+\end{array}
+\right.
+\]
+
+\[ u_k\in \R^m \rightarrow \boxed{\Sigma_d} \rightarrow y_k\in\R^p \]
+
+$x_k \in \R^n$ vecteur de suites numériques
+\end{defin}
+\paragraph{Systèmes stationnaires :} on peut simplifier comme suit :
+
+\begin{multicols}{2}
+Continu :
+\[
+\left\{
+\begin{array}{ll}
+\dot{x}(t) & = f(x(t),u(t)), \quad x_0=x(0) \\
+y(t) & = h(x(t),u(t))
+\end{array}
+\right.
+\]
+
+Discret :
+\[
+\left\{
+\begin{array}{ll}
+x_{k+1} & = f_d(x_k,u_k), \quad x_0=x(0) \\
+y_k & = h_d(x_k,u_k)
+\end{array}
+\right.
+\]
+\end{multicols}
+
+
+\paragraph{Systèmes linéaires stationnaires :} on a alors :
+ \begin{multicols}{2}
+Continu :
+\[
+\left\{
+\begin{array}{ll}
+\dot{x}(t) & = Ax(t)+Bu(t), \quad x_0=x(0) \\
+y(t) & = Cx(t)+Du(t))
+\end{array}
+\right.
+\]
+
+Discret :
+\[
+\left\{
+\begin{array}{ll}
+x_{k+1} & = A_d x_k + B_d u_k, \quad x_0=x(0) \\
+y_k & = C_d x_k + D_d u_k
+\end{array}
+\right.
+\]
+\end{multicols}
+
+$A,A_d \in \R^{n\times n}$ matrices d'évolution
+
+$B,B_d\in \R^{n\times m}$ matrices d'application de l'entrée commande $u$
+
+$C,C_d \in \R^{p \times n}$ matrices d’observation
+
+$D,D_d \in \R^{p\times n}$ matrices de transmission directe
+
+\paragraph{Remarque} Systèmes linéaires variant dans le temps :
+
+\begin{multicols}{2}
+Continu :
+\[
+\left\{
+\begin{array}{ll}
+\dot{x}(t) & = A(t)x(t)+B(t)u(t), \quad x_0=x(0) \\
+y(t) & = C(t)x(t)+D(t)u(t))
+\end{array}
+\right.
+\]
+
+Discret :
+\[
+\left\{
+\begin{array}{ll}
+x_{k+1} & = A_d(k) x_k + B_d(k) u_k, \quad x_0=x(0) \\
+y_k & = C_d(k) x_k + D_d(k) u_k
+\end{array}
+\right.
+\]
+\end{multicols}
+
+\paragraph{Cadre du cours :} systèmes linéaires, stationnaires, SISO (mono-entrée, mono-sortie).
+
+De plus, $u\in\R \quad (m=1)$, $y\in\R \quad (p=1)$.
+
+
+\subsection{Quelques exemples}
+
+\subsubsection{Robot manipulateur à 1 bras}
+
+PFD : équation de mouvement
+
+\begin{align*}
+J\ddot{\theta}(t) & = C_m(t) + C_g(t)\\
+J\ddot{\theta} & = C_m(t) - \frac{L}{2}mg\cos\theta \\
+\intertext{On pose $C_m(t) = u(t)$}
+\ddot{\theta}(t) & = \frac{1}{J}u(t) - \frac{mgL}{2J}\cos(\theta(t))
+\end{align*}
+On a donc :
+\[
+\dot{x}(t) =
+\left[
+\begin{array}{cc}
+\dot{\theta}(t) \\
+\ddot{\theta}(t)
+\end{array}
+\right]
+=
+\left[
+\begin{array}{cc}
+\dot{\theta}(t) \\
+-\frac{mgL}{2J}\cos(\theta(t))
+\end{array}
+\right]
++
+\left[
+\begin{array}{cc}
+0 \\ \frac{1}{J}
+\end{array}
+\right] u(t)
+\]
+
+\subsubsection{Cas d'un robot à n liaisons en série, n-actionné}
+
+\[M(q) \ddot{q} + C(q,\dot{q}) \dot{q} + D\dot{q} + g(q) = \tau \]
+\[q(t) = \vect{
+\theta_1(t) \\
+\vdots \\
+\theta_n(t)
+}
+\in \R^n, \quad
+\tau =
+\vect{
+\tau_1(t) \\
+\vdots \\
+\tau_n(t)
+}\]
+
+\begin{tabular}{lll}
+$M(q) = M(q)^T$ & $\in \R^{n \times n}$ & matrice d'inertie, définie positive \\
+$C(q,\dot{q})\dot{q}$ & $\in \R^n$ & forces centrifuges et de Coriolis\\
+$g(q) = \frac{\partial u(q)}{\partial q}$ & $\in \R^n$ & énergie potentielle totale due à la gravité\\
+$D\dot{q}$ & & frottements visqueux dans les liaisons
+\end{tabular}
+
+
+\[x(t) =
+\vect{q(t) \\ \dot{q}(t)} \in \R^{2n}\]
+\[\dot{x}(t) =
+\vect{ \dot{q}(t) \\ \ddot{q}(t)}
+=
+\vect{\dot{q}(t) \\ -M^{-1}(q)C(q,\dot{q})\dot{q}-M^{-1}D\dot{q}-M^{-1}(q)g(q)}
++
+\vect{ 0_{n\times n} \\ M^{-1}}
+\]
+
+\subsubsection{Circuit avec diode à effet tunnel}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.8]
+\draw (0,0) to [sV=$u(t)$] (0,2) to [R,l=$R$] (0,4) to [L,l=$L$,i=$i_L$] (4,4) to [C,l=$C$,v=$v_c$] (4,0) to (0,0)
+(4,4) to (8,4) to[tunnel diode,i=$i_D$] (8,0) to (4,0)
+;
+\end{tikzpicture}
+\caption{Montage étudié}
+\end{figure}
+
+Lois de Kirchoff :
+\begin{align*}
+\text{Noeud A : } & i_L = i_C + i_D = h(v_D) + v_C \\
+& \Rightarrow  C\frac{dv_D}{dt} = i_L - h(v_D)\\
+\text{Maille 1 : } & u(t) - Ri_L(t) - L\frac{di_L}{dt} -v_C(t) = 0  \\
+& \Rightarrow  Ri_L + L\frac{di_L}{dt} + v_D = u(t)\\
+\text{Maille 2 : } & v_C(t) = v_D(t)
+\end{align*}
+\[x(t) = \vect{
+i_L \\
+v_D
+} = \vect{
+x_1 \\
+x_2
+} \in \R^2,\text{ 2 variables d'état} \]
+
+\[\dot{x}(t) =
+\vect{
+\dot{x}_1 \\
+\dot{x}_2
+}
+ =
+\left[
+\begin{array}{cc}
+-\frac{R}{L}i_L & -\frac{1}{L}v_D \\
+\frac{1}{C}i_L & -\frac{1}{C}h(v_D)
+\end{array}
+\right]
+ +
+ \vect{
+ \frac{1}{L} \\
+ 0
+ }
+ u(t)
+ \]
+
+
+\section{Quelques propriétés de base, valables à temps continu ou discret}
+
+\subsection{Non-unicité d'un modèle d'état}
+
+Cas continu :
+\[
+\left\{
+\begin{array}{ll}
+\dot{x}(t) & = Ax(t)+Bu(t), \quad x_0=x(0) \\
+y(t) & = Cx(t)+Du(t))
+\end{array}
+\right.
+\]
+
+Soit $T\in\R^{n\times n}$ inversible. Soit $z(t) \in \R^n$ tel que $x(t) = T z(t)$. et $T$ invariante dans le temps.
+\begin{align*}
+  & \begin{cases}
+    T\dot{z}(t) & = AT(t)+Bu(t) \\
+    y(t) & = CTz(t)+Du(t))
+\end{cases}
+ \\
+& \begin{cases}
+\dot{z}(t) & = T^{-1}ATz(t) + T^{-1}Bu(t) \\
+y & = CT z(t) + Du(t)
+\end{cases}  \text{ avec } z(0) = T^{-1}x_0 \\
+& \begin{cases}
+\dot{z}(t) & = \tilde{A}z(t) + \tilde{B}z(t) \\
+y & = \tilde{C}z(t) + Du(t)
+\end{cases}
+\end{align*}
+
+D est invariant par changement de coordonnées régulier ($x(t) = Tz(t)$)
+
+\begin{prop}
+Il existe une infinité de modèles d'état pour un même système (linéaire et stationnaire).
+\end{prop}
+
+\paragraph{Remarque} voir plus bas quelques changement de coordonnées vers des formes d'état canoniques.
+\subsection{Solution de l'équation d'état}
+
+\subsubsection{Exponentiel d'une matrice}
+
+\begin{defin}
+Soit $\K = \R \text{ ou } \C$.
+\[ \forall A \in \K^{n\times n}, e^A \in \K^{n\times n} \text{ et } e^A = \sum_{k=0}^{\infty} \frac{A^k}{k!} \]
+On admet la convergence de la série.
+\end{defin}
+
+\paragraph{Remarque} $e^{0_{n\times n}} = 1_{n}$
+
+\begin{prop}
+\[ e^A = \lim_{k \rightarrow \infty} (1_{n}+\frac{1}{k}A)^k \]
+\begin{enumerate}
+\item $(e^A)^T = e^{A^T}$
+\item $e^A$ inversible et $(e^A)^{-1} = e^{-A}$
+\item Si $A=diag(A_k)$ où $A_k\in \K^{n_i \times n_i}$, i=1.. k, $e^A = diag (e^{A_k})$
+\item Soit $X$ inversible $\in \K^{n \times n}$, $e^{XAX^{-1}} = Xe^AX^{-1}$
+\item Si $A,B \in \K^{n \times n}$ sont similaires $e^A$ et $e^B$ sont similaires aussi
+\item Si $A,B \in \K^{n \times n}$ sont similaires et unitaires $e^A$ et $e^B$ le sont aussi
+\item Si $A$ est hermitienne ($A=\overline{A}^T$) alors $e^A$ est définie positive
+\item Si $A$ est anti-hermitienne, alors $e^A$ est unitaire
+\item Si $A$ est normale $(AA^* = A^*A)$, alors $e^A$ est normale aussi
+\end{enumerate}
+\end{prop}
+
+\begin{prop}
+\[ t\in \R, \frac{de^{At}}{dt} = Ae^{tA} = e^{tA}A \]
+\end{prop}
+
+\begin{proof}
+\begin{align*}
+e^{tA} & = \sum_{k=0}^{\infty} \frac{t^k}{k!}A^k \\
+\frac{de^{At}}{dt} & = \frac{d}{dt}\sum_{k=0}^{\infty} \frac{t^k}{k!}A^k  = \sum_{k=1}^{\infty} \frac{t^{k-1}}{(k-1)!}A^k \\
+& = A \sum_{k=1}^{\infty} \frac{t^{k-1}}{(k-1)!}A^{k-1}  = Ae^{tA}
+\end{align*}
+\end{proof}
+
+\begin{prop}
+Soient $A,B \in \K^{n \times n}$
+\begin{enumerate}
+\item \[\forall t \in \R_+, \quad AB = BA \Leftrightarrow e^{tA}e^{tB} = e^{t(A+B)} \]
+\item \[ \text{ si } AB = BA, \text{ alors } e^{A+B} = e^A e^B = e^Be^A \]
+\end{enumerate}
+\end{prop}
+
+
+\begin{thm}
+
+Soit $A\in \K^{n\times n}$
+\begin{align*}
+e^{tA} & = \sum_{k=0}^{n-1} \Psi_k(t)A^k, \quad \forall t \in \R \\
+e^{tA} & = \frac{1}{2\pi j} \int_C (z1_n-A)^{-1} e^{tz} dz
+\end{align*}\\[2em]
+
+où $C$ est un contour fermé du plan complexe contenant $Spec(A)$ (valeurs propres de A)
+\end{thm}
+Soit $P_A$ le polynôme caractéristique de $A$
+\begin{align*}
+P_A(s) & = det(s1_n-A)  = s^n + a_{n-1}s^{n-1} + ... + a_1s + a_0, \quad a_j \in \R, j=0...n-1 \\
+\intertext{On montre que}
+sP_A^{(k+1)}(s) & = P_A^{(k)}(s) - a_k, \quad k=0,...n-1 \text{ avec } P_A^{(0)}(s) = P_A(s) \text{ et } P_A^{(n)}(s) = 1 \\
+\Psi_k(t) & = \frac{1}{2\pi j} \int_C \frac{P_A^{(k+1)}(z)}{P_A^{(k)}(z)} e^{tz} dz
+\end{align*}
+
+On montre que $\forall k = 0,1...n-1$ et $t\geq 0$
+\[ \Psi_k^{(n)}(t) + a_{n-1} \Psi_k^{(n-1)}(t) + ... + a_1\Psi_k^{(0)}(t) + a_0\Psi_k(t) = 0 \]
+avec $\forall k,l= 0...n-1, k\neq l$, on a $\Psi_k^{(l)}(0) = \delta_{kl}$
+
+\begin{thm}
+Soit $A\in \K^{n\times n}$ et $\Psi_0(t)...\Psi_{n-1}(t)$ définis précédement.
+
+Alors $\forall s \in \C \setminus Spec(A)$,
+\[ L[e^{tA}] = \int_0^{\infty} e^{-st}e^{At} dt = (s1_n-A)^{-1} \]
+
+On appelle $(s1_n-A)^{-1}$ résolvante de A.
+
+\end{thm}
+De plus,
+\begin{align*}
+\hat{\Psi_k}(s) & = L[\Psi_k(t)]_{k=0..n-1} \\
+& = \frac{P_A^{(k+1)}(s)}{P_A^{(k)}(s)} \\
+(p1_n-A)^{-1}  & = L[e^{tA}] \\
+& = \sum_{k=0}^{n-1}\hat{\Psi_k}(s)A^k
+\end{align*}
+
+
+En pratique, soit $V\in \mathbb{K}^{n\times }$ inversible, tel que $V^{-1}AV = J$, $J\in \mathbb{K}^{n \times n}$ matrice de Jordan ou bien $J = \Lambda = \text{diag}(\lambda_1...\lambda_n), \lambda_i$ valeurs propres de A
+\begin{thm}[Exponentielle d'un bloc de Jordan]
+  On note $J_p(\lambda) \in \K^{p\times p}$ le $p$-ième bloc de jordan $
+  \begin{bmatrix}
+    \lambda & 1&  & \\
+      & \ddots & \ddots & \\
+      &    & \lambda & 1
+    \end{bmatrix}$
+    On a :
+    \[
+      e^{J_p(\lambda)t} = e^{\lambda t}
+      \begin{bmatrix}
+  1 & t & \frac{t^2}{2} & \dots & \frac{t^p-1}{(p-1)!}&\frac{t^p}{p!} \\
+    & \ddots & \ddots            & \ddots     &  \ddots             &\frac{t^p-1}{(p-1)!}\\
+    &   & \ddots             & \ddots     &  \ddots      & \vdots       \\
+    &   &               & \ddots     & \ddots       &  \frac{t^2}{2}\\
+    &   &               &       &  \ddots      &   t\\
+    &   &               &       &         & 1 \\
+      \end{bmatrix}
+    \]
+\end{thm}
+
+\begin{prop}
+\[A^k = V J^k V^{-1}\] ou bien si $J = \Lambda = \text{diag}(\lambda_1...\lambda_n)$, \[A^k = V \Lambda^k V^{-1} \]
+
+\[ e^{tA} = e^{tVJV^{-1}} = V e^{tJ} V^{-1} \]
+ou si $J = \Lambda = \text{diag}(\lambda_1...\lambda_n)$,
+\[ e^{tA} = V e^{t\Lambda}V^{-1} \]
+$\Lambda^k = \text{diag}(\lambda_i^k)$
+$e^{t\Lambda} = \text{diag}(e^{t\lambda_i})$
+\end{prop}
+
+
+\subsubsection{Cas analogique}
+\begin{thm}
+  La solutions de l'équation d'état est:
+\[ (S) :
+\left\{
+\begin{array}{ll}
+\dot{x} &= Ax + Bu, \quad x(0)=x_0 \in \R^n \\
+y & = Cx+Du
+\end{array}
+\right.
+\]
+\[ x(t) = e^{At}x_0 + \int_0^t e^{A(t-\tau)}Bu(\tau)d\tau \]
+\end{thm}
+\begin{proof}
+\begin{align*}
+\dot{x} & = Ax + Bu \\
+e^{-tA}(\dot{x} - Ax) & = e^{-tA}Bu\\
+\int \frac{d}{dt}(e^{-tA}x(t))  & = \int e^{-tA}Bu(t) \\
+e^{-tA}x(t)-e^{-t_0A}x_0 & = \int_{t_0}^t e^{-\tau A}Bu(\tau)d\tau \text{ avec } t_0=0
+\end{align*}
+
+Réciproquement
+\begin{align*}
+\dot{x}(t) & = Ae^{tA}x_0 + \frac{d}{dt} \int_0^t e^{A(t-\tau)}Bu(\tau)d\tau \\
+& = Ae^{tA}x_0 + \int_0^t Ae^{(t-\tau)A} Bu(\tau)d\tau + Bu(t) \\
+& = A(e^{tA}x_0 + \int_0^t e^{(t-\tau)A} Bu(\tau)d\tau) + Bu(t) \\
+& = Ax(t) + Bu(t)
+\end{align*}
+\end{proof}
+
+\subsubsection{Cas discret}
+\begin{thm}
+Dans le cas discret , les solutions de l'équation d'état sont:
+  \[ (S) :
+\left\{
+\begin{array}{ll}
+x_{k+1} &= A_dx_k + B_du_k, \quad x_0 \in \R^n \\
+y_k & = C_dx_k+D_du_k
+\end{array}
+\right.
+\]
+\end{thm}
+\[
+\begin{array}{c|ll}
+k=0 & x_1 = & A_dx_0 + B_du_0 \\
+k=1 & x_2 = & A_dx_1 + B_du_1 \\
+& & A_d^2x_0 + A_dB_du_0 + B_du_1 \\
+& \vdots \\
+\forall k & x_k & = A_d^k x_0 + \sum_{j=0}^{k-1}A_j^{k-1-j}B_du_j
+\end{array}
+\]
+
+
+\subsection{Modèle d'état pour quelques associations de systèmes (TD1)}
+\newpage
+\section{Stabilité}
+
+\subsection{Concept de stabilité}
+\emph{sur le poly}
+On étudie la stabilité d'un système dynamique au sens de \textsc{Lyapunov}.
+
+\begin{defin}
+  Un état d'équilibre du système autonome est un vecteur d'état, noté $x_e\in \K^n$ tel que
+  \[
+    A x_e =0
+  \]
+\end{defin}
+
+
+\begin{defin}
+  Un point d'équilibre $x_e,u_e$ est :
+  \begin{description}
+  \item[ - simplement stable] ~\\
+    si pour tout voisinage $V_1$ de $x_e$, il existe un voisinage $V_2$ tel que $\forall x_0 \in V_2, \forall t, x(t) \in V_1 $
+  \item[- asymptotiquement stable]~\\
+    Si il existe un voisinage $V_1$ de $x_e$ tel que $\forall x_0 \in V_1$, $x(t)\xrightarrow[t\to\infty]{} x_e$
+  \item[- globalement asymptotiquement stable] ~\\
+    si $\forall x_0$, $x(t)\xrightarrow[t\to\infty]{} x_e$.
+  \item[- instable] sinon
+  \end{description}
+\end{defin}
+
+\subsection{Caractérisation des différents type de stabilité}
+Soit $A \in \K^{n\times n}$ une matrice d'évolution d'un système $(\Sigma)$, de valeurs propres $\lambda_1, ..., \lambda_r$ deux à deux disctintes et de multiplicité algébrique (ordre des racines du polynome annulateur, taille des sous-espace propres) respectives $m_1, ... ,m_r $. on note $\nu_1 ,...,\nu_r$ les multiplicité géométrique (taille des sous-espaces caractéristiques \footnote{$\forall k\ge \nu_i , (A-\lambda_iI_n)^k = 0$})
+\begin{thm}[Stabilité analogique]
+  La stabilité de l'origine (apres translation d'état) est donnée par :
+  \begin{itemize}
+  \item si $\exists i $ tq $\Re(\lambda_i)>0 $ alors 0 est \textbf{instable}
+  \item sinon:
+    \begin{itemize}
+    \item si $\forall i , \Re(\lambda_i)<0$ alors 0 est \textbf{globalement asymptotiquement stable}
+    \item si $\exists j, \Re(\lambda_j) = 0 $ et $\nu_j>1$ alors 0 est \textbf{instable}
+    \item si $\forall j, \Re(\lambda_j) = 0 $ et $\nu_j=1$ alors 0 est \textbf{stable sans être asymptotiquement stable}
+    \end{itemize}
+  \end{itemize}
+\end{thm}
+
+\begin{thm}[Stabilité numérique]
+  La stabilité de l'origine (apres translation d'état) est donnée par :
+  \begin{itemize}
+  \item si $\exists i $ tq $|\lambda_i| > 1  $ alors 0 est \textbf{instable}
+  \item sinon:
+    \begin{itemize}
+    \item si $\forall i , |\lambda_i|<1$ alors 0 est \textbf{globalement asymptotiquement stable}
+    \item si $\exists j, |\lambda_j| = 1 $ et $\nu_j>1$ alors 0 est \textbf{instable}
+    \item si $\forall j, |\lambda_j| =1 $ et $\nu_j=1$ alors 0 est \textbf{stable sans être asymptotiquement stable}
+    \end{itemize}
+  \end{itemize}
+\end{thm}
+\section{Commandabilité et observabilité}
+
+Problème : existe-t-il une commande $u(t)$ permettant de passer d'un point de fonctionnement à $t=t_1$ à un autre à $t=t_2$ ?
+
+\subsection{Commandabilité}
+
+\begin{defin}
+  \begin{description}
+  \item[Cas analogique]
+Le système $(\Sigma)$ est dit commandable si \[\forall x(t=t_0)=x_0 \in \K^N \text{ et } \forall x_f=x(t=t_f)\in \K^n\] il existe une commande $u(t)$ continue (par morceaux) qui amène l'état $x(t)$ de l'état $x_0$ à $t=t_0$ vers $x_f$ à $t=t_f$.
+\item[Cas discret]
+  Le système $(\Sigma_d)$ est commandable si \[\forall x_d \in \K^n \text{ et } \forall x_f \in \K^n\] il existe une séquence d'échantillons de commande $[u_0,u_1,\dots u_k]$ qui amène le système $\Sigma_d$ de l'état de $x_d$ pour $k=0$ à $x_f$ pour $k=n$.
+  \end{description}
+\end{defin}
+
+\begin{defin}
+On appelle \textbf{matrice de commandabilité} (dite de Kalman), la matrice notée (obtenue par concaténation)
+\[  \mathcal{C}(A,B) = [B \quad AB \quad A^2B \dots A^{n-1}B] \in \K^{n \times n} \]
+\end{defin}
+
+\begin{thm} Cas analogique ou discret : \\
+
+\textbf{Le système $(\Sigma)$ est commandable} si et seulement si (matrice de rang plein)
+\[ rang( \mathcal{C}(A,B)) = n \]
+
+\textbf{Le système $(\Sigma_d)$ est commandable} si et seulement si
+\[ rang( C(A_d,B_d)) = n \]
+
+\end{thm}
+
+On dit alors que la paire $A,B$ est commandable.
+
+\begin{prop}[Corollaire spécifique aux systèmes monovariables]
+Le systèmes $(S)$ ou $(S_d)$ est commandable si et seulement si
+\[ det (\mathcal{C}(A,B)) \neq 0 \quad (\text{ ou } det (C(A_d,B_d)) \neq 0) \]
+\end{prop}
+
+\begin{proof}
+\[x_k= A_d^k x_0 + \sum_{j=0}^{k-1}A_j^{k-1-j}B_du_j\]
+Pour atteindre n'impotre quel état de $\K^N$, il faut que
+\[ Im\{A_d^{k-1-j}B_d\}_{j=0...k-1} = \K^n \]
+
+De plus, $\forall k \geq n$,
+\[ Im\{A_d^{k-1-j}B_d\}_{j=0...k-1} =  Im\{A_d^{n-1-j}B_d\}_{j=0...n-1} \]
+En effet, d'après le théorème d'Hamilton-Cayley, la matrice $A$ est racine de son polynôme caractéristique : $P_A(A) = 0$ donc $A^n = -\sum_{k=0}^{n-1}a_k A^k$.
+
+Donc :
+\[Im\{A_d^{k-1-j}B_d\}_{j=0...n-1} = \K^n \Leftrightarrow rang(C(A_d,B_d)) = n\]
+\end{proof}
+\subsubsection{Cas discret}
+\begin{prop}
+Soit $x_0\in\K^n, x_f\in\K^n$,
+\[x_f-A_d^nx_0 = \underbrace{[B \quad AB \dots \quad A^{n-1}b]}_{\mathcal{C}(A,B)}\vect {u_{n-1}\\ \vdots\\ u_0}\]
+
+Si $\mathcal{C}(A,B)$ inversible i.e. système commandable, alors on en déduit la séquence de commande permettant de passe de $x_d$ pour $k=0$ à $x_f$ pour $k=n$:
+
+\[
+\vect{u_{n-1}\\ \vdots\\ u_0} = \mathcal{C}(A,B)^{-1}(x_n-A_d^nx_0)
+\]
+\end{prop}
+
+\subsubsection{Cas continu}
+
+\begin{defin}
+On définit le Gramien de commandabilité, noté $W_c\in\R^{n\times n}$
+\[W_c(t_0,t_1) = \int_{t_0}^{t_1} e^{(t_1-\tau)A} BB^T e^{(t_1-\tau)A^T} d\tau = \int_0^{t_1-t_0}e^{\sigma A}BB^Te^{\sigma A^T}d\sigma  \in \K^{n\times n}\]
+\end{defin}
+
+\begin{prop}
+  \begin{itemize}
+  \item $W_c$ est symétrique
+  \item $W_c \ge 0$ ie $W_c \in S_n^+$
+  \end{itemize}
+\end{prop}
+
+\begin{thm}
+Le système $(\Sigma)$ d'équation d'état $\dot{x}=Ax+Bu$ est commandable si et seulement si $W_c$ inversible, c'est-à-dire $W_c > 0$.
+\end{thm}
+
+\begin{proof}~\\
+  \begin{enumerate}[label=\alph*)]
+
+  \item $W_c$ inversible $\implies (\Sigma)$ commandable.
+Soient $x_0,X_1\in\R^n$.
+
+Soit $v(t)$ bornée sur $[t_0,t_1]$ défini par $v(t) = B^Te^{A(t_1-\tau)}W_c(t_0,t_1)^{-1}(x_1-e^{A(t_1-t_0)}x_0)$,
+
+$v(t)$ solution de $\dot{\overline{x}} = A\overline{x}+Bv,\overline{x}(t_0) = X_0$
+
+On a \begin{align*}
+\overline{x}(t_1) & = e^{A(t_1-t_0)}x_0 + \int_{t_0}^{t_1}e^{A(t_1-\tau)}Bv(\tau)d\tau \\
+& = e^{A(t_1-t_0)}x_0 + \int_{t_0}^{t_1}e^{A(t_1-\tau)}BBe^{A^T(t_1-\tau)}W_c(t_0,t_1)^{-1}(x_1-e^{A(t_1-t_0)}x_0)d\tau + W_c(t_0,t_1)W_c(t_0,t_1)^{-1}(x_1-e^{A(t_1-t_0)}x_0), \forall x_1 \in \R^n \\
+& = x_1
+\end{align*}
+
+\item  $(\Sigma)$ commandable $\implies$  $W_c$ inversible. Montrons que si $W_c$ non inversible, alors $(\Sigma)$ non commandable.
+
+$\exists y \in \R^n \setminus \{0\}$ tel que $W_cy=0$
+\begin{align*}
+\Leftrightarrow & y^TW_c y = 0 \\
+\Leftrightarrow & \int_{t_0}^{t_1}y^T e^{A\tau}BB^Te^{A^T\tau}yd\tau = 0 \\
+\Leftrightarrow & \int_{t_0}^{t_1}\left|B^Te^{(t_1-\tau)A^T}y\right|^2d\tau =0
+\Rightarrow & B^Te^{A^T\tau}y=0 \forall\tau\in [t_0,t_1] \\
+\Leftrightarrow & y^Te^{A\tau}B=0
+\end{align*}
+
+Soit $u$ tel que $\dot{x}=Ax+Bu$, $x(t_0)=0$
+\[x(t_1) = \int_{t_0}^{t_1}e^{A(t_1-\tau)}Bu(\tau)d\tau \]
+\[ \Rightarrow y^Tx(t_1)=0 \]
+
+Or si $y\in\R^n \setminus \{0\}$ il existe $x_1\in\R^n$ tel que $y^Tx_1\neq 0$ par exemple $x_1=y$ donc $\forall u, x(t_1) \neq x_1$ $(\Sigma)$ non commandable.
+\end{enumerate}
+\end{proof}
+
+\begin{prop}[Gramien asymptotique]
+$W_c(0,\infty)$ solution de l'équation de Lyapumov $AP + PA^T+BB^T=0$
+\end{prop}
+\paragraph{Remarque}
+Soit $A \in \K^{n\times n}$ et $t\in \R$  on montre avec le théorème de Cayley-Hamilton  que :
+
+\[
+ e^{tA} = \sum_{j=0}^{n-1} \phi_j(t)A^j \text{ avec } \phi_j(t) \text{ fonction  analytique de $\R$, ie DSE.}
+\]
+
+
+On a alors:
+
+\begin{align*}
+  x(t) &=  e^{tA}x_0+ \int_0^t e^{(t-\tau)A}Bu(t)d\tau\\
+       &=e^{tA}x_0 +  \int_0^t \sum_{j=0}^{n-1} \phi_j(t-\tau)A^j B u(t)d\tau \\
+       &=e^{tA}x_0 +  \sum_{j=0}^{n-1} \int_0^t \phi_j(t-\tau)A^j B u(t)d\tau \\
+       &=e^{tA}x_0 +  \sum_{j=0}^{n-1}  A^jB  \underbrace{\int_0^t \phi_j(t-\tau)u(t)d\tau}_{\mu_j}\\
+       &= e^{tA}x_0 + \mathcal{C}(A,B) \vect{\mu_0 \\ \vdots\\ \mu_{n-1}}
+\end{align*}
+
+\paragraph{Exercice}
+\begin{it}
+  Soit $A\in\K^{3\times3}$ diagonalisable. Calculer $e^{tA}$ et en déduire $\phi_0,\phi_1,\phi_2$ tel que \[e^{tA}=\sum_{j=0}^{2}\phi_jA^j\]
+\end{it}
+
+
+\subsection{Observabilité}
+
+\begin{defin}
+  Le système $(\Sigma_d)$ est observable si $\forall x_0 \in \R^n$ à
+    $t=t_0$, il est possible de déterminer le vecteur d'état ($x(t)$ ou $x_d$, uniquement en se servant de l'entrée $u(t)$ ou $u_k$ et de la sortie $y(t)$ ou $y_k$.
+\end{defin}
+
+\begin{defin}
+On appelle matrice d'observabilité (dite de Kalman), la matrice
+\[ \mathcal{O}(A,C) = \left[ \begin{array}{c}
+C \\
+CA \\
+\vdots \\
+CA^{n-1}
+\end{array} \right]
+\in \K^{n\times n}
+\]
+\end{defin}
+
+\begin{thm}[Critère d'Observabilité de Kallman]
+Le systèmes $(\Sigma)$ ou $(\Sigma_d)$ est observalble si et seulement si
+\[ rang(\mathcal{O}(A,C)) = n \quad  \text{ ou }rang(\mathcal{O}(A_d,C_d)) = n \]
+\end{thm}
+
+\begin{prop}[Corollaire dans le cas SISO]
+\[rang(\mathcal{O}(A,C)) = n \Leftrightarrow det(\mathcal{O}(A,C)) \neq 0 \]
+\end{prop}
+
+\begin{proof}
+Dans le cas discret, \[y_k = C_dA_d^kx_0 + \sum_{j=0}^{k-1}C_dA_d^{k-1-j}B_du_j+D_du_k\]
+\[ \left[ \begin{array}{c} C \\ CA \\ \vdots \\CA^{k-1} \\ \end{array} \right] x_d = \left[ \begin{array}{c} y_0 \\ y_1 \\ \vdots \\ y_k \end{array} \right] - M \left[ \begin{array}{c} u_0 \\ u_1 \\ \vdots \\ u_{k-1} \end{array} \right] \]
+avec \[ M = \left[
+\begin{array}{ccccc}
+0 \\
+CB & \ddots\\
+CAB & \ddots & \ddots \\
+\vdots & \ddots & \ddots & \ddots \\
+CA^{k-2} & \hdots & CAB & CB & 0
+\end{array}
+\right]
+\]
+
+$k\geq n-1$
+
+$x_d$ s'obtient si et seulement si $rang(\mathcal{O}(C,A))=n$
+\end{proof}
+
+
+
+\begin{prop}
+ Les propriétés de commandabilité et d'observabilité sont invariantes par changement de variable.
+\end{prop}
+
+\begin{proof}
+  Soit $(\Sigma) =
+  \begin{cases}
+    \dot{x} =Ax+Bu \\
+    y = Cx+Du
+  \end{cases}$
+  et $T\in \K^{n\times n}$ inversible et $z$ tel que $x(t)= Tz(t)$. Alors:
+
+\[
+  \begin{cases}
+    \dot{z} = \underbrace{T^{-1}AT}_{\tilde{A}} + \underbrace{T^{-1}B}_{\tilde{B}}u\\
+     y = \underbrace{CT}_{\tilde{C}}z + Du
+  \end{cases}
+\]
+
+Alors on a la matrice de commandabilité :
+\[
+\mathcal{C}(\tilde{A},\tilde{B}) = [ T^{-1}B T^{-1}ATT^{-1}B \dots ] = T^{-1} \mathcal{C}(A,B)
+\implies rg(\mathcal{C}(\tilde{A},\tilde{B})) = rg(\mathcal{C}(A,B))
+\]
+De même :
+\[
+\mathcal{O}(\tilde{C},\tilde{A}) = \mathcal{O}(C,A)T \implies rg(\mathcal{O}(\tilde{C},\tilde{A}))=rg(\mathcal{O}(C,A))
+\]
+
+\end{proof}
+
+\section{Relation modèle d'état / fonction de transfert}
+
+\subsection{Modèle d'état vers fonction de transfert}
+
+\[ u(t) \rightarrow \boxed{(S)} \rightarrow y(t) \]
+\[ (S) :
+\left\{
+\begin{array}{ll}
+\dot{x} &= Ax + Bu, \quad x(0)=x_0 \in \R^n \\
+y & = Cx+Du
+\end{array}
+\right.
+\]
+
+Soient $Y(p) = L\{y(t)\}, U(p) = L\{u(t)\}, p\in \C$. $X(p) = L\{x(t)\} = [X_1(p) \dots X_n(p)]^T$
+
+Alors on a
+\begin{align*}
+L\{\dot{x}\} & = pX(p) - x_0 \\
+pX(p) - x_0 & = AX(p) + BU(p) \\
+(p1_n-A)X(p) & = BU(p) + x_0 \\
+X(p) & = (p1_n-A)^{-1}BU(p) + (p1_n-A)^{-1}x_0 \\
+\intertext{ Remarque : $X(p) = L\{\int_0^t e^{-A(t-\tau)}Bu(\tau)d\tau\} + L\{e^{At}x_0\}$}
+Y(p) & = CX(p) + DU(p) \\
+Y(p) & = [C(p1_n-A)^{-1}B+D]U(p) + C(p1_n-A)^{-1}x_0 + DU(p)
+\end{align*}
+
+Soit $G(p)$ la fonction de transfert entre $u$ et $y$.
+\[\boxed{G(p) = C(p1_n-A)^{-1}B+D}\]
+
+\begin{prop}
+Les valeurs propres de A (les modes de (S)) sont les pôles de la fonction de transfert $G(p)$.
+\end{prop}
+
+\begin{proof}
+\[(p1_n-A)^{-1}=\frac{1}{det(p1_n-A)}Adj(p1_n-A)\]
+Or, $P_A(p) = det(p1_n-A)$. $Adj(p1_n-A)\in\K^{n\times n}[X]$ Les éléments de $Adj(p1_n-A)$ sont des polynômes d'ordre $n-1$
+\[G(p) = \frac{CAdj(p1_n-A)B+DP_A(p)}{P_A(p)}\]
+\end{proof}
+
+\paragraph{Remarque} Les fonctions de transferts entrées/sorties sont indépendantes du choix du vecteur d'état.
+
+
+\subsection{Fonction de transfert / équation différentielle vers modèle d'état}
+
+\emph{Voir polycopié}
+
+
+\subsubsection*{Forme modale (pôles simples)}
+\begin{align*}
+G(p) & = \frac{p^2-1}{(p+1)(p+2)(p+3)}\\
+& = \frac{\alpha_1}{p^2-1} + \frac{\alpha_2}{p+2} + \frac{\alpha_3}{p+3} \\
+(S) & \left\{ \begin{array}{cc}
+\dot{x_m} & = \left[\begin{array}{ccc}
+-1 & & \\
+& -2 & \\
+&  & -3
+\end{array} \right] x_m +
+\left[\begin{array}{ccc}
+\alpha_1 \gamma_1 \\
+\alpha_2 \gamma_2 \\
+\alpha_3 \gamma_3
+\end{array} \right] u \\
+y & = [1/\gamma_1 \quad 1/\gamma_2 \quad 1/\gamma_3]x_m+0, \quad \forall \gamma_i \neq 0
+\end{array}
+\right.
+\end{align*}
+
+\subsection{Changement de base vers une forme canonique}
+\subsubsection{Forme canonique de commandabilité}
+\begin{defin}
+  Pour un système $(\Sigma)$ la forme canonique de commandabilité est :
+\[  \begin{array}{ll}
+    A_c =
+    \begin{bmatrix}
+      0 & 1 & 0 & \dots & 0 \\
+      \vdots  & \ddots & \ddots &\ddots & \vdots \\
+      \vdots  &   & \ddots &\ddots & 0 \\
+      0 & \cdots & \cdots  &0 &1 \\
+      -a_0 &-a_1 & \cdots &-a_{n-2} &-a_{n-1} \\
+    \end{bmatrix}
+&  B_c =
+    \begin{bmatrix}
+      0 \\
+      \vdots \\
+      \vdots \\
+      0 \\
+      1
+    \end{bmatrix}  \\
+C_c =
+    \begin{bmatrix}
+     \quad b_0 & \quad b_1& \cdots & \quad b_{n-2} & \quad b_{n-1}
+    \end{bmatrix} &
+D_c = D
+    \end{array}
+  \]
+  $A_c$ est une matrice compagnon  horizontale de type I .
+
+\end{defin}
+\paragraph{Détermination de la matrice de passage}~\\
+On cherche M tel que $M^{-1}AM = A_c $ et $ M^{-1}B = B_c$ . En décrivant $M$ par ses colonnes : $M =\vect{ m_1 & ... & m_n}$ on a :
+\[
+m_n = B
+\]
+et \[\left\{
+  \begin{array}{rl}
+    m_{n-1}-a_{n-1}B &= AB \\
+    m_{n-2}-a_{n-2}B &= Am_{n_1}\\
+    &\vdots\\
+    m_1- a_1 B &= A m_2\\
+    -a_0B &= Am_1
+  \end{array}\right.
+\]
+Soit encore :
+\[
+  \begin{cases}
+    m_{n-1} &= (A+a_{n-1}I_n)B \\
+    m_{n-2} &= (A^2+a_{n-1}A +a_{n-2}I_n)B \\
+&\vdots\\
+      m_{1}  &= (A^{n-1}+a_{n-1}A^{n-2}+ ... + a_1A + a_0 I_n)B
+  \end{cases}
+\]
+\begin{prop}
+  La matrice $M$ est une matrice de changement de base vers la forme canonique de commandabilité si et seulement si:
+   \[
+     rg(M)) = rg(\vect{B & AB & \cdots & A^{n-1} &B}) =rg(\mathcal{C}(A,B) = n
+   \]
+   Cette matrice est donc inversible ssi le système est commandable.
+\end{prop}
+
+
+
+\subsubsection{Forme canonique d'observabilité}
+
+\begin{defin}
+  Pour un système $(\Sigma)$ la forme canonique de commandabilité est :
+\[  \begin{array}{ll}
+    A_c =
+    \begin{bmatrix}
+      -a_{n-1} & 1 & 0 & \dots & 0 \\
+      -a_{n-2} & 0 & \ddots &\ddots &\vdots \\
+      \vdots        & \vdots  & \ddots & 1& 0 \\
+      -a_{1} & 0 & \cdots  &0 &1 \\
+      -a_0 & 0 & \cdots & \cdots & 0 \\
+    \end{bmatrix}
+&  B_c =
+    \begin{bmatrix}
+      b_{n-1} \\
+      b_{n-2} \\
+      \vdots \\
+      b_{1} \\
+      b_{0}
+    \end{bmatrix}  \\
+C_o =
+    \begin{bmatrix}
+     \quad1_{~}&\quad0& \cdots &  \cdots &  0
+    \end{bmatrix} &
+D_o = D
+    \end{array}
+  \]
+  $A_c$ est une matrice compagnon verticale de type I .
+
+\end{defin}
+
+\paragraph{Détermination de la matrice de passage}~\\
+On cherche M tel que $M^{-1}AM = A_o $ et $ CM = C_oM$ . Soit egalement:
+\[
+  \begin{cases}
+    M^{-1}A = A_oM^{-1}\\
+    C = C_0M^{-1}
+  \end{cases}
+\]
+On pose $T=M^{-1}$ alors , en décrivant la matrice suivant ces $n$ lignes
+$T= vect{t_1 \\ t_2 \\ \vdots \\ t_n\\ }$
+\[
+t_1 = C
+\]
+et
+\[
+  \begin{cases}
+    t_2 &= C(A+a_{n-1}I_n) \\
+    t_3 &= C(A^2+a_{n-1}A +a_{n-2}I_n) \\
+&\vdots\\
+      t_{n}  &= C(A^{n-1}+a_{n-1}A^{n-2}+ ... + a_1 I_n)
+      -a_0 C =t_nA
+    \end{cases}
+\]
+
+\begin{prop}
+  La matrice $T$ est une matrice de changement de base vers la forme canonique d'observabilité si et seulement si
+  \[
+    rg(T) = rg(\vect{C& CA& ...&  CA^{n-1}}^T) =rg(\mathcal{O}(C,A) = n
+  \]
+  Cette matrice est donc inversible ssi le système est commandable.
+\end{prop}
+
+
+\subsubsection{forme modale}
+
+
+\subsection{Dualité observation-commande}
+\[ (S) :
+\left\{
+\begin{array}{ll}
+\dot{x} &= Ax + Bu, \quad x(0)=x_0 \in \R^n \\
+y & = Cx+Du
+\end{array}
+\right.
+\]
+
+\[G(s) = C(s1_n-A)^{-1}B+D \in \R[X]\]
+$G(s)$ est scalaire, donc en transposant ($G(s)=G(s)^T, D=D^T$) :
+\[G(s) = B^T(s1_n-A)^{-1}C^T+D \in \R[X]\]
+\begin{defin}
+On a donc  forme duale du modèle d'état (monovariable uniquement).
+$\exists \tilde{x}\in \R^n$ tel que
+\[ (S) :
+\left\{
+\begin{array}{ll}
+\dot{\tilde{x}} &= A^T\tilde{x} + C^Tu \\
+y & = B^T\tilde{x}+Du
+\end{array}
+\right.
+\]
+
+\end{defin}
+\subsection{Commandabilité et observabilité pour les formes canoniques}
+
+Une forme canonique :
+\begin{itemize}
+\item de commandabilité est toujours commandable, l'observabilité est à étudier
+\item d'observabilité est toujours observable, la commandabilité est à étudier\\
+\end{itemize}
+
+
+Cas des formes modales :
+
+\[
+(S) : \left\{
+\begin{array}{rl}
+\left[
+\begin{array}{c}
+\dot{\xi_1} \\
+\vdots \\
+\dot{\xi_n}
+\end{array}
+\right]
+& = \left[
+\begin{array}{ccc}
+\lambda_1 \\
+&\ddots \\
+&& \lambda_n
+\end{array}
+\right]
+.
+\left[
+\begin{array}{c}
+\xi_1 \\
+\vdots \\
+\xi_n
+\end{array}
+\right]
++
+\left[
+\begin{array}{c}
+z_1 \\
+\vdots \\
+z_n
+\end{array}
+\right]
+u \\
+y & = [\gamma_1 \dots \gamma_n]
+\vect{z_1 \\ \vdots \\z_n}
++ D_n
+\end{array}
+\right.
+\]
+$(S)$ est commandable (resp. observable) si et seulement si tous les modes sont commandables (resp. observables)
+
+Si dans la matrice d'application exprimée dans la base modale, un des coefficients est nul, alors le mode correspondant, donc le système, n'est pas commandable. Il en est de même pour la matrice d'observation et l'observabilité.\\
+
+Cas des formes de Jordan : (exemple)
+\[ \dot{x}= \begin{bmatrix}
+
+    \lambda_1 & 1& \\
+    & \lambda_1 & \\
+    & &\lambda_1 \\
+    \end{bmatrix}
+x + \vect{.\\.\\.\\} u, \quad u \in \R
+\]
+Ce n'est pas un système commandable.
+
+Dans un système monovariable ($y\in\R, u\in\R$), si un mode multiple est associé à au moins 2 blocs de Jordan, alors ce mode n'est pas commandable / observable.
+
+\section{Commande  par retour d'état}
+
+\[ (S) :
+\left\{
+\begin{array}{ll}
+\dot{x} &= Ax + Bu, \quad x(0)=x_0 \in \R^n \\
+y & = Cx+Du
+\end{array}
+\right.
+\]
+
+Étant donné un système en boucle ouverte où $A$ peut posséder des modes / pôles instables, faiblements amortis, lents,... le but est de se donner un ensemble $\{ \lambda_1^{des}, \dots, \lambda_n^{des}\}\in\C^n$ auto-conjugué, et de chercher une loi de commande $u(t)$ permettant d'obtenir en boucle fermée un système dont les pôles / modes sont  $\{ \lambda_1^{des}, \dots, \lambda_n^{des}\}$.
+
+\paragraph{Hypothèses : } $x(t) = \vect{x_1(t) \\ \vdots \\ x_n(t)} \in \K^n$.
+
+On suppose que les $x_k(t)$ sont mesurables, i.e. $x(t)$ est mesurable.\\
+
+\begin{defin}
+Une loi de commande par retour d'état est une expression du type
+\[u(t) = \kappa (x(t)) \text{ où } \kappa : \begin{array}{ll}
+\R^n & \rightarrow \R \\
+x(t) & \mapsto u(t) = \kappa(x(t))
+\end{array}
+\]
+Dans le cas d'une loi de commande linéaire, la ldc par retour d'état est une expression du type :
+\[ u(t) = Kx(t) \text{ où } K\in \R^{1\times n} \]
+$K$ est alors appelé gain du rectour d'état.
+
+Une ldc linéaire par retour d'état et consigne est une expression du type :
+\[ u(t) = Kx(t) + \eta e(t) \]
+où $K\in \R^{1\times n}$ gain du retour d'état, $\eta \in \R$ terme de précommande et $e(t)$ signal de consigne (ou de référence).
+\end{defin}
+
+\subsection{Mise en équation (cas continu) :}
+\[ (\Sigma) :
+\left\{
+\begin{array}{ll}
+\dot{x} &= Ax + Bu, \quad x(0)=x_0 \in \R^n \\
+y & = Cx+Du
+\end{array}
+\right.
+\]
+
+\begin{align*}
+\intertext{Avec $u=Kx+\eta e$,}
+\dot{x} & = Ax + BKx + \eta Be \\
+& = (A+BK)x+\eta Be
+\intertext{Posons $A_{bf} = A+BK \in \K^{n \times n}$ matrice d'évolution en bf, $B_{bf} = \eta B \in \K^{n\times 1}$ matrice d'application du signal de consigne}
+\dot{x} & = A_{bf}x + B_{bf} e
+\end{align*}
+
+Donc :
+ \[
+x(t)  e^{tA_{bf}}x_0 + \int_0^t e^{(t-\tau)A_{bf}}B\eta e(\tau)d\tau
+\]
+
+\paragraph{Remarque} le Dynamisme de $x(t)$ est caractérisé par les valeurs propres de $A_{bf}$. $K$ permet de les régler sous certaines conditions.
+
+
+\subsection{Calcul du gain $K$ du retour d'état}
+
+On souhaite trouver $K \in \K^{1 \times n}$ tel que $\{ \lambda_1^{d}, \dots, \lambda_n^{d}\}$ correspondent aux valeurs propres de $A_{bf} = A+BK$.\\
+
+\textbf{Hypothèse : } $(\Sigma)$ est commandable, i.e. $\mathcal{C}(A,B)$ est inversible.\\
+
+Soit $P_A(\lambda) = det(\lambda 1_n-A) = \lambda^n + a_{n-1} \lambda^{n-1} + ... + a_1 \lambda + a_0$.
+
+Soit $\Pi_d(p)$ le polynôme caractéristique désiré en boucle fermée.
+
+\begin{align*}
+\Pi_d(\lambda) & = \prod_{i=1}^n(\lambda-\lambda_i^d) \\
+& = \lambda^n + \alpha_{n-1}\lambda^{n-1} + ... + \alpha_1\lambda + \alpha_0 , \alpha_k\in\R
+\end{align*}
+
+Ainsi, on cherche $K=[k_0, k_1,\dots,k_n]$ tel que
+\begin{align*}
+P_{A_{bf}}(\lambda) & = det(\lambda 1_n-A_{bf}) \\
+& = det(\lambda 1_n - A - BK) \\
+& = \Pi_d(\lambda)
+\end{align*}
+
+Cette équation polynomiale équivaut à un système linéaire de $n$ équations à $n$ inconnues $k_0, k_1,\dots,k_n$.
+
+On identifie terme à terme les monômes de $\Pi_d(\lambda)$ et $P_{a_{bf}}(\lambda)$ pour obtenir les $n$ équations.
+
+\subsubsection{Obtention de $K$ à partir de la forme canonique de commandabilité}
+
+Soit $M \in \K^{n\times n} $ la matrice de changement de coordonnées vers la forme canonique de commandabilité tel que :
+\[ (S) :
+\left\{
+\begin{array}{ll}
+\dot{x_c} &= A_cx + B_cu\\
+y & = C_cx+D_cu
+\end{array}
+\right.
+\]
+où \[ A_c = \left[ \begin{array}{cccc}
+0 & 1 \\
+& & \ddots \\
+& & & 1 \\
+-a_0 & \dots & & -a_{n-1}
+\end{array}\right], B_c = \vect{0 \\ \vdots \\ 0 \\ 1}, x = Mx_c \]
+
+\begin{align*}
+u(t) & = Kx(t) + \eta e(t) \\
+u(t) & = KMx_c(t) + \eta e(t)
+\end{align*}
+
+Posons $\tilde{K} = KM = [\tilde{k_1}\dots\tilde{k_{n-1}}]$. Ainsi,
+\begin{align*}
+\dot{x_c} & = A_c x_c + B_c \tilde{K}x + \eta B_c e \\
+& = \tilde{A_{bf}}x_ + \eta B e \\
+\tilde{A_{bf}} & =
+\left[ \begin{array}{cccc}
+0 & 1 \\
+& & \ddots \\
+& & & 1 \\
+-a_0 & \dots & & -a_{n-1}
+\end{array}\right] +
+\vect{0 \\  \vdots \\ 0 \\ 1}.[\tilde{k_0}...\tilde{k_{n-1}}] \\
+& = \left[ \begin{array}{cccc}
+0 & 1 \\
+& & \ddots \\
+& & & 1 \\
+-a_0 + \tilde{k}_0 & \dots & & -a_{n-1} +\tilde{k}_{n-1}
+\end{array}\right]\\
+P_{\tilde{A_{bf}}}(\lambda) & = det(\lambda1_n - \tilde{A_{bf}}) \\
+& = \lambda^n + (a_{n-1}-\tilde{k}_{n-1})\lambda^{n-1} + \dots + (a_0-\tilde{k}_0)
+\end{align*}
+
+Rappel : si $P_A(\lambda) = det (\lambda1_n -A)$, $ P_{T^{-1}AT} = det(T^{-1}) P_A(\lambda) det(T)$.
+
+En identifiant terme à terme $ P_{\tilde{A_{bf}}}(\lambda)$ avec $\Pi_d(\lambda)$, on obtient
+\begin{align*}
+a_{n-1} - \tilde{k}_{n-1} & = \alpha_{n-1} \\
+\vdots \\
+a_{1} - \tilde{k}_{1} & = \alpha_{1} \\
+a_{0} - \tilde{k}_{0} & = \alpha_{0} \intertext{ d'où $\tilde{k}_j = a_j - \alpha_j, j=0...n-1$ et enfin, $K=\tilde{K}M^{-1}$}
+\end{align*}
+
+\subsubsection{formule d'Ackerman}
+\begin{thm}[Formule d'Ackerman]
+\[ K = [0 \dots 0,1].\mathcal{C}(A,B)^{-1}\Pi_d(A) \]
+\end{thm}
+\begin{proof}
+  Preuve par récurrence, la preuve en dimension 3 est \og laissé en exercice au lecteur\fg{}.
+\end{proof}
+
+\paragraph{Remarque} : il n'y a pas besoin de calculer l'inverse de $\mathcal{C}(A,B)$ dans son intégralité, mais seulement la dernière ligne, c'est-à-dire seulement la dernière colonne de la matrice des cofacteurs.
+
+
+
+\subsection{Calcul du terme de précommande $\eta$}
+\[ (S) :
+\left\{
+\begin{array}{ll}
+\dot{x_c} &= (A+BK) x + B\eta u\\
+y & = (C+DK) x+ B\eta u
+\end{array}
+\right.
+\]
+
+Soit $G_{bf}(p) = ((C+DK)(p1_n-A-BK)^{-1}B+D)\eta$
+
+Erreur statique nulle $\Leftrightarrow G_{bf}(0)=1$ (gain statique unitaire en bf)
+\[ \eta = \frac{-1}{(C+DK)(A+BK)^{-1}B-D} \]
+
+Remarque : en cas de boucle mal posée (quand le dénominateur est nul), on peut mettre en série du système de départ un filtre passe-bas.
+
+\subsection{Poursuite de trajectoire}
+\[ (S) :
+\left\{
+\begin{array}{ll}
+\dot{x_c} &= A_cx + B_cu\\
+y & = C_cx+D_cu
+\end{array}
+\right.
+\]
+$\exists M \in \K^{n\times n}$ inversible tel que
+\[M^{-1}AM = A_c = A_c = \left[ \begin{array}{cccc}
+0 & 1 \\
+& & \ddots \\
+& & & 1 \\
+-a_0 & \dots & & a_{n-1}
+\end{array}\right] \qquad M^{-1}B = B_c = \vect{0 \\ \vdots \\ 0 \\ 1}\]
+\[ x_c = \vect{z_1\\ \vdots \\ z_n}, \quad x = Mx_c\]
+
+\subsubsection{Forme canonique de commandabilité}
+\[\vect{ \dot{z_1} \\ \vdots \\ \dot{z_n}} = \left[ \begin{array}{cccc}
+0 & 1 \\
+& & \ddots \\
+& & & 1 \\
+-a_0 & \dots & & a_{n-1}
+\end{array}\right] . \vect{z_1\\ \vdots \\ z_n} + \vect{0 \\ \vdots \\ 0 \\ 1}u\]
+
+Posons $a = [-a_0 \dots a_{n-1}]$, puis $v(t) = -a^Tx_c(t)+u(t)$, on obtient la forme de Brunowsky :
+\[ \vect{ \dot{z_1} \\ \vdots \\ \dot{z_n}} = \vect{z_2\\ \vdots \\ z_n \\ v} \]
+On parle aussi d'une chaîne d'intégrateurs en cascade.
+
+\subsubsection{Application au suivi de trajectoire}
+Soit $y_d(t)$ une trajetoire désirée en boucle fermée.
+
+Si $y(t) = z_1(t)$ (par exemple), $\dots y^{(n)}(t) = z_1^{(n)}(t) = v$,
+
+soit $\epsilon(t) = y(t) - y_d(t) = z_1(t) - y_d(t),\dots,\epsilon^{(n)}(t) = v(t) - y_d^{(n)}(t)$
+
+On pose \[v(t) = y_d^{(n)}(t) + k_{n-1}(y^{(n-1)}(t)-y_d^{(n-1)}(t)) + ... + k_1 (y^{(1)}(t)-y_d^{(1)}(t)) + k_0(y-y_d)\]
+où les racines du polynôme caractéristique $p^n + k_{n-1}p^{n-1} + k_1p+k_0$ sont à partie réelle strictement négative, alors
+\[\lim_{t\rightarrow \infty} y(t) = y_d(t) \]
+
+Enfin, \[u(t) = v(t) + a^Tx_c\]
+
+\newpage
+\section{Observateur}
+\emph{CF polycopié}
+\subsection{Concept}
+\[ (S) :
+\left\{
+\begin{array}{ll}
+\dot{x} &= Ax + Bu,\quad x(0) = x_0 \in \R^n \\
+y & = Cx+Du
+\end{array}
+\right.
+\]
+
+Seul $y$ est mesuré à chaque instant par un capteur.\\
+
+L'observateur donne une estimation du vecteur d'état du système telle que :
+
+$\forall \epsilon > 0,$ arbitrairement petit, $\exists T > 0$ tel que
+\[ \forall t > T, ||x(t) - \hat{x}(t) || < \epsilon \]
+
+But: faire la synthèse du système $(O)$ sous forme d'état, appelé observateur du système $(S)$.
+
+\subsection{Observateur asymptotique (extension de l'observateur de Luenberger)}
+
+Hypothèse : système $(S)$ observable
+
+\begin{defin}
+Un observateur asymptotique d'ordre $n$ est donné par le modèle d'état \[\dot{\hat{x}}=A\hat{x}+Bu+L(y- \hat{y}), \quad \hat{x}(0)=\hat{x}_0\in\R^n\] où $\hat{x}\in \R^n$ est le vecteur d'état quelconque de l'observateur et $L\in\R^{n\times 1}$ est le gain de l'observateur asymptotique. $L(y- \hat{y})$ correspond à un terme de correction, et $\epsilon_y=y-\hat{y}$ est appelé innovation.
+\end{defin}
+
+\textbf{\textbf{But :}} calculer $L\in\R^{n\times 1}$ tel que $\lim_{t\rightarrow\infty} ||x(t) - \hat{x}(t) || = 0$ \\
+
+Soit $\epsilon_x(t) = x(t)-\hat{x}(t)\in\R^n$, on a
+\[\dot{\epsilon_x}(t) = \dot{x}(t)-\dot{\hat{x}}(t) = Ax(t)+Bu(t)-(A\hat{x}(t)+Bu(t)+L(y(t)-\hat{y}(t))\]
+
+Or, $y(t) = Cx(t) + Du(t)$ et $\hat{y}=C\hat{x}(t) +Du(t)$, donc $y-\hat{y} = C\epsilon_x$
+\[\dot{\epsilon_x}(t) = (A-LC)\epsilon_x(t)\]
+
+$\epsilon_x(0) = x(0) - \hat{x}(0) = x_0 - \hat{x_0}$ avec $x_0$ inconnu et $\hat{x_0}$ choisi arbitrairement par l'utilisateur.
+
+\[\epsilon_x(t) = e^{(A-LC)t}(x_0-\hat{x}_0)\]
+
+$A-LC$ : dynamique d'observation.
+
+Si les valeurs propres de $A-LC$ sont à partie réelle strictement négative, alors \[\lim_{t\to\infty} \epsilon_x(t) = 0 \quad \text{i.e.} \quad \lim_{t\to\infty} \hat{x}(t) = x(t)\]
+
+Ainsi, on se donne un polynôme caractéristique désiré pour la dynamique d'observation
+\[ \Pi_o(\lambda) = \Pi_{i=1}^n (\lambda-\lambda_i^o) \]
+
+avec $\{\lambda_j\}_{j=1..n}$ auto-conjugué (stable par conjugaison) et $\forall j, Re(\lambda_j)<0$
+
+\[ \Pi_o(\lambda) = \lambda^n + \sum_{i=0}^{n-1} \gamma_i \lambda^i, \quad \gamma_k\in\R \]
+
+Soit $L=[l_1 \quad ... \quad l_{n-1}]^T$, le calcul de $L$ s'appuie sur la résolution du système linéaire (de type $ML=b$) issu de l'identification terme à terme des monômes de $P_{A-LC}(\lambda) = det (\lambda 1_n - (A-LC))$ avec ceux de $\Pi_o(\lambda)$.
+
+Soit $T\in\R^{n\times n}$ inversible tel que $x(t) = Tx_0(t)$ conduit à la forme canonique d'observabilité, c'est-à-dire avec
+\[
+\left\{
+\begin{array}{ll}
+\dot{x}_0 & = \left[ \begin{array}{cccc}
+-a_{n-1} & 1 \\
+& & \ddots \\
+& & & 1 \\
+-a_0 & \dots & & 0
+\end{array}\right] x_0 + \vect{b_{n-1} \\ \vdots \\ b_0}u \\
+y(t) &= [1 \quad 0 ... 0]x+Du
+\end{array}
+\right.
+\]
+
+Or, $\dot{\hat{x}} = A\hat{x} + Bu + L(y-\hat{y})$ et $\hat{y} = C\hat{x}$.
+
+Posons $\hat{x}_0$ tel quel $\hat{x} = T\hat{x}_0$
+\begin{align*}
+& \left\{
+\begin{array}{ll}
+T\dot{\hat{x}}_0 & = AT\hat{x}_0 + Bu + L(y-\hat{y}) \\
+\hat{y} & = CT\hat{x} + Du
+\end{array}
+\right. \\
+\Leftrightarrow & \left\{
+\begin{array}{ll}
+\dot{\hat{x}}_0 & = A_0\hat{x}_0 + B_0u + T^{-1}L(y-\hat{y}) \\
+\hat{y} & = C_0\hat{x} + D_u
+\end{array}
+\right.
+\end{align*}
+où $ A_0 = T^{-1}AT, B_0 = T^{-1}B, C_0 = CT$
+
+Posons $\tilde{L} = T^{-1}L = [\tilde{l}_{n-1} ... \tilde{l}_0]^T$
+\[ \dot{\tilde{\epsilon}}_x = (A-\tilde{L}C_0)\epsilon_x\]
+
+Calculons $A_0-\tilde{L}C_0 =
+\left[ \begin{array}{cccc}
+-a_{n-1}-\tilde{l}_{n-1} & 1 \\
+\vdots & 0 & \ddots \\
+\vdots & & & 1 \\
+-a_0-\tilde{l}_0   & & & 0
+\end{array}\right]$
+
+Son polynôme caractéristique est $P_{A_0-\tilde{L}C_0}(\lambda) = \lambda^n + (a_{n-1}\tilde{l}_{n-1})\lambda^{n-1} + ... + (a_0 + \tilde{l}_0)$ (déduit de la forme de la matrice compagnon).\\
+
+En identifiant terme à terme les monômes de $\Pi_d(\lambda)$ avec $P_{A-LC}(\lambda)$ : $\tilde{l}_j = \gamma_j - a_j$ d'où on en déduit $L = T\tilde{L}$.
+
+\subsection{Correcteur par retour de sortie - Correcteur par retour d'état sur l'état reconstruit}
+
+\[ (S) :
+\left\{
+\begin{array}{ll}
+\dot{x} &= Ax + Bu,\quad x(0) = x_0 \in \R^n \\
+y & = Cx+Du
+\end{array}
+\right.
+\]
+
+Loi de commande par retour d'état et consigne :
+\[ u(t) = Kx(t) + \eta e(t) \] où $x$ était supposé entièrement mesurable.\\
+
+En pratique on utilisera
+\[
+(C) \left\{
+\begin{array}{ll}
+\dot{\hat{x}} &= Ax + Bu + L(y-\hat{y})\\
+\hat{y} & = C\hat{x}+Du
+\end{array}
+\right.
+\]
+\[u(t) = K\hat{x}(t) + \eta e(t)\]
+Correcteur dynamique par retour de sortie avec la structure observateur - retour d'état sur l'état reconstruit.
+
+\begin{align*}
+\dot{\hat{x}} & = A\hat{x} + BK\hat{x} + \eta Be + LC(x-\hat{x}) \\
+& = (A+BK-LC)\hat{x} + LCx + \eta BE \\
+& = (A+BK-LC)\hat{x} + L(y-DK\hat{x}-\eta De) + \eta Be \\
+& = (A+BK-LC-LDK)\hat{x} + (B-LD)\eta e + Ly \\
+& = K_A\hat{x} + K_{Be} e + Ly \\
+u & = K\hat{x} + \eta e + 0y
+\end{align*}
+
+\begin{prop}[Principe de séparation]
+La dynamique du système $(\Sigma)$ bouclé au correcteur est donné par l'union de :
+\begin{itemize}
+\item la dynamique de commande (valeurs propres de $A+BK$)
+\item la dynamique d'observation (valeurs propres de $A-LC$)
+\end{itemize}
+\end{prop}
+
+\newpage
+\section{Modèle d'état d'un système analogique discrétisé par un CNA-BOZ}
+\begin{center}
+  \begin{tikzpicture}
+
+    \sbEntree{E}
+    \sbBloc[5]{CNA}{CNA+BOZ}{E}
+    \sbRelier[$u_k$]{E}{CNA}
+    \sbBloc{sys}{{\Huge$(\Sigma)$}}{CNA}
+    \sbRelier[$u(t)$]{CNA}{sys}
+    \sbBloc{CAN}{CAN}{sys}
+    \sbRelier[$y(t)$]{sys}{CAN}
+    \sbSortie[5]{S}{CAN}
+    \sbRelier[$y_k$]{CAN}{S}
+
+    \node[draw,dotted,fit= (CNA) (sys) (CAN),inner sep=1em ] (box){};
+    \node[below = 0em of box] {$\Sigma_q$};
+  \end{tikzpicture}
+\end{center}
+
+\paragraph{Hypothèses}: Pas d'erreur de quantification. Conversions synchrones  periodique de période $T_e$
+
+Pour $(\Sigma)$ on a :
+\
+\begin{align*}
+  x(t) &= e^{tA}x_0 + \int_0^t e^{(t-\tau)A}Bu(\tau)d\tau
+  \intertext{Pour $t=kT_e$}
+   x_k &= e^{kT_eA}x_0 +  \int_0^{kT_e} e^{(kT_e-\tau)A}Bu(\tau)d\tau\\
+  \intertext{}
+  x_{k+1} &= e^{T_eA}\left(e^{kT_eA}x_0+  \int_0^{kT_e} e^{(kT_e-\tau)A}Bu(\tau)d\tau+  \int_{kT_e}^{(k+1)T_e} e^{(kT_e-\tau)A}Bu(\tau)d\tau \right) \\
+  x_{k+1} &= e^{T_eA}\left(x_k - \int_0^{-T_e} e^{\sigma A}Bu_kd\sigma \right) \\
+  x_{k+1} &= \underbracket{e^{T_eA}}_{A_d}x_k + \underbracket{\int_0^{T_e} e^{\sigma A}Bd\sigma}_{B_d} u_k
+\end{align*}
+
+De plus
+\[
+y_k = y(kT_e) = C x(kT_e) + Du(kT_e) = C x_k + D u_k
+\]
+
+
+\end{document}

@@ -1,0 +1,34 @@
+\documentclass{../../td}{subfiles}
+\usepackage{../../raccourcis}
+\begin{document}
+\begin{enumerate}
+\item La dynamique que l'on veut imposer est $\dot{\epsilon} + a_0\epsilon = 0$ avec $a_0 > 0$, sachant que $\epsilon = \omega_{opt} - \omega_t$, il s'agit donc de remplacer $\epsilon$ dans un premier temps, on trouve :
+\[\dot{\omega}_{opt} - \dot{\omega_t} + a_0(\omega_{opt} - \omega_t)\]
+
+Si l'on injecte ceci dans l'équation dynamique, on trouve alors la commande qui suit la restriction imposée sur $\epsilon$ :
+\begin{align*}
+\dot{\omega}_{opt} - \frac{T_a}{J_t} + \frac{K_t}{J_t} \omega_t + \frac{T_g}{J_t} + a_0((\omega_{opt} - \omega_t) = 0\\
+T_g = -a_0 J_t\omega_{opt} - J_t \dot{\omega}_{opt}v + (a_0 J_t - K_t)\omega_t + T_a 
+\end{align*}
+$T_a$ étant le terme à linéariser.
+
+\item Si l'on impose une perturbation constante d, la commande précédente reproduit la perturbation et ne la rejette pas. L'équation obtenue est:
+\[\dot{\omega}_{opt} - \frac{T_a}{J_t} + \frac{K_t}{J_t} \omega_t + \frac{T_g}{J_t} + a_0((\omega_{opt} - \omega_t) = - \frac{d}{J_t} \]
+On voit bien que la solution de cette équation aura un terme constant dépendant de d.
+
+\item On se propose d'imposer une convergence asymptotique vers 0 suivant la dynamique $\ddot{\epsilon} + a_1\dot{\epsilon} + a_0 \epsilon = 0$ avec $a_1 > 0 $ et $a_0 >0$. Comme précédemment, $\epsilon = \omega_{opt} - \omega_t$. Donc en injectant ceci on a:
+\[(\ddot{\omega}_{opt} - \ddot{\omega_t}) + a_1 (\dot{\omega}_{opt} - \dot{\omega}_t) + a_0 (\omega_{opt} - \omega_t) = 0\]
+
+On va avoir besoin de dériver l'équation dynamique pour remplacer $\ddot{\omega_t}$,et on trouve :
+\[\dot{T_g} = \dot{T_a} - K_t\dot{\omega_t} - J_t a_1(\dot{\omega}_{opt} - \dot{\omega_t}) - J_ta_0(\omega_{opt} - \omega_t) - J_t \ddot{\omega}_{opt}\]
+
+On constate que l'on doit introduire un capteur pour mesurer $\dot{\omega_t}$.
+
+On a donc un modèle d'asservissement suivant le schéma suivant:
+%\img{0.5}{1}
+Pour une perturbation constante d, on a bien toujours la dynamique sur $\epsilon$. d disparaissant lors du calcul de la dérivée de $\dot{\omega_t}$.
+
+\item La partie que l'on souhaite linéariser dans la commande de $T_g$ (respectivement $\dot{T_g}$ pour la question 3) est celle contenant les termes dépendant de $\omega_{opt}$. Il suffit donc d'égaler ces termes à une commande $v$ puis d'exprimer cette commande en fonction de $T_g$ comme vu dans les TDs précédents.
+
+\end{enumerate}
+\end{document}

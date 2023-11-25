@@ -1,0 +1,35 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+ch}{\PYGZsh{}!/usr/bin/python3}
+
+\PYG{k}{def} \PYG{n+nf}{get\PYGZus{}2min}\PYG{p}{(}\PYG{n}{l}\PYG{p}{):}
+    \PYG{n}{min1} \PYG{o}{=} \PYG{l+m+mi}{0}
+    \PYG{n}{min2} \PYG{o}{=} \PYG{l+m+mi}{1}
+    \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{l}\PYG{p}{)):}
+        \PYG{k}{if} \PYG{n}{l}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}\PYG{o}{\PYGZlt{}=}\PYG{n}{l}\PYG{p}{[}\PYG{n}{min1}\PYG{p}{]:}
+            \PYG{n}{min2} \PYG{o}{=} \PYG{n}{min1}
+            \PYG{n}{min1} \PYG{o}{=} \PYG{n}{k}
+        \PYG{k}{elif} \PYG{n}{l}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}\PYG{o}{\PYGZlt{}=}\PYG{n}{l}\PYG{p}{[}\PYG{n}{min2}\PYG{p}{]:}
+            \PYG{n}{min2} \PYG{o}{=} \PYG{n}{k}
+    \PYG{k}{return} \PYG{n}{min1}\PYG{p}{,}\PYG{n}{min2}
+
+\PYG{k}{def} \PYG{n+nf}{huffman\PYGZus{}rec}\PYG{p}{(}\PYG{n}{p}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{p}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+        \PYG{n}{C} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}1\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}0\PYGZsq{}}\PYG{p}{]}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,}\PYG{n}{C}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{C}
+    \PYG{k}{else}\PYG{p}{:}
+       \PYG{n}{min1}\PYG{p}{,}\PYG{n}{min2} \PYG{o}{=} \PYG{n}{get\PYGZus{}2min}\PYG{p}{(}\PYG{n}{p}\PYG{p}{)}
+       \PYG{n}{min1}\PYG{p}{,}\PYG{n}{min2} \PYG{o}{=} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{min1}\PYG{p}{,}\PYG{n}{min2}\PYG{p}{),}\PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{min1}\PYG{p}{,}\PYG{n}{min2}\PYG{p}{)}
+       \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,}\PYG{n}{min1}\PYG{p}{,}\PYG{n}{min2}\PYG{p}{)}
+       \PYG{n}{p\PYGZus{}save}\PYG{o}{=}\PYG{n}{p}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{n}{min2}\PYG{p}{)}
+       \PYG{n}{p}\PYG{p}{[}\PYG{n}{min1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{p}\PYG{p}{[}\PYG{n}{min1}\PYG{p}{]}\PYG{o}{+}\PYG{n}{p\PYGZus{}save}
+       \PYG{n}{C} \PYG{o}{=} \PYG{n}{huffman\PYGZus{}rec}\PYG{p}{(}\PYG{n}{p}\PYG{p}{)}
+       \PYG{n}{C}\PYG{o}{.}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{min2}\PYG{p}{,}\PYG{n}{C}\PYG{p}{[}\PYG{n}{min1}\PYG{p}{]}\PYG{o}{+}\PYG{l+s+s1}{\PYGZsq{}1\PYGZsq{}}\PYG{p}{)}
+       \PYG{n}{C}\PYG{p}{[}\PYG{n}{min1}\PYG{p}{]} \PYG{o}{+=}\PYG{l+s+s1}{\PYGZsq{}0\PYGZsq{}}
+       \PYG{n}{p}\PYG{o}{.}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{min2}\PYG{p}{,}\PYG{n}{p\PYGZus{}save}\PYG{p}{)}
+       \PYG{n}{p}\PYG{p}{[}\PYG{n}{min1}\PYG{p}{]} \PYG{o}{\PYGZhy{}=} \PYG{n}{p\PYGZus{}save}
+       \PYG{k}{return} \PYG{n}{C}
+
+\PYG{n}{p} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{25}\PYG{p}{,}\PYG{l+m+mi}{20}\PYG{p}{,}\PYG{l+m+mi}{15}\PYG{p}{,}\PYG{l+m+mi}{12}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{,}\PYG{l+m+mi}{8}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{]}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{huffman\PYGZus{}rec}\PYG{p}{(}\PYG{n}{p}\PYG{p}{))}
+\end{Verbatim}

@@ -1,0 +1,143 @@
+\documentclass{../../td}{subfiles}
+\usepackage{../../raccourcis}
+\begin{document}
+\subsection*{Exercice 1: Forme quadratique de la fonction de Lyapunov}
+Soit le système donné par:
+\[
+  \begin{cases}
+\dot{x_1} = f_1(x_1,x_2,...,x_n) \\
+    \dot{x_2} = f_2(x_1,x_2,...,x_n)\\
+\dot{x_n} = f_n(x_1,x_2,...,x_n)
+\end{cases}
+\]
+\begin{enumerate}
+\item 
+L'approximation linéaire pour le point d'équilibre $x_0$ est :
+\begin{align*}
+\delta \dot{x}_1 =& \sum_{i=1}^{n}a_{1i}\delta x_i\\
+&\vdots\\
+\delta \dot{x}_n =& \sum_{i=1}^{n}a_{ni}\delta x_i \text{	avec, } a_{ij} = \left. \frac{\partial f_j}{\partial x_i}\right|_{x=x_0}
+\intertext{Pour simplifier, on pose $x_0 = 0$, et comme $\delta x_1 = x_1 - x_{0i}$, on a:}
+\dot{x}_1 =& \sum_{i=1}^{n}a_{1i} x_i\\
+&\vdots\\
+\dot{x}_n =& \sum_{i=1}^{n}a_{ni} x_i
+\end{align*}
+
+\item \begin{align*}
+\dot{z}_i =& \sum_{j=1}^n C_{ji} \dot{x_i}
+= \sum_{j=1}^n C_{ji} \sum_{k=1}^n a_{jk}x_k\\
+=& \sum_{k=1}^n \sum_{j=1}^n C_{ji} a_{jk}x_k
+= \sum_{k=1}^n \lambda_k C_{ki}x_k\\
+=& z_i \lambda_i
+\end{align*}
+
+\item On considère la fonction de Lyapunov candidate fournie, on calcul alors: 
+\begin{align*}
+\dot{V} =& \sum_{k=1}^n \dot{z}_k z^*_k + z_k\dot{z}^*_k\\
+=& \sum_{k=1}^n \lambda_k z_k z^*_k + \lambda_k^* z_k z^*_k\\
+=& \sum_{k=1}^n 2 Re(\lambda_k)z_kz_k^* < 0  \forall k
+\end{align*}
+
+\item L'analyse doit se faire sur un voisinage suffisamment petit de l'origine (CN).
+
+
+\item Modèle linéaire:
+\begin{align*}
+\dot{x_1} & = -x_2\\
+\dot{x_2} & = x_1\\
+\text{donc } A & = \begin{pmatrix}
+0&-1\\1&0\end{pmatrix}\\
+\end{align*}
+Ainsi, les valeurs propres sont i et -i.\\
+Le système linéaire est stable au sens de Lyapunov. Par contre, il n'y a pas de stabilité asymptotique.\\
+
+On passe alors dans la base modale. Pour cela, on résout:
+\begin{align*}
+jc_{11} &= a_{11}c_{11} + a_{21}c_{21}\\
+-jc_{12} &= a_{11} c_{12} + a_{21}c_{22}\\
+jc_{21} &= a_{12} c_{11} + a_{22} c_{21} \\
+-jc_{22} &= a_{12}c_{22} + a_{22} c_{22}\\
+\Rightarrow z_1 &= x_1 + j x_2 \text{ et, } z_2 = x_2 + jx_1\\
+\end{align*}
+Comme $V = \sum_{k=1}^2 z_k z_k^*$ alors,
+\begin{align*}
+\dot{V} &= 8(x_1^4+x_2^4)(1-\alpha x_1^2 - \beta x_2^2)\\
+\dot{V} &\leq 0\\
+\Rightarrow& \alpha x_1^2 + \beta x_2^2 > 1 
+\end{align*}
+
+%\img{0.5}{1.png}
+Au voisinage de l'origine, ($\alpha x_1^2 + \beta x_2^2 >1$), c'est instable, mais en dehors de la trajectoire converge. On a un cycle limite pour $\alpha x_1^2 + \beta x_2^2 =1$
+\end{enumerate}
+
+\subsection*{Exercice II : Système du 2nd ordre}
+
+\begin{enumerate}
+\item Suivant Routh, $a>0 \et b>0$
+\item Cas linéaire : $f(y)=by$, alors $b>0$ implique que $y(by) >0$ pour $y\neq0$, soit $yf(y)>0$ pour $y\neq 0$
+\item On prend $V(x_1,x_2) = x_2^2 + 2 \int_0^{x_1}f(\tau)d\tau$. Elle est définie positive et : \begin{align*}
+\dot{V} & = 2f(x_1)\dot{x_1} + 2x_2 \dot{x_2} \\
+& = 2 x_2 f(x_1) - 2ax_2^2 -2x_2 f(x_1)
+& \leq 0 \text{ : origine stable pour Lyapunov}
+\end{align*}
+\end{enumerate}
+
+\subsection*{Exercice III : Commandabilité et observabilité}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Vc}{\mathcal{V}}
+
+\begin{enumerate}
+\item On considère le système :
+  $ \begin{cases}
+\dot{x_1} & = -x_2 -x_2^2\\
+    \dot{x_2} & = u
+\end{cases}
+$
+
+On a donc $f(x) = \vect{ -x_2-x_2^2 \\ 0} \et g(x) = \vect{0 \\ 1}$.
+
+$E=\{f(x),g(x)\}$
+\begin{align*}
+[f,g] & = J_gf - J_fg \\
+& = \vect{0 & 0 \\ 0 & 0}f(x)-\vect{0 & -1 -2x_2\\0 & 0} \vect{0 \\ 1} = \vect{1 + 2x_2 \\ 0}\\
+[f,[f,g]] & = J_{[f,g]}f - J_f[f,g] \\
+& = \vect{0 & 2\\0 & 0} \vect{-x_2 -x_2^2 \\ 0} - \vect{0 & -1-2x_2\\0 & 0} \vect{ 1 + 2x_2 \\ 0} = \vect{0 \\ 0} \\
+[g,[f,g]] & = J_g[f,g] - J_{[f,g]}g \\
+& = 0 - \vect{0 & 2\\0 & 0} \vect{0 \\ 1} = -\vect{2 \\ 0} 
+\end{align*}
+On a donc : \[
+\D = \{\vect{0 \\ 1}, \vect{2 \\ 0}, \vect{1+2x_2 \\ 0}\}\]
+
+$\D$ est de dimension 2 : le système est commandable.
+
+\item On a $f(x) = \vect{x_2^2 \\ 0} \et g(x) = \vect{0 \\ 1}$.
+\begin{align*}
+[f,g] & = \vect{-2 x_2 \\ 0} \\
+[f,[f,g]] & = \vect{0 \\ 0} \\
+[g,[f,g]] & = \vect{-2 \\ 0} 
+\end{align*}
+
+On a donc : \[ \D = \{\vect{0 \\ 1}, \vect{-2 \\ 0}, \vect{2x_2 \\ 0}\} \]
+
+$\D$ est de dimension 2 : le système est commandable.\\
+
+De plus, on a $h(x) = x_1$
+
+$\Vc = \{h,L_fh,L_gh,L_fL_gh,\dots \}$ et on étudie $\nabla \Vc$.
+
+On a $\nabla h = \vect{0 \\ 1}$. Il reste à trouver un élément de $\nabla \Vc$ qui a une 2e composante non nulle pour que $\nabla \Vc$ soit de dimension 2, et que le système soit observable.
+
+\begin{align*}
+L_fh(x) = x_2^2 \quad & \quad \nabla L_fh(x) = \vect{0\\2x_2} \text{ ok mais dépend de $x_2$}\\
+L_gL_fh(x) = 2x_2 \quad & \quad \nabla L_gL_gh(x) = \vect{0 \\ 2} \text{ COOL!}
+\end{align*}
+
+Le système est donc observable.
+\end{enumerate}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:

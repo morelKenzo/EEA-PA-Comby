@@ -1,0 +1,105 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Codage de donnée discrètes}
+\begin{defin}
+Les données discrètes sont représentées par des symboles en nombre fini $m$.
+On parle d'une répresentation $m-$aire ou $m-$moments
+\end{defin}
+
+\begin{exemple}
+  \begin{itemize}
+  \item Alphabets
+  \item Symbole de numérotation (décimal, hexa, octal)
+  \end{itemize}
+\end{exemple}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  Sources          & Symboles & Dimension        & Codage binaires \\
+  \hline
+  alpha. simplifié & lettre   & 27               & 5               \\
+  alphabet         & lettres  & 128              & 7               \\
+  Nombres          & chiffres & Dec: 0-9 10      & 4 (DCB)         \\
+  Nombres          & chiffres & Hex: 0-F 16      & 4               \\
+  Nombres          & chiffres & Ternaire: 0-p 10 & 2)              \\
+  \hline
+\end{tabular}
+\end{center}
+
+\begin{rem}
+Les symboles binaire s sont des bits ou ``digit''.
+
+On code  un alphabet à $m= 2^n$ symboles avec des mots binaires à $n$ bits. Il y a $m!$ possibilités.
+\end{rem}
+
+\section{Codage d'une information analogique MIC}
+\subsection{Conversion analogique numérique}
+On réalise une conversion Analogique-Numérique classique : Échantillonnage et blocage. Comme au chapitre 1.
+\subsection{Bruit de quantification}
+\subsection{Quantification uniforme}
+Ensuite on effectue une quantification uniforme , commme au chapitre 1.
+\subsection{Quantification non uniforme}
+
+\subsection{Loi $A$ et loi $\mu$}
+\paragraph{Objectif}
+Rendre le rapport signal sur bruit de quantification indépendant du niveau du signal.
+
+\begin{defin}
+  On rapppelle la définition de \emph{puissance d'un signal}
+  \[
+    P_x=\int_{-1}^{1}x^2 p(x)\d x
+  \]
+  Soit pour le bruit issue d'une quantification non uniforme
+  \[
+    \sigma_q^2 = \int_{-1}^{1}p(x)\frac{\Delta_i^2}{12} = \int_{-1}^{1}\frac{p(x)}{12} \left(\frac{2}{N}\deriv[x]{y}\right)^2\d x
+  \]
+\end{defin}
+\begin{prop}
+  Le RSB s'écrit alors:
+  \[
+    \frac{P_x}{\sigma_q} = \frac{\int_{-1}^{1}x^2 p(x)\d x}{\int_{-1}^{1}\frac{p(x)}{3N^2} \left(\frac{2}{N}\deriv[x]{y}\right)^2\d x} =Cste
+  \]
+  Cela est possible pour $\deriv[x]{y}=kx$ soit :
+  \[
+\frac{P_x}{\sigma_q} = \frac{3N^2}{k^2}
+\]
+Soit en dB :
+\[
+\left(\frac{P_x}{\sigma_q}\right)= 6 n +4.7 -20 \log_{10}(k)
+\]
+\end{prop}
+
+
+\begin{rem}
+  On a alors:
+   \[
+     y = \frac{1}{k}\ln |x|+1
+   \]
+   Pour $x\simeq 0$ on doit faire une approximation.
+ \end{rem}
+ \begin{prop}
+   \begin{itemize}
+   \item Loi $\mu$ (USA)
+   \[
+     \begin{cases}
+       y =\frac{\ln(1+\mu|x|)}{\ln(1+\mu)} \\
+       \mu = 255
+     \end{cases}
+   \]
+ \item Loi $A$ (UE)
+   \[
+   \begin{cases}
+     y = \frac{Ax}{1+\ln(A)}  & \text{si} |x| < 1/A\\
+     y= \frac{1+\ln(A|x|)}{1+\ln(A)} & \text{si} |x| \ge 1/A
+   \end{cases}
+   \]
+ \end{itemize}
+ \end{prop}
+\section{Modulation différentielles DPCM}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

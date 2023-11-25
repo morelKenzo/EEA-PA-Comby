@@ -1,0 +1,53 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+ch}{\PYGZsh{}!/usr/bin/env python3}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}*\PYGZhy{} coding: utf\PYGZhy{}8 \PYGZhy{}*\PYGZhy{}}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pyplot} \PYG{k}{as} \PYG{n+nn}{plt}
+\PYG{k+kn}{from} \PYG{n+nn}{scipy.spatial} \PYG{k+kn}{import} \PYG{n}{Voronoi}\PYG{p}{,} \PYG{n}{voronoi\PYGZus{}plot\PYGZus{}2d}
+\PYG{c+c1}{\PYGZsh{}initialisations clusters}
+\PYG{n}{M} \PYG{o}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{N} \PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{;} \PYG{c+c1}{\PYGZsh{}point par cluster}
+\PYG{n}{K} \PYG{o}{=} \PYG{n}{N}\PYG{o}{*}\PYG{n}{M}
+\PYG{n}{means} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{rand}\PYG{p}{(}\PYG{n}{M}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{*}\PYG{l+m+mi}{10}
+\PYG{n}{X} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{n}{K}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{))}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{()}
+\PYG{n}{cov} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{],[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]])}
+\PYG{k}{for} \PYG{n}{m} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{M}\PYG{p}{):}
+    \PYG{n}{xi} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{multivariate\PYGZus{}normal}\PYG{p}{(}\PYG{n}{means}\PYG{p}{[}\PYG{n}{m}\PYG{p}{,:],}\PYG{n}{cov}\PYG{p}{,}\PYG{n}{N}\PYG{p}{)}
+    \PYG{n}{X}\PYG{p}{[}\PYG{n}{m}\PYG{o}{*}\PYG{n}{N}\PYG{p}{:(}\PYG{n}{m}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{*}\PYG{n}{N}\PYG{p}{]} \PYG{o}{=} \PYG{n}{xi}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{xi}\PYG{p}{[:,}\PYG{l+m+mi}{0}\PYG{p}{],}\PYG{n}{xi}\PYG{p}{[:,}\PYG{l+m+mi}{1}\PYG{p}{],}\PYG{l+s+s1}{\PYGZsq{}+\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{means}\PYG{p}{[:,}\PYG{l+m+mi}{0}\PYG{p}{],}\PYG{n}{means}\PYG{p}{[:,}\PYG{l+m+mi}{1}\PYG{p}{],}\PYG{l+s+s1}{\PYGZsq{}ob\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{mean}\PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n}{Y0} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{multivariate\PYGZus{}normal}\PYG{p}{(}\PYG{n}{mean}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{o}{*}\PYG{n}{cov}\PYG{p}{,} \PYG{n}{M}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+\PYG{n}{Y0}\PYG{o}{=} \PYG{n}{means} \PYG{c+c1}{\PYGZsh{}triche}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{Y0}\PYG{p}{[:,}\PYG{l+m+mi}{0}\PYG{p}{],}\PYG{n}{Y0}\PYG{p}{[:,}\PYG{l+m+mi}{1}\PYG{p}{],}\PYG{l+s+s1}{\PYGZsq{}ok\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+\PYG{k}{def} \PYG{n+nf}{LBG}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{Y0}\PYG{p}{,}\PYG{n}{eps}\PYG{o}{=}\PYG{l+m+mf}{1e\PYGZhy{}5}\PYG{p}{,}\PYG{n}{maxiter}\PYG{o}{=}\PYG{l+m+mi}{1000}\PYG{p}{):}
+    \PYG{n}{Y} \PYG{o}{=} \PYG{n}{Y0}\PYG{o}{.}\PYG{n}{copy}\PYG{p}{()}
+    \PYG{n}{old\PYGZus{}dist} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+    \PYG{n}{cluster\PYGZus{}index} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{K}\PYG{p}{,}\PYG{n}{dtype}\PYG{o}{=}\PYG{n+nb}{int}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{l} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{maxiter}\PYG{p}{):}
+        \PYG{n}{dist}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+        \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{X}\PYG{p}{)):}
+            \PYG{n}{quant\PYGZus{}min} \PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+            \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{)):}
+                \PYG{k}{if} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linalg}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{X}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{Y}\PYG{p}{[}\PYG{n}{j}\PYG{p}{])} \PYG{o}{\PYGZlt{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{linalg}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{X}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{quant\PYGZus{}min}\PYG{p}{):}
+                    \PYG{n}{quant\PYGZus{}min} \PYG{o}{=} \PYG{n}{Y}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}
+                    \PYG{n}{cluster\PYGZus{}index}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{=} \PYG{n}{j}
+            \PYG{n}{dist} \PYG{o}{+=} \PYG{n+nb}{sum}\PYG{p}{((}\PYG{n}{X}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{quant\PYGZus{}min}\PYG{p}{)}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{)):}
+            \PYG{n}{Y}\PYG{p}{[}\PYG{n}{j}\PYG{p}{,:]} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{X}\PYG{p}{[}\PYG{n}{cluster\PYGZus{}index}\PYG{o}{==}\PYG{n}{j}\PYG{p}{],}\PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n}{dist}\PYG{o}{\PYGZhy{}}\PYG{n}{old\PYGZus{}dist} \PYG{o}{\PYGZlt{}} \PYG{n}{eps}\PYG{p}{:}
+            \PYG{k}{break}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{old\PYGZus{}dist} \PYG{o}{=} \PYG{n}{dist}
+    \PYG{k}{return} \PYG{n}{Y}
+\PYG{n}{Y} \PYG{o}{=} \PYG{n}{LBG}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{Y0}\PYG{p}{)}
+\PYG{n}{vor} \PYG{o}{=} \PYG{n}{Voronoi}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{)}\PYG{c+c1}{\PYGZsh{} black magic}
+\PYG{n}{voronoi\PYGZus{}plot\PYGZus{}2d}\PYG{p}{(}\PYG{n}{vor}\PYG{p}{,}\PYG{n}{show\PYGZus{}vertices}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{X}\PYG{p}{[:,}\PYG{l+m+mi}{0}\PYG{p}{],}\PYG{n}{X}\PYG{p}{[:,}\PYG{l+m+mi}{1}\PYG{p}{],}\PYG{l+s+s1}{\PYGZsq{}+\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{[:,}\PYG{l+m+mi}{0}\PYG{p}{],}\PYG{n}{Y}\PYG{p}{[:,}\PYG{l+m+mi}{1}\PYG{p}{],}\PYG{l+s+s1}{\PYGZsq{}ob\PYGZsq{}}\PYG{p}{)}           
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{Y0}\PYG{p}{[:,}\PYG{l+m+mi}{0}\PYG{p}{],}\PYG{n}{Y0}\PYG{p}{[:,}\PYG{l+m+mi}{1}\PYG{p}{],}\PYG{l+s+s1}{\PYGZsq{}ok\PYGZsq{}}\PYG{p}{)}  
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}        
+\end{Verbatim}

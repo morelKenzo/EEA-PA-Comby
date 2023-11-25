@@ -1,0 +1,49 @@
+\documentclass{../../td}
+\usepackage{../../raccourcis}
+\usepackage{multicol}
+% Mise en page
+\title{Correction de TD}
+\author{Pierre-Antoine Comby (basé sur le travail de ?)}
+\teacher{Samy Tliba}
+\module{421}
+\usepackage{tikz}
+\usepackage{schemabloc}
+\usepackage{graphicx}
+
+\renewcommand{\thesection}{TD\arabic{section}}
+
+\makeatletter
+\def\l@section{\@dottedtocline{1}{1em}{3em}}
+\makeatother
+
+\graphicspath{{TD1/}{TD2/}{TD3/}{TD4/}{TD5/}{TD6/}{TD7/}{TD8/}{TD9/}}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\section{Systèmes échantillonés}
+\subfile{TD1/TD1.tex}
+\section{Stabilité}
+\subfile{TD2/TD2.tex}
+\section{Correcteurs numériques}
+\subfile{TD3/TD3.tex}
+\section{Correcteur RST}
+\subfile{TD4/TD4.tex}
+\section{Modélisation par variable d'état}
+\subfile{TD5/TD5.tex}
+\section{Représentation d'état et commandabilité}
+\subfile{TD6/TD6.tex}
+\section{Commandabilité et plannification de trajectoire}
+\subfile{TD7/TD7.tex}
+\section{Poursuite de trajectoire avec retour d'état}
+\subfile{TD8/TD8.tex}
+\section{Observateur}
+\subfile{TD9/TD9.tex}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -1,0 +1,52 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+ch}{\PYGZsh{}!/usr/bin/env python3}
+
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+
+\PYG{n}{X}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{]}
+
+\PYG{k}{def} \PYG{n+nf}{binary}\PYG{p}{(}\PYG{n}{n}\PYG{p}{,}\PYG{n}{m}\PYG{p}{,}\PYG{n}{b}\PYG{o}{=}\PYG{l+m+mi}{2}\PYG{p}{):}
+\PYG{c+c1}{\PYGZsh{}    Convertie un nombre décimal en sa version binaire tronqué à m bits.}
+    \PYG{n}{binaire}\PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{floor}\PYG{p}{(}\PYG{n}{n}\PYG{o}{*}\PYG{n}{b}\PYG{o}{**}\PYG{n}{m}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} on se décale dans les entiers et on floor}
+    \PYG{k}{return} \PYG{n}{binaire}\PYG{p}{,}\PYG{n}{np}\PYG{o}{.}\PYG{n}{binary\PYGZus{}repr}\PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{binaire}\PYG{p}{))}
+
+\PYG{k}{def} \PYG{n+nf}{arithm}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{p}\PYG{p}{):}
+    \PYG{n}{l}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{];} \PYG{n}{h}\PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}
+    \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n}{X}\PYG{p}{:}
+        \PYG{k}{if} \PYG{n}{x} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+            \PYG{n}{h}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{+}\PYG{n}{p}\PYG{o}{*}\PYG{p}{(}\PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]))}
+            \PYG{n}{l}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{l}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{+}\PYG{n}{p}\PYG{o}{*}\PYG{p}{(}\PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]))}
+            \PYG{n}{h}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}
+            \PYG{n}{lmb} \PYG{o}{=} \PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{+}\PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mi}{2}
+            \PYG{n}{mu} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{log2}\PYG{p}{(}\PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]))}\PYG{o}{+}\PYG{l+m+mi}{1}
+    \PYG{n}{code} \PYG{o}{=} \PYG{n}{binary}\PYG{p}{(}\PYG{n}{lmb}\PYG{p}{,}\PYG{n}{mu}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{code}\PYG{p}{,}\PYG{n}{lmb}\PYG{p}{,}\PYG{n}{mu}
+
+\PYG{k}{def} \PYG{n+nf}{arithm\PYGZus{}pratique}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{p}\PYG{p}{):}
+    \PYG{n}{l} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{];} \PYG{n}{h} \PYG{o}{=}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{p}{;}\PYG{n}{f} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}\PYG{n}{c} \PYG{o}{=}\PYG{p}{[]} \PYG{c+c1}{\PYGZsh{}inf, sup,follow, code}
+    \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{X}\PYG{p}{)):}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}for loop\PYGZdq{}}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n}{X}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+            \PYG{n}{l}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}
+            \PYG{n}{h}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{+}\PYG{n}{p}\PYG{o}{*}\PYG{p}{(}\PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]))}
+        \PYG{k}{else}\PYG{p}{:}
+           \PYG{n}{l}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{+}\PYG{n}{p}\PYG{o}{*}\PYG{p}{(}\PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]))}
+           \PYG{n}{h}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}
+        \PYG{k}{while} \PYG{p}{((}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZgt{}=}\PYG{l+m+mi}{0} \PYG{o+ow}{and} \PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZlt{}}\PYG{l+m+mf}{0.5}\PYG{p}{)} \PYG{o+ow}{or} \PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZgt{}=}\PYG{l+m+mf}{0.5} \PYG{o+ow}{and} \PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o+ow}{or} \PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{0.25} \PYG{o+ow}{and} \PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZlt{}}\PYG{l+m+mf}{0.75}\PYG{p}{)):}
+            \PYG{k}{if} \PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZgt{}=}\PYG{l+m+mi}{0} \PYG{o+ow}{and} \PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZlt{}}\PYG{l+m+mf}{0.5}\PYG{p}{):}
+                \PYG{n}{c} \PYG{o}{+=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{+}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{*}\PYG{n}{f}
+                \PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{*=}\PYG{l+m+mi}{2}
+                \PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{*=}\PYG{l+m+mi}{2}
+            \PYG{k}{elif} \PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZgt{}=}\PYG{l+m+mf}{0.5} \PYG{o+ow}{and} \PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{):}
+                \PYG{n}{c} \PYG{o}{+=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{+}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{*}\PYG{n}{f}
+                \PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+                \PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+            \PYG{k}{elif} \PYG{p}{(}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{0.25} \PYG{o+ow}{and} \PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZlt{}}\PYG{l+m+mf}{0.75}\PYG{p}{):}
+                \PYG{n}{f} \PYG{o}{+=}\PYG{l+m+mi}{1}
+                \PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{l}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.5}
+                \PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{h}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.5}
+    \PYG{k}{return} \PYG{n}{c}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{arithm\PYGZus{}pratique}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{p}\PYG{p}{))}
+\end{Verbatim}

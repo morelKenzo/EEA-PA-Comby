@@ -1,0 +1,222 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+Dans cette partie on étudie l'influence du canal sur le signal.
+\begin{defin}
+  On rappel:
+  \begin{itemize}
+  \item La rapidité de modulation est noté $R = 1/T$ en [bauds]\\
+  \item Le débit binaire $D = 1/T_b$.
+  \item $T = log_2(M) .T_b$
+  \end{itemize}
+  Soit:
+  \[
+    R = \frac{D}{\log_2(M)}
+  \]
+\end{defin}
+
+\section{Caractéristique du canal}
+\label{sec:carac_canal}
+On choisit d'étudier un canal :
+\begin{itemize}
+\item linéarie et invariant (caractérisé par sa réponse impulsionnelle  $g(t)$, sa réponse fréquentielle $G(f)$ ...)
+\item bruité par un bruit $n(t)$ additif.
+\item de type passe-bas et de bande $B$.
+ \item associé à un filtre de réception de réponse impulsionnelle $g_r(t)$.
+\end{itemize}
+
+Le signal recu et filtré par le fitre de réception:
+\begin{align*}
+  r(t) &= g_r(t) \ast h(t) \ast e(t) + g_r(t)\ast n(t)\\
+       &= g_r(t) \ast h(t) \ast \sum_{k}^{}a_kg(t-kT)+ b(t)\\
+       &= \sum_{k}^{}a_ky(t-kT)+b(t)
+\end{align*}
+$b(t)$ représente la contribution totale du bruit après filtrage.
+
+\begin{prop}
+  On considère que le bruit est additif blan gaussien (BABG) àmoyenne nulle et de variance $\sigma^2$
+  \[_B(b) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{\frac{-b^2}{2\sigma^2}}\]
+\end{prop}
+\begin{prop}
+  Le filtre de reception peux être optimiser afin de maximiser le rapport signal sur bruit après réception:
+  \[
+    G_r^{opt}=(G(f).H(f))^*
+  \]
+\end{prop}
+\begin{proof}
+  
+\end{proof}
+Ainsi après échantillonnage à l'instant de décision on a :
+\[
+  r(t_0+nT) = \sum_{k}^{}a_ky(t_0+nT-kT)+b(t_0+nT)= d(t)
+\]
+soit:
+\[
+  r(t_0+nT) = a_ny(t_0)+\sum_{k\neq n}^{}a_ky(t_0+(n-k)T)+b(t_0+nT)
+\]
+\begin{defin}
+  On défini le terme d'interférence entre symbole comme:
+  \[
+IES =  \sum_{k\neq n}^{} a_k y(t_0+(n-k)T)
+\]
+Que l'on peux exprimer comme:
+\[
+  \sum_{k\neq n}^{} a_k y(t_0+(n-k)T) = \sum_{k}^{}a_kg_r(t_0+nT)\ast h(t_0+nT)\ast g(t_0+(n-k)T)
+\]
+\end{defin}
+
+\begin{prop}
+  En considérant un récepteur parfaitement synchronisé on souhaite qu'à l'instant de prise de décision :
+
+\[
+  r(t_0+nT)  = a_n y(t_0)+ b(t_0+nT)
+\]
+Soit $IES = 0 $
+\end{prop}
+
+\begin{rem}
+  Dans le cas d'un filtre de réception optimal, et pour une synchronisation parfaite, l'annulation de l'IES consiste à choisir une forme d'impulsion compatible avec le canal et telle que l'IES soit nulle.
+\end{rem}
+\section{Premier critère  du Nyquist}
+
+\begin{thm}[Critère de Nyquist]
+  On ne peux pas transmettre sans IES un signal de rapidité de modulation $R = 1/T$ dans une bande inférieure à $1/2T$.
+  Un canal respectant le premier criètre de Nyquist est tel que:
+  \[
+    B \ge \frac{1}{2T} = B_{Nyquist}
+  \]
+\end{thm}
+\begin{defin}
+  On appelle Bande de \textsc{Nyquist} la bande minimale pour une durée de symbole $T$.
+  \[
+    B_{Nyquist} = \frac{1}{2T}
+  \]
+\end{defin}
+
+\begin{proof}
+  On considère un canal décrit en \ref{sec:carac_canal}. Sans bruit on a :
+
+  \[
+    r(t_0+nT) = a_ny(t_0)+\sum_{k\neq n}^{}a_k y(t_0+(n-k)T)
+  \]
+  On souhaite obtenir:
+  \[
+    r(t_0+nT) = a_ny(t_0) \implies y(t_0+nT) =
+    \begin{cases}
+      y(t_0) & text{ pour } n = 0\\
+      0 & \forall n \neq 0 \\
+    \end{cases}
+  \]
+
+  En sortie de l'échantillonneur on a la prise de décision :
+  \[
+    d(t) = y(t)\sum_{n}^{}\delta(t-t_0-nT)
+  \]
+  Soit dans l'espace de Fourrier:
+  \[
+    D(f) = \frac{1}{T}Y(f-\frac{n}{T})e^{-j2\pi n t_0/T} \tag{(*)}
+  \]
+  De plus on a également:
+   \[
+     d(t) = \sum_{n}^{}y(t_0+nT)\delta(t-t_0-nT)
+   \]
+   Soit dans l'espace de Fourrier:
+   \[
+     D(f) = \sum_{n}^{}y(t_0+nT)e^{-j 2 \pi f(t_0+nT)} \tag{(**)}
+   \]
+   Par unicité de la transformée de Fourier on a :
+   \[
+     \sum_{n}^{}Y(f-\frac{n}{T}) e^{-j2\pi (f-n/T)t_0} = T y(t_0)
+   \]
+   alors:
+   \[
+     Y^{(t_0)}(f)  = \frac{Y(f)}{y(t_0)}e^{j 2 \pi f t_0}
+   \]
+
+   Le premier critère de Nyquist s'écrit donc:
+   \[
+     \sum_{n}^{}Y^{(t_0)}(f-\frac{n}{T}) =T 
+   \]
+ \end{proof}
+
+\section{Impulsion de Nyquist}
+
+  Toutes les fonctions qui vérifie l'équation suivante, vérifie le critère de Nyquist.
+  \[
+    \sum_{n}^{}Y^{(t_0)}(f-\frac{n}{T}) = T
+  \]
+
+  La DSP rectangulaire centrée en fait partie.
+  \begin{rem}
+    On a cepedant des lobs secondaire élevé dans la DSP (sinus
+    cardinal pur), ce qui peux être dramatique en cas de mauvaise
+    synchronisation. On cherche donc d'autre fonctions candidates avec
+    des lobes secondaires moins élevé.
+  \end{rem}
+
+  \begin{defin}
+    Le filtre en cosinus surélevé vérifie ces deux critères. Sa DSP
+    est alors:
+    \[G(f) = 
+      \begin{cases}
+        T  & \forall f  \in \left[-\frac{1-\alpha}{2T},\frac{1-\alpha}{2T}\right]\\
+        \frac{T}{2}\left[1+\sin\left(\frac{\pi T}{\alpha}\left(\frac{1}{2T}-|f|\right)\right)\right] & \frac{1-\alpha}{2T}\le |f| \le \frac{1+\alpha}{2T}\\
+        0 & \text{ sinon}
+      \end{cases}
+    \]
+    Ce qui donne la reponse temporelle:
+    \[
+      g(t) = \frac{\sin\left(\frac{\pi t}{T}\right)}{\frac{\pi t}{T}}
+      \frac{\cos\left(\frac{\pi\alpha t}{T}\right)}{\left(1-4\alpha^2 \frac{t^2}{T^2}\right)}
+    \]
+
+    Avec$\alpha$ le \emph{Roll-off} compris entre 0 et 1 .
+
+    Pour $\alpha=0$on retrouve l'impulsion rectangulaire. pour $\alpha=1$ on a
+    un filtre de Hanning.
+  \end{defin}
+  \begin{exemple}
+    Dans la téléphonie 3G $\alpha=0,22$.
+  \end{exemple}
+
+  \begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.5\textwidth}
+          
+      \caption{Réponse fréquentielle}
+     
+    \end{subfigure}%
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \caption{réponse temporelle}
+     
+    \end{subfigure}
+    \caption{Différents filtres respectant le critère de Nyquist}
+  \end{figure}
+ 
+  \section{Capacité de canal}
+
+  \subsection{Critère empirique HTS}
+  \begin{defin}
+    \textsc{Hartley}, \textsc{Tuller},\textsc{Shannon} on établi la
+    formule empirique:
+    \[
+      m \le m_{max} = \sqrt{1+\frac{S}{N}}
+    \]
+    Avec $S$ et $N$ puissance du signal et du bruit. et $m$ le nombre
+    de niveau de codage possible.
+  \end{defin}
+  \subsection{À retenir}
+  \begin{defin}
+    C la capacité du canal est le nombre maximal de bit qu'il est
+    susceptible de transmettre par seconde.
+
+    \[C = D_{max} = R.\log_2(M) = B\log_2\left(1+\frac{S}{N}\right)
+    \]
+  \end{defin}
+
+  \begin{prop}
+    Pour un canal de transmission de type passe-bas, de bande passante
+    $B$ et bruité par un BABG le débit doit toujours être inférieur à
+    la capacité de Shannon.
+  \end{prop}
+\end{document}

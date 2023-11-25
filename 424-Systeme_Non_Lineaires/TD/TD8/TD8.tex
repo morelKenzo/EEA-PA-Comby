@@ -1,0 +1,123 @@
+\documentclass{../../td}{subfiles}
+\usepackage{../../raccourcis}
+\begin{document}
+\subsection*{Exercice I: Platitude}
+\begin{enumerate}
+\item On considère le système suivant:
+\[
+  \begin{cases}
+\dot{x_1} &= x_2 - x_1 cos x_1\\
+\dot{x_2} &= (x_2^2 + u)(5 + sinx_1)
+\end{cases}
+\]
+
+Montrons que $x_1$ est une sortie plate, pour cela, il faut exprimer u en fonction de $x_1$ et ses dérivées uniquement:
+\begin{align*}
+x_2 &= \dot{x_1} + x_1 cos x_1\\
+u &= \frac{\dot{x_2}}{5 + sin x_1} - x_2^2\\
+&= \frac{\ddot{x_1} + \dot{x_1}cosx_1 - \dot{x_1}x_1 sinx_1}{5 + sin x_1} - (\dot{x_1} + x_1 cos x_1)^2
+\end{align*}
+$x_1$ est bien une sortie plate.
+
+\item On considère le système suivant:
+\[ \left\{\begin{matrix}
+\dot{x_1} &= -x_1^2 + x_2\\
+\dot{x_2} &= x_2x_1 + u_1\\
+\dot{x_3} &= u_2
+\end{matrix}\right. \]
+Montrons que $x_1$ et $x_3$ sont des sorties plates:
+\begin{align*}
+x_2 &= \dot{x_1}- x_1^2 \\
+u_1 &= \dot{x_2} - x_2 x_1\\
+&= \ddot{x_1} - 3x_1 \dot{x_1} + x_1^3\\
+u_2 &= \dot{x_3}
+\end{align*}
+On a bien les commandes en fonctions de $x_1$,$x_3$ et leurs dérivées uniquement.
+
+\end{enumerate}
+
+\subsection*{Exercice II: Planification}
+On considère le système suivant:
+\[
+  \begin{cases}
+\dot{x_1} &= x_2\\
+\dot{x_2} &= \alpha\dot{x_1} + u
+\end{cases}
+\]
+\begin{enumerate}
+\item Trouvons la sortie plate y. On remarque que pour $y=x_1$ on a $u = \ddot{y} - \alpha \dot{y}$, donc ce y convient (est une sortie plate) et on a alors le système:
+\[ \left\{\begin{matrix}
+\dot{x_1} &= y\\
+\dot{x_2} &= \dot{y}\\
+u &= \ddot{y} - \alpha \dot{y}
+\end{matrix}\right. \]
+
+\item 
+\begin{align*}
+y_c(t) &= a(T-t)^3 + b(T-t)^2 + c(T-t) + d\\
+y_c(0) &= y_0 \Rightarrow aT^3 + bT^2 + cT + d = y_0\\
+y_c(T) &= y_T \Rightarrow d = y_T\\
+\dot{y_c}(T) &= 0 \Rightarrow -c = 0\\
+\ddot{y_c}(T) &= 0 \Rightarrow b = 0\\
+&\Rightarrow aT^3 = y_0 - y_T\\
+&\Rightarrow a = \frac{y_0 - y_T}{T^3}\\
+u &= \ddot{y_c} - \alpha \dot{y_c}\\7
+&=3\frac{y_0 -y_T}{T^3}(T-t)(3 + \alpha(T-t)
+\end{align*}
+On a la commande en BO. En posant $ \delta x = x - x_c$ on peut linéariser le modèle autour du point et approcher une trajectoire point par point.\\
+La planification de la trajectoire permet de trouver un modèle linéaire autour de la trajectoire obtenue via $u_c$, la commande de planification.
+
+\end{enumerate}
+
+\subsection*{Exercice III: Suspension magnétique}
+On peut appliquer le backstepping car le système est de forme triangulaire :
+\[ \left\{ \begin{matrix}
+\dot{x_1} &= x_2\\
+\dot{x_2} &= -g + \frac{k}{m} \frac{x_3^2}{(c-x_1)^2}\\
+\dot{x_3} &= \frac{-x_3 + k_v u}{\tau}
+\end{matrix} \right. \]
+
+On a $u^*$ qui permet d'avoir $x_3$ qui via $\alpha_3$ donne $x_3^*$ qui lui donne $x_2$ qui via $\alpha_2$ donne $x_2^*$ qui donne $x_1$ qui lui donne $x_1^*$ via $\alpha_1$.
+Peut-être.
+
+\subsection*{Etape 1:}
+On pose $V_1(x_1) = \frac{1}{2}(x_1-x_1^*)^2$ avec $x_1^* = z_*$, et, $\dot{V_1} = \alpha_1 (x_1 - x_1^*)^2$. En égalisant les deux termes, on trouve après simplification que:
+\[ x_2^* = \alpha_1(x_1 - x_1^*) + \dot{x_1}^* \text{avec, } \alpha_1 <0\]
+
+\subsection*{Etape 2:}
+On pose:
+\begin{align*}
+V_2(x_1,x_2)& = \frac{1}{2}(x_1 - x_1^*)^2 + \frac{1}{2}(x_2 - x_2^*)^2\\
+\dot{V_2}(x_1,x_2) &= \alpha_1(x_1 - x_1^*)^2 + \alpha_2(x_2 - x_2^*)^2 \text{avec, } \alpha_2 < \alpha_1 <0
+\intertext{On dérive, on égalise et on injecte $\dot{x_2}$ pour trouver}
+x_3^2 &= \hat{x_3}^* = (\alpha_2(x_2-x_2^*) + g + \dot{x_2}^*) \frac{m}{k} (c-x_1)^2
+\end{align*} 
+
+\subsection*{Etape 3:}
+On s'intéresse ici à $\hat{x_3}$ plutot que $x_3^2$.
+On pose:
+\begin{align*}
+V_3(x_1,x_2,\hat{x_3}) &= V_2(x_1,x_2) + \frac{1}{2}(\hat{x_3} - \hat{x_3}^*)^2\\
+\dot{V_3}(x_1,x_2,\hat{x_3}) &= \dot{V_2}(x_1,x_2) + \alpha_3(\hat{x_3} - \hat{x_3}^*)^2
+\intertext{On dérive, on égalise et on injecte $\dot{x_3}$ pour trouver}
+u = \frac{2x_3 + \alpha_3 \tau (x_3 - \hat{x_3}^*/x_3) + \tau \dot{\hat{x_3}}^*}{2k_v}
+\end{align*}
+
+Il faut éviter que $x_3 = 0$ pour avoir i non nul? 
+
+\subsection*{Exercice IV: Commande par modes glissants}
+$\alpha_0 = 1.5, \alpha(t) = \alpha_0 + \Delta \alpha avec |\Delta\alpha| \leq 0.5$
+$S = \dot{\epsilon} + \beta_0 \epsilon$
+
+$\dot{S} = \ddot{\epsilon} + \beta_0 \dot{\epsilon}$ Poursuite assymptotique 
+$u = (\alpha_0 x_2^2 + \ddot{y_c} + \dot{S} + \alpha K sign(S))$
+Premier terme: mode linéarisant
+Terme 3 et 4:  mode glissant
+
+$\alpha >1  K tel que |\Delta \alpha x_2^2| < K$
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:

@@ -1,0 +1,195 @@
+% Relu 12.10.14. AA
+
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+\subsection*{Exercice I : Stabilité d'un asservissement avec retour unitaire}
+
+On considère l'asservissement analogique où :
+\[ H(p) = \frac{C}{p(1+\tau p)} \text{avec } \tau = 0.2 \]
+
+On place un CNA (BOZ) en amont de $H(p)$ et un CAN dans la boucle de retour.
+\begin{enumerate}
+\item Pour passer de l'analogique au numérique, on utilise la formule suivante :
+\[ T(z) = (1-z^{-1})Z[^*L^{-1}[\frac{H(p)}{p}]] \]
+On a donc successivement :
+\begin{align*}
+A(p) & = \frac{H(p)}{p}  = \frac{C/\tau}{p^2(p+1/\tau)} \\
+& = \frac{C}{\tau}(\frac{\alpha}{p} + \frac{\beta}{p^2} + \frac{\gamma}{p+1/\tau}) \\
+& = C (\frac{-\tau}{p} + \frac{1}{p^2} + \frac{\tau}{p+1/\tau}) \\
+a(t) & = C[-\tau+t+\tau e^{-\frac{t}{\tau}}] \\
+a_k & = C[-\tau + kT_e + \tau e^{-\frac{T_e}{\tau}k}] \\
+A(z) & = C[ -\frac{\tau z}{z-1} + \frac{T_e z}{(z-1)^2} + \tau\frac{z}{z-D} ] \text{ où } D = e^{-\frac{T_e}{\tau}} \\
+T(z) & = (1-z^{-1})A(z) \\
+& = \frac{z-1}{z} C[ -\frac{\tau z}{z-1} + \frac{T_e z}{(z-1)^2} + \tau\frac{z}{z-D}] \\
+& = C[ -\tau + \frac{T_e}{z-1} + \frac{\tau(z-1)}{z-D} ] \\
+T(z) & = C \frac{(\tau(1+D)+T_e-2\tau)z + (-D\tau - T_e D + \tau)}{z^2 - (1+D)z + D}
+\end{align*}
+On pose
+\begin{align*}
+T(z) & = \frac{b_1 z + b_0}{z^2 + a_1 z + a_0} \\
+& b_1 = C(\tau(D-1) + T_e)\\
+& b_0 = C(\tau(1-D) - T_e D)\\
+& a_1 = -(1+D)\\
+& a_0 =D
+\end{align*}
+
+\item Mise en équation de l'asservissement
+\begin{align*}
+Y(z) & = \frac{T(z)}{1+T(z)} E(z) \\
+& = \frac{B(z)}{A(z) + B(z)} \text{ avec } T(z) = \frac{A(z)}{B(z)}
+\end{align*}
+
+Le polynôme caractéristique s'écrit :
+\begin{eqnarray*}
+\Pi(z) & = &  B(z) + A(z)  \\
+& = &  c_2 z^2 + c_1 z + c_0 \\
+& \text{avec } & c_2 = 1 \\
+& & c_1 = a_1 + b_1  = -(1+D) + C(T_e + \tau (D-1)) \\
+& & c_1 = -(1+D) + CT_eD \text{ car ici } \tau = T_e \\
+& & c_0 = a_0 + b_0 = D + C(\tau(1-D) - T_e D) \\
+& & c_0 = D + CT_e(1-2D)
+\end{eqnarray*}
+
+
+\item a) Critère de Routh-Hurwitz \\
+Transformation en w : \( z = \frac{1+w}{1-w}, \quad w = \frac{z-1}{z+1} \) \\
+
+On réécrit l'équation caractéristique en $w$ :
+\begin{eqnarray*}
+c_2 (\frac{1+w}{1-w})^2 & + c_1(\frac{1+w}{1-w}) & + c_0  = 0 \\
+C_2 (w^2 + 2w + 1) & + c_1(1-w^2) & + c_0(w^2 -2w+1)  = 0 \\
+(c_2-c_1+c_0)w^2 & + 2(c_2-c_0)w & + (c_2+c_1+c_0)  = 0
+\end{eqnarray*}
+
+Tableau de Routh :\\
+\begin{figure}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+$w^2$ & $c_2-c_1+c_0$ & $c_2+c_1+c_0$ \\
+\hline
+$w$ & $2(c_2-c_0)$ & 0 \\
+\hline
+$w^0$ & $c_2+c_1+c_0$ & \\
+\hline
+\end{tabular}
+
+\end{figure}
+
+
+On doit avoir tous les termes de la première colonne positifs : on retrouve le critère de Jury.
+
+
+
+\item b) Critère de Jury :
+\begin{itemize}
+\item $c_2 + c_1 + c_0 > 0$
+\item $c_2 - c_1 + c_0 > 0$
+\item $|c_0| < c_2 \Leftrightarrow -c_2 < c_0 < c_2$
+\end{itemize}
+
+On traduit ces conditions
+\begin{itemize}
+\item $c_2 + c_1 + c_0 > 0$
+\begin{align*}
+& 1 + (-(1+D) + CT_eD) + (D + CT_e(1-2D)) > 0 \\
+& C ( T_e D + T_e - 2 DT_e ) > 0 \\
+& C (1-D) > 0 \\
+& C > 0 \text{ car } D =e^{-1} < 1
+\end{align*}
+
+\item $c_2 - c_1 + c_0 > 0$
+\begin{align*}
+& 1 - (-(1+D) + CT_eD) + (D + CT_e(1-2D)) > 0 \\
+& 2 + 2D + cT_e(-3D+1) > 0 \\
+& C T_e(1-3D) > -2 -2D  \\
+& C < -\frac{2+2D}{1-3D} \text{  car } 3D > 1
+\end{align*}
+
+\item $-c_2 < c_0 < c_2$
+\begin{eqnarray*}
+-1 < & D + CT_e(1-2D) & < 1 \\
+-1 - D < & CT_e(1-2D) & < 1 - D \\
+\frac{-1-D}{T_e(1-2D)} < & C & < \frac{1-D}{T_e(1-2D)}
+\end{eqnarray*}
+\end{itemize}
+
+Le critère de Jury aboutit donc à :
+\[ \boxed{ 0 < C < \min(-\frac{2+2D}{(1-3D)T_e},\frac{1-D}{(1-2D)T_e}) } \]
+
+\item On s'intéresse à l'asservissement analogique du même système
+\[ Y(p) = \frac{H(p)}{1+H(p)} E(p) \]
+L'équation caractéristique conduit à
+\begin{align*}
+1 + H(p) & = 0 \\
+1 + \frac{C}{p(1+\tau p)} &= 0 \\
+\tau p^2 + p + C &= 0
+\end{align*}
+Le système est stable si et seulement si $C>0$.\\
+En analogique, la marge de gain est infinie (la phase n'est jamais égale à $-180^o$. En numérique, le BOZ induit un déphasage qui conduit à une limitation supplémentaire pour $C$ en terme de stabilité.
+
+
+\item Pour approcher le comportement basse fréquence de la chaîne directe de l'asservissement de la figure 1, il faut tenir compte du BOZ. Il faut approximer l'expression de $B_0(p)$.
+
+\begin{itemize}
+\item Avec $\omega << \frac{1}{T_e}$, $e^{-T_ep} \approx 1 - T_ep$ et
+\begin{align*}
+B_0(p) & = T_e \\
+\tilde{H}(p) & = T_e H(p) = \frac{CT_e}{p(1+\tau p)}
+\end{align*}
+On revient à la même condition $ C > 0 $.
+
+\item Suggestion : faire le développement à l'ordre 2 ?
+
+Avec $e^{-T_e p} \approx 1 - T_ep + \frac{(T_ep)^2}{2}$,
+\begin{align*}
+B_0(p) & = \frac{T_ep-T_e^2p^2 / 2 }{p}\\
+& = T_e - \frac{T_e^2}{2}p \text{ : non causal} \\
+\tilde{H}(p) & = T_e(1-\frac{T_e}{2}p)\frac{C}{p(1+\tau p)}
+\end{align*}
+L'équation caractéristique $1+\tilde{H}(p) = 0$ mène à
+\begin{align*}
+\tau p^2 + p + CT_e(1-\frac{T_e}{2}p) & = 0 \\
+\tau p^2 + (1-C\frac{T_e^2}{2})p + CT_e & = 0
+\end{align*}
+L'application du critère de Routh mène à : $0 < C < \frac{2}{T_e^2}$
+
+\item Approximation de Padé ($\omega << \frac{1}{2T_e}$) :
+\[ e^{-T_ep} = \frac{e^{-\frac{T_e}{2}p}}{e^{\frac{T_e}{2}p}} \text{ et } e^{-\frac{T_e}{2}p} \approx 1 -
+\frac{T_e}{2}p \Longrightarrow e^{-T_ep} \approx \frac{1 - \frac{T_e}{2}p}{1 + \frac{T_e}{2}p} \text{ : causal !} \]
+
+\begin{align*}
+B_0(p) & \approx \frac{1-\frac{1 - \frac{T_e}{2}p}{1 + \frac{T_e}{2}p}}{p} \\
+& = \frac{T_e}{1+\frac{T_e}{2}p} \text{ : causal } \\
+\tilde{H}(p) & = \frac{T_e}{1+\frac{T_e}{2}p} . \frac{C}{p(1+\tau p)}
+\end{align*}
+
+L'équation caractéristique $1+\tilde{H}(p)=0$ mène à
+\begin{align*}
+CT_e + p (1+\frac{T_e}{2}p)(1+\tau p) & = 0 \\
+\tau\frac{T_e}{2}p^3 + (\tau+\frac{T_e}{2})p^2 + p + CT_e &= 0
+\end{align*}
+
+\begin{figure}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+$p^3$ & $\tau \frac{T_e}{2}$ & 1 \\
+\hline
+$p^2$ & $\tau + \frac{T_e}{2} $ & $CT_e$ \\
+\hline
+$p$ & $1- \frac{CT_e \tau}{2(\tau + \frac{T_e}{2})}$ & 0 \\
+\hline
+$p^0$ & $CT_e$ &  \\
+\hline
+\end{tabular}
+\end{figure}
+
+La condition est donc $C < \frac{2(\tau + T_e/2)}{T_e \tau} = \frac{3}{\tau}$
+\end{itemize}
+
+\item La discrétisation d'un asservissement en temps continu dégrade la stabilité.
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,49 @@
+\documentclass{../../td}
+\usepackage{../../raccourcis}
+\usepackage{multicol}
+% Mise en page
+\title{Correction de TD}
+\author{Pierre-Antoine Comby (basé sur le travail de ?)}
+\teacher{Mohamed Abbas Turki}
+\module{424}
+
+\renewcommand{\thesection}{TD\arabic{section}}
+
+\newcommand{\et}{\quad\text{ et }\quad}
+\newcommand{\avec}{\quad\text{ avec }\quad}
+\makeatletter
+\def\l@section{\@dottedtocline{1}{1em}{3em}}
+\makeatother
+
+\graphicspath{{TD1/}{TD2/}{TD3/}{TD4/}{TD5/}{TD6/}{TD7/}{TD8/}{TD9/}}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\section{Espace de phase et stabilité}
+\subfile{TD1/TD1.tex}
+\section{Methode du premier harmonique}
+\subfile{TD2/TD2.tex}
+\section{Stabilité en non linéaire}
+\subfile{TD3a/TD3a.tex}
+\subfile{TD3b/TD3b.tex}
+\section{Choix de la fonction de Lyapunov candidate, Commandabilité et Observabilité}
+\subfile{TD4/TD4.tex}
+\section{Bouclage linéarisant par retour d'état statique}
+\subfile{TD5/TD5.tex}
+\section{Bouclage linéarisant par retour d'état dynamique}
+\subfile{TD6/TD6.tex}
+\section{Bouclage linéarisant poursuite asymptotique}
+\subfile{TD7/TD7.tex}
+\section{Commande hiérarchisée et robustesse}
+\subfile{TD8/TD8.tex}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+

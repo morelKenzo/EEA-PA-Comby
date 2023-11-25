@@ -1,0 +1,219 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+
+\newcommand{\hth}{\hat{\theta}}
+\newcommand{\hx}{\hat{x}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bH}{\mathbf{H}}
+\newcommand{\erth}{\tilde{\theta}}
+\newcommand{\erx}{\tilde{x}}
+\newcommand{\gxx}{\gamma_{xx}}
+
+\subsection{Introduction}
+
+\begin{itemize}
+\item Grandeur à estimer : VA $\theta = x(t+\Delta t)$, $\Delta t >0$.
+\item Information a priori : $x(t)$ SA réel, scalaire, centré ($\forall t \in \R, E[x(t)] = 0$), stationnaire ($E[x(t)] = m_x(t) = m_x$).
+
+\item Observations / mesures :  dans la partie II, $Y=x(t)$ et dans la partie III, $\bY=\vect{ x(t) \\ x'(t) }$
+\item Choix de l'estimateur : estimateur linéaire : $\hth = \bH \bY$
+\begin{itemize}
+\item Partie II : $\hth = \hx (t+\Delta t) = Hx(t)$
+\item Partie III : $\hth = \hx (t+\Delta t) = \bH \vect{x(t) \\ x'(t) } = [a \quad b]\vect{ x(t) \\ x'(t)} =ax(t) + bx'(t)$
+\end{itemize}
+
+\item Calcul des caractéristiques statistiques de l'estimateur
+\begin{itemize}
+\item $ \erth = \hx(t+\Delta t) - x(t+\Delta t)$
+\item $E[\erth] = $ biais(moyen)
+\item $E[\erth^2] = P_{\erth} = E[(\hth-\theta)^2] =$ erreur quadratique moyenne (puissance de l'erreur)\\
+\end{itemize}
+\end{itemize}
+
+Objectif : Minimiser $P_{\erth}$\\
+
+\begin{itemize}
+\item Variations lentes : $x(t+\Delta t) \approx x(t)$.
+
+$\hx(t+\Delta t) = x(t) = 1.x(t)$. L'erreur d'estimation vient de celle de $x(t+\Delta t) \approx x(t)$.
+
+$\hx(t+\Delta t) = 1.x't) + \Delta t x'(t)$
+
+\item Fortement corrélé : $\gxx(\Delta t) \approx \gxx(0)$. 
+
+On obtient les mêmes expressions que précédemment pour $\hx(t+\Delta t)$.
+
+\item Faiblement corrélé : la fonction d'autocorrélation est "plus étroite" : $\gxx(\Delta t) \approx 0$
+
+$\hx(t+\Delta t) = 0$ i.e. $a=0,b=0$
+
+\item Signal sinusoïdal
+
+$\hx(t+\Delta t) = \frac{x_1(t+\Delta t) + x_2(t+\Delta t)}{2}$ si on a seulement accès à $x(t)$
+
+$\hx(t+\Delta t) = x(t+\Delta t)$ si on a accès à $x(t)$ et $x'(t)$.
+\end{itemize}
+
+\subsection{Estimateur à partir de $x(t)$}
+
+On utilise l'estimateur suivant :
+\[\hx(t+\Delta t) = a.x(t) \]
+\begin{enumerate}\setlength{\itemsep}{5mm}
+\item Calculons l'erreur moyenne :
+\begin{align*}
+E[\erx(t+\Delta t)] & = E[\hx(t+\Delta t) - x(t+\Delta t)] \\
+& = E[a.x(t) - x(t+\Delta t)] \\
+& = aE[x(t)] - E[x(t+\Delta t)] \\
+& = 0 \text{ car le signal est centré}
+\end{align*}
+L'estimateur est non biaisé car la moyenne de l'estimateur est égale à la moyenne du signal.
+
+\item Calculons l'erreur quadratique :
+\begin{align*}
+P_{\erth} & = E[\erx(t+\Delta t)^2] \\
+& = E[(ax(t)-x(t+\Delta t))^2] \\
+P_{\erth}(a) & = a^2 \gxx(0) -2a\gxx(\Delta t)+\gxx(0)
+\end{align*}
+
+$P_{\erth}(a)$ est une parabole et $\gxx(a)>0$ donc on a la CNS de maximum :
+\[ \frac{dP_{\erth}(a)}{da}|_{a_{opt}} = 0 \Leftrightarrow a_{opt} = \frac{\gxx(\Delta t)}{\gxx(0)} \in [-1,1] \]
+
+On en déduit l'erreur quadratique minimale :
+\[P_{min} = P_{\erth}(a_{opt}) = \gxx(0) - \frac{\gxx^2(\Delta t)}{\gxx(0)} = \gxx(0)(1-(\frac{\gxx(\Delta t)}{\gxx(0)})^2)\]
+
+Calculons l'erreur moyenne de $\erx(t+\Delta t)x(t)$ :
+\begin{align*}
+E[\erx(t+\Delta t)x(t)] & = E[(ax(t) - x(t+\Delta t)) x(t)] \\
+& = a \gxx(0) - \gxx(\Delta t)
+\intertext{Pour $a = a_{opt}$,}
+E[\erx(t+\Delta t)x(t)] & = 0 \text{ (principe d'orthogonalité)}
+\intertext{On peut réécrire ce résultat :}
+E[\erx(t+\Delta t)x(t)] & = \gamma_{x\erx}(\Delta t) = 0 
+\end{align*}
+Autrement dit, il ne reste plus d'information commune entre $\erx(t+\Delta)$ et $x(t)$. On a extrait ce qu'on pouvait. Si on ne l'avait pas fait ($\gamma_{x\erx}(\Delta t) \neq 0$), on pourrait trouver un meilleur estimateur.
+
+\item Dans le cas du bruit blanc $\gxx(\Delta t) = 0$ donc $a_{opt}=0$.
+
+Dans le cas du faiblement corrélé, $\gxx(\Delta t)=0$.
+
+Fortement corrélé : $\gxx(\Delta t) \approx \gxx(0)$ donc $a_{opt}\approx 1$
+\end{enumerate}
+
+\subsection{Estimateur à partir de $x(t)$ et $x'(t)$}
+
+On considère l'estimateur :
+\[ \hx(t+\Delta t) = ax(t) + bx'(t) \]
+
+Hypothèses :
+\begin{itemize}
+\item $\tau \rightarrow \gamma_{xx}(\tau)$ est dérivable 2 fois
+\item $\gxx'(0)=0$
+\item $\gxx''(0) <0$
+\end{itemize}
+
+\begin{enumerate}\setlength{\itemsep}{5mm}
+\item Biais de l'estimateur ? 
+\begin{align*}
+E[\erx(t+\Delta t)] & = E[(\hx(t+\Delta t) - x(t-\Delta t)] \\
+& = E[ax(t) + bx'(t) - x(t+\Delta t)]\\
+& = a E[x(t)] + bE[x'(t)] - E[x(t+\Delta t)] \\
+& = 0
+\end{align*}
+L'estimateur est non biaisé, et e $\forall a,b\in\R^2$.
+
+\item Erreur quadratique moyenne de l'estimateur ?
+\begin{align*}
+P_{\erth} &= E[\erx(t+\Delta)^2] \\
+& = E[(ax(t)+bx'(t)-x(t+\Delta t))^2] \\
+& = a^2E[x(t)^2] + b^2E[x'(t)^2]+E[x(t+\Delta t)^2] + 2abE[x(t)x'(t)] \\& \qquad -  2aE[x(t)x(t+\Delta t) - 2bE[x'(t)x(t+\Delta t)] \\
+\intertext{D'après les résultats démontrés au TD précédent (via formule des interférences) : }
+P_{\erth} & = a^2\gxx(0) -b^2\gxx''(0)+\gxx(0) -2ab\gxx'(0)-2a\gxx(\Delta t) +2b\gxx'(\Delta t) \\
+& = (1+a^2)\gxx(0) -b^2\gxx''(0) -2a\gxx(\Delta t) +2b\gxx'(\Delta t) 
+\end{align*}
+
+Ceci définit sans conteste un fantastique paraboloïde tourné ver le haut ! En effet, les coefficients de vant $a^2$ et $b^2$ ont le bon goût d'être positifs (car $gxx(0)=P_x>0$ et $\gxx''(0)<0$ (puissance maximum en 0)).
+
+Tout ça pour ne pas minimiser la belle fonction à deux variables, car on a maintenant une CNS de minimum de l'erreur quadratique :
+\[ \frac{\partial P_{\erth}}{\partial a}|_{a=a_{opt}} = 0 \quad \et \quad \frac{\partial P_{\erth}}{\partial b}|_{b=b_{opt}} \]
+
+On en déduit donc :
+\[ a_{opt} = \frac{\gxx(\Delta t)}{\gxx(0)} \quad \et \quad b_{opt} = \frac{\gxx'(\Delta t)}{\gxx''(0)} \]
+puis
+\[P_{\erth}(a_{opt},b_{opt}) = \gxx(0) - \frac{\gxx^2(\Delta t)}{\gxx(0)} + \frac{\gxx'^2(\Delta t)}{\gxx''(0)} \]
+
+On compare les 2 estimateurs :
+\[P_{min,2} = \gxx(0)[1 -(\frac{\gxx(\Delta t)}{\gxx(0)})^2] + \frac{\gxx'^2(\Delta)}{\gxx''(0)} = P_{min,1} + \frac{\gxx'^2(\Delta)}{\gxx''(0)} \]
+
+Or, $\frac{\gxx'^2(\Delta)}{\gxx''(0)}<0$ donc $P_{min,2} < P_{min,1}$
+
+\begin{align*}
+E[\erx(t+\Delta t)x(t)] & = E[(ax(t)+bx'(t)-x(t+\Delta t))x(t) \\
+& = a\gxx(0) - b\gxx'(0)  - \gxx(\Delta t) \\
+& = a\gxx(0) - \gxx(\Delta t) \\
+& = 0 \avec a=a_{opt}
+\end{align*}
+
+\begin{align*}
+E[\erx(t+\Delta t)x(t)] & = E[(ax(t)+bx'(t)-x(t+\Delta t))x'(t)] \\
+& = a\gxx'(0) - b\gxx''(0) +\gxx'(\Delta t) \\
+& = - b\gxx''(0) +\gxx'(\Delta t) \\
+& =0 \avec b = b_{opt}
+\end{align*}
+
+On aurait pu utiliser ce résultat (principe d'orthogonalité) pour trouver les valeurs de $a_{opt}$ et $b_{opt}$.\\
+
+\textbf{Résumé : } dans le cadre d'un estimateur linéaire :  \[\hth = \hx (t+\Delta t) = \bH \vect{x(t) \\ x'(t) } = [a \quad b]\vect{ x(t) \\ x'(t)} =ax(t) + bx'(t)\]
+\begin{itemize}
+\item 1ère méthode : exprimer $P_{\erth}=E[\erth^2]$, chercher le $\bH_{opt} = [a_{opt} \quad b_{opt}]$ tel que $P_{\erth}$ est minimale. On en déduit $\hth=\bH_{opt} \bY$.
+\item 2ème méthode : Principe d'orthogonalité, revient à chercher $\bH$ tel que $E[\erth\bY^T]=0$.
+\end{itemize}
+
+\[E[\erth\bY^T]=0 \Leftrightarrow \text{Chercher } P_{\erth} min + \text{ estimateur lin. } \]
+
+\textit{Remarque :} Innovation = l'erreur $\erx(t+\Delta t)$ dans le cas où l'estimateur minimise $P_{\erth}$
+\end{enumerate}
+
+\subsection{Comparaison}
+\begin{enumerate}\setlength{\itemsep}{5mm}
+\item \begin{itemize}
+\item Les deux estimateurs sont non biaisés.
+\item $P_{min,2} \leq P_{min,1}$ : le 2ème est cool !
+\end{itemize}
+
+\item On suppose $\Delta t$ "petit". Au début du TD, on avait alors intuité que \[\hx(t+\Delta t) = 1.x't) + \Delta t x'(t)\] soit $a_{opt} = 1$ et $b_{opt} =\Delta t$.
+\[a_{opt} = \frac{\gxx(\Delta t)}{\gxx(0)} \approx \frac{\gxx(0) + \Delta t \gxx'(0)}{\gxx(0)}=1\]
+\[b_{opt} = \frac{\gxx'(\Delta t)}{\gxx''(0)} \approx \frac{\gxx'(0) + \Delta t \gxx''(0)}{\gxx''(0)}=\Delta t\]
+
+WIRKLICH WUNDERBAR !
+
+\end{enumerate}
+
+\subsection{Application}
+
+On s'intéresse maintenant au signal :
+\[ x(t) = E_0\sin(2\pi f_0 t+\phi) \] où $\Phi$ est une VA uniformément répartie sur $[0,2\pi[$
+
+On a montré dans un TD précédent que ce signal est stationnaire et ergodique (à l'ordre 2).
+
+\begin{enumerate}\setlength{\itemsep}{5mm}
+\item $E[x(t)] = 0$ car $\Phi$ est une VA uniforme. Par ergodicité et stationnarité au 1er ordre, $\overline{x(t)} = E[x(t)] = 0$.
+
+On calcule la fonction d'autocorrélation et comme on l'a déjà vu :
+\[ \gxx(\tau) = \frac{E_0^2}{2}\cos(2\pi f_0 t) \]
+
+\item $\gxx(\tau)=\frac{E_0^2}{2}\cos(2\pi f_0 t)$ a sensiblement l'air périodique, d'amplitude $\frac{E_0^2}{2}$ et de fréquence $f_0$.
+
+\item 1er estimateur : $\hx_1(t+\Delta t) = a_{opt}x(t)$. 
+
+Or, $a_{opt} = \frac{\gxx(\Delta t)}{\gxx(0)} = \cos(2\pi f_0 \Delta t)$, donc
+\[ \hx_1(t+\Delta t)= E_0 \cos(2\pi f_0 \Delta t)x(t) = E_0 \cos(2\pi f_0 \Delta t) \sin(2\pi f_0 t + \phi) \]
+
+\item 2ème estimateur : $\hx_2(t+\Delta t) = a_{opt}x(t) + b_{opt}x'(t)$. 
+
+Or, $a_{opt} = \frac{\gxx(\Delta t)}{\gxx(0)} = \cos(2\pi f_0 \Delta t)$ et 
+$b_{opt} = \frac{\gxx'(\Delta t)}{\gxx''(0)} = \frac{\sin(2\pi f_0 \Delta t)}{2\pi f_0}$, donc
+\[ \hx_2(t+\Delta t) = E_0 \cos(2\pi f_0 \Delta t) \sin(2\pi f_0 t + \phi) + E_0 \frac{\sin(2\pi f_0 \Delta t)}{2\pi f_0} (2\pi f_0 \cos(2\pi f_0 t + \phi)) \]
+\[ \hx_2(t+\Delta t) = E_0\sin(2\pi f_0(t+\Delta t) + \phi) = x(t+\Delta t)\]
+\end{enumerate}
+\end{document}

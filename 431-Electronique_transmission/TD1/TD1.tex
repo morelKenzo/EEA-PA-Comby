@@ -1,0 +1,132 @@
+\documentclass[../../Cours_M1.tex]{subfiles}
+\newcommand{\nomTD}{TD1 : L'amplificateur opérationnel}
+\renewcommand{\nomentete}{UE431 - \nomTD}
+
+\begin{document}
+
+\section*{\nomTD}
+
+\subsection*{Exercice 1}
+Le but de ce TD est de valider les hypothèse $\mu \neq \infty$ et $R_e \neq \infty$ et $R_0=0$.\\
+On considère le montage suivant :\\
+\medbreak
+\begin{center}
+\begin{tikzpicture}[scale = 1]
+  \draw[color=black]
+(1,1) node[op amp] (opamp) {}
+(opamp.+) node[left] {}
+(opamp.-) node[left] {}
+(opamp.out) node[right] {}
+(2,-1) to[open,v_>=$V_s$] (2,1)
+(-1,1.5)--(opamp.-)--(-0.5,1.5)--(-0.5,2.5)to[R, l=$R_2$,i<=$i_2$](2,2.5)--(2,1)
+(-1,0.5)--(opamp.+)
+(-1,0.5)--(-1,-.2)to[V,v^<=$V_e$](-1,-1.75) node[ground]{}
+(-1,1.5) to[R,i=$i_1$,l^=$R_1$] (-3,1.5)--(-3.5,1.5) node[ground]{}
+;
+\end{tikzpicture}
+\end{center}
+\medbreak
+On a un montage amplificateur non inverseur idéal. Donc $V_+=V_-=V_e$. Et comme $i_1=i_2$ on a $\frac{V_s}{V_e}=1+\frac{R_2}{R_1} = G_v$ gain du montage. Si $R_1=R_2$ alors $G_v = 2$
+
+\paragraph{Étude de l'AO non idéal tel que : }$R_e \neq \infty$ et $\mu \neq \infty$.\\
+Le montage devient alors :\\
+\medbreak
+\begin{center}
+\begin{tikzpicture}[scale = 1]
+  \draw[color=black]
+  	(1,1) node[op amp] (opamp) {}
+  	(opamp.+) node[left] {}
+  	(opamp.-) node[left] {}
+  	(opamp.out) node[right] {}
+  	(opamp.out) -- (3.5,1)
+  	(1,-2) node[ground]{} to[V_=$\mu \epsilon$] (1,0)--(1,1)--(opamp.out)
+  	(-1,1.5)--(opamp.-)--(-0.5,1.5)--(-0.5,2.5)to[R, l=$R_2$,i<=$i_2$](2,2.5)--(2,1)
+  	(-1,-0.2)--(-0.2,-0.2)--(opamp.+)
+  	(-1,1.5) to[R, l=$R_e$,i^<=$i_{0d}$] (-1,0)--(-1,-.2)to[V,v^<=$V_e$](-1,-2)node[ground]{}
+  	(-1,1.5) to[R,i=$i_1$,l^=$R_1$] (-3,1.5)--(-3.5,1.5) node[ground]{}
+  	(3.5,-2)to[open,v_>=$V_s$](3.5,1)
+;
+\end{tikzpicture}
+\end{center}
+\medbreak
+La loi des noeuds en A donne : $i_1=i_2+i_{ed}$. Ceci nous donne donc :
+\begin{align*}
+& \frac{V_e-\epsilon}{R_1} = \frac{V_s +\epsilon - V_e}{R_2} + \frac{\epsilon}{R_e}\\
+& V_e(\frac{1}{R_1}+\frac{1}{R_2}) =\frac{V_s}{R_2}+\epsilon(\frac{1}{R_e}+\frac{1}{R_1}+\frac{1}{R_2})\\
+& \text{or, } \epsilon =\frac{V_s}{\mu}\text{, d'où :}\\
+& {G'}_v = \frac{V_s}{V_e} = \frac{\mu.R_e(R_1+R_2)}{R_e(R_1\mu+R_1+R_2) + R_1R_2}
+\end{align*}
+
+Si on prend $R_1=R_2=1K\Omega$, $R_e=1M\Omega$ et ${G'}_v=1.9999$.\\
+En conclusion, l'influence de $\mu \neq \infty$ et $R_e \neq \infty$ est négligeable.
+
+\paragraph{Influence de la dépendance du gain à la fréquence} $R_e \rightarrow \infty$ et $u(p)=\frac{A_0}{1+\frac{p}{\omega_c}}$ avec $Z_0 = 10^6$ et $\frac{\omega_c}{2\pi}$.\\
+
+On a d'après le calcul précédent et $R_e \rightarrow \infty$:\\
+\begin{align*}
+{G''}_v &= \frac{\mu(R_1+R_2)}{R_1\mu+R_1+R_2}\\
+&=\frac{1}{\frac{R_1}{R_1+R_2}+\frac{1}{\mu}}\\
+&= \frac{1}{\beta+\frac{1}{\mu}} \text{\indent avec }\beta=\frac{R_1}{R_1+R_2}=\frac{1}{G_v}\\
+&=\frac{1}{\beta(1+\frac{1}{\mu\beta})}
+\end{align*}
+
+\noindent L'erreur relative est $\delta = \frac{v^{ideal}_s-v_s}{v_s}$.\\
+Or, $\frac{v_e}{\beta}=G_v.v_e=v^{ideal}_s$\\
+donc, $v_s(1+\frac{1}{\mu\beta})=v^{ideal}_s$\\
+d'où, $\delta=\frac{1}{\mu\beta}$\\
+
+Mais que vaut ${G''}_v$ en fonction de p?\\
+\[{G''}_v = \frac{1}{\beta\frac{\beta\mu}{\beta\mu+1}} = \frac{\frac{A_0}{1+\frac{p}{\omega_0}}}{\beta\frac{A_0}{1+\frac{p}{\omega_0}}+1} = \frac{A_0}{\beta A_0+1+\frac{p}{\omega_0}}\]
+or, $\beta A_0 >> 1$ donc 
+\[{G''}_v \approx \frac{A_0}{A_0\beta+\frac{p}{\omega_0}}=\frac{1}{\beta}\frac{1}{1+\frac{p}{A_0\beta\omega_0}} \]
+
+Le gain statique du montage quand $\omega \rightarrow 0$ est $\frac{1}{\beta}=1+\frac{R_2}{R_1}$.
+
+La fréquence de coupure a -3db du montage est $A_0\beta f_0$.
+
+Le produit gain bande est $\frac{1}{\beta}*A_0\beta f_0$, donc plus le gain est élevé et plus la bande passante est faible.
+\bigbreak
+\paragraph{Impédance de sortie non nulle}
+On considère le montage suivant avec l'impédance de sortie $R_0$ non nulle :\\
+\medbreak
+\begin{center}
+\begin{tikzpicture}[scale = 1]
+  \draw[color=black]
+(1,1) node[op amp] (opamp) {}
+(opamp.+) node[left] {}
+(opamp.-) node[left] {}
+(opamp.out) node[right] {}
+
+(opamp.out) to  [R, l =$R_0$] (3.5,1)
+(1,-2) node[ground]{} to[V_=$\mu \epsilon$] (1,0)--(1,1)--(opamp.out)
+(-1,1.5)--(opamp.-)--(-0.5,1.5)--(-0.5,2.5)to[R, l=$R_2$,i<=$i_2$](3.5,2.5)--(3.5,1)
+(-1,-0.2)--(-0.2,-0.2)--(opamp.+)
+(-1,1.5) to[R, l=$R_e$,i^<=$i_{0d}$] (-1,0)--(-1,-.2)to[V,v^<=$V_e$](-1,-2) node[ground]{}
+(-1,1.5) to[R,i=$i_1$,l^=$R_1$] (-3,1.5)--(-3.5,1.5) node[ground]{}
+(3.5,-2) node[ground]{} to[R,l=$R_L$,v_>=$V_s$](3.5,1)
+(2,-2)to[open,v_>=$V_s'$](2,1)
+;
+\end{tikzpicture}
+\end{center}
+\medbreak
+Expressions de ${G'''}_v = \frac{V_s}{V_e}$\\
+On applique la loi des nœuds en B
+
+\begin{align*}
+& \frac{v_A-v_S}{R_2}+\frac{{v'}_s-v_S}{R_0} = \frac{v_S}{R_L}\\
+& \frac{v_A-v_S}{R_2}+\frac{{v'}_s-v_S}{R_0} = v_P(\frac{1}{R_L}+\frac{1}{R_2}+\frac{1}{R_0})\\
+\end{align*}
+or, ${v'}_p=\mu\epsilon$, $v_A=v_e-\epsilon$, et $v_A=\frac{R_1}{R_1+R_2}v_S$\\
+
+\begin{align*}
+& {v'}_p=\mu(v_e-\frac{R_1}{R_1+R_2}V_S)\\
+& \frac{R_1}{R_2(R_1+R_2)}V_S +\frac{\mu}{R_0}(v_e-\frac{R_1}{R_1+R_2})=v_S(\frac{1}{R_L}+\frac{1}{R_2}+\frac{1}{R_0})\\
+& \frac{\mu}{R_0}v_e = v_S(\frac{1}{R_L}+\frac{1}{R_2}+\frac{1}{R_0} + \frac{\mu R_1R_2-R_1R_0}{R_0R_2(R_1+R_2)}) \text{\indent or }uR_2>>R_0\\
+& {G'''}_v = \frac{V_s}{V_e} = \mu \frac{1}{\frac{R_0}{R_2}+\frac{R_0}{R_L}+\mu\beta}
+\end{align*}
+Remarque : si $R_0$ = 0 on retrouve $G_v=\frac{1}{\beta}$.
+
+Pour minimiser l'influence de $R_0$ sur le gain, il faut minimiser $\frac{R_0}{R_2}+\frac{R_0}{R_l}$ donc avoir $R_2 >> R_0$ et $R_L >> R_0$.
+
+
+\end{document}

@@ -1,0 +1,174 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Stationnarité et ergodicité}
+\begin{defin}
+  Soit $(\Omega,\mathcal{E},P)$ un espace probabilisé.
+  Une famille/suite de VA indexé par le temps est un \emph{signal aléatoire} $\in\C^n$ noté : $X_t(\omega) ~ \forall t\in \R$ (ou $X_n(\omega) ~ \forall n \in \Z$)
+\end{defin}
+
+En ptratique on s'interesse àdes des signaux de dimension 1.
+\paragraph{Rappel:} on appelle trajectoire la réalisation / acquisition d'un signal. il existe deux types de moyenne possible:
+\begin{itemize}
+\item temporelle, idem que celle des signaux déterministes
+\item Statistique, ideme que pour les VA.
+\end{itemize}
+\begin{exemple}Soit le SA suivant:
+  $X(t,\omega) =A \sin(2\pi f_0 t)$ où $A$ est une variable aléatoire , (ici qui suit une loi uniforme).
+  Alors une réalisation de ce SA est $x(t)=a\sin(2 \pi f_0 t)$.
+  \begin{itemize}
+  \item $\overline{x(t,\omega)} = 0 = m_x$ et $\overline{x^22(t,\omega)} = \frac{a^2}{2}$
+  \item $E[X(t,\omega)] =\sin(2 \pi f_0 t)E[A] = m_X(t)$.
+  \end{itemize}
+\end{exemple}
+\subsection{Moyenne temporelle}
+On rappelle les différentes expression des 1er et 2nd ordre (si il existe) de trajectoire particulière.
+\begin{defin}
+  Les moments d'ordre 1 temporel sont des \emph{moyennes temporelle}:
+  \begin{itemize}
+  \item Temps continu
+    \[
+      \overline{x(t,\omega)}=\lim_{T\to\infty}\frac{1}{2T}\int_{-T}^{T}x(t,\omega)\d t = m_x(\omega)
+    \]
+  \item Temps discret
+    \[
+      \overline{x[n,\omega]} =\lim_{N\to\infty}\frac{1}{2N+1} \sum_{n=-N}^{N}x[n,\omega] =m_x(\omega)
+    \]
+  \end{itemize}
+\end{defin}
+
+
+\begin{defin}
+  Les moments d'ordre 2 croisés définissent la fonction d'intercorrélation temporelle (($\omega$ est fixé )
+  \begin{itemize}
+  \item Temps continu:
+    \[
+      \overline{x(t,\omega)\cdot y^*(t-\tau,\omega)} = \lim_{T\to\infty}\frac{1}{2T}\int_{-T}^{T}x(t,\omega) y^*(t-\tau,\omega)\d t =C^p_{xy}(\tau,\omega)
+    \]
+  \item Temps discret:
+    \[
+\overline{x[n,\omega]y^*[n-k,\omega]} =\lim_{N\to\infty}\frac{1}{2N+1} \sum_{n=-N}^{N}x[n,\omega]y^*[n-k,\omega]
+    \]
+  \end{itemize}
+\end{defin}
+
+\begin{rem}
+On dit également que les  Les moments temporels dépendent de la trajectoire.
+
+Si $y=x$ on parle d'autocorrélation. De plus $C_{xx}^p(0)$ est la \emph{puissance de $x$}.
+\end{rem}
+\subsection{Ergodicité}
+\begin{defin}
+  \begin{itemize}
+  \item Un processus est \emph{ergodique au sens stricte}
+    si et seulement si toutes les moyennes temporelles sont indépendantes de la trajecoire considérée.
+  \item
+    Un processus est ergodique à l'ordre $n$ si et seulement si tous les moments jusqu'à l'ordre de $n$ sont indépendant de la trajectoire considéré.
+    Les moments temporel d'un signal ergodique ne sont pas des variables aléatoires.
+\end{itemize}
+\end{defin}
+\begin{rem}
+  Souvent $n=2$ Pour 2 SA on parle d'ergodicité dans leur ensemble.
+\end{rem}
+
+\subsection{Moyenne statistique}
+
+On considère les signaux aléatoire à des instants particuliers, fixé.
+
+\begin{rem}
+  En fixant le temps on peux définir les fonctions de répartition et la densité de probabilité  d'un signal aléatoire. Alors on peux exprimer les moments statistiques de ses signaux temporels:
+\end{rem}
+\begin{defin}
+  On défini la moyenne statistique (moment d'ordre 1):
+  \[
+    m_X(t) = E[X(t,\omega)] = \int_{\R}^{}x f_X(x,t) \d x
+  \]
+  et la fonction d'intercorrélation statistique (moment d'ordre 2):
+  \[
+    \gamma_{xy}(t_1,t_2) =E[X(t_1,\omega)y^{*}(t_2,\omega)] = \iint xy^{*}f_{x,y,t_1,t_2}\d x\d y
+  \]
+  Il en est de meme dans le cas discret.
+\end{defin}
+\subsection{Stationnarité}
+\begin{defin}
+  \begin{itemize}
+  \item Un processus aléatoire est\emph{ stationanaire au sens strict} ssi
+    toutes ses caractéristiques statistiques sont invariantes par tout
+    changement de l'origine des temps.
+  \[
+    f_{X}(x,t) = f_X(x,t+\tau) =f_X(x) \quad \forall \tau 
+  \]
+\item Un processus aléatoire est stationnaire au sens large /au second ordre ssi ses moments d'ordre 1 et 2 sont invariants par tout changement d'origine des temps.
+  \[
+    E[|X(t,\omega)|^2] = E[|X(t',\omega)|^2] < +\infty
+  \]
+\end{itemize}
+\end{defin}
+\subsection{Stationnarité et ergodicité}
+\begin{prop}
+  Si  un SA est à la fois stationnaire et ergodique les moyennes temporelles et statistiques sont égales.
+
+  L'ensemple des processus stochastique,stationnaire, ergodique peux être obtenu à partir d'une seule trajectoire allant de $-\infty$ à $+\infty$.
+\end{prop}
+\begin{prop}
+  Un SASE au second ordre est tel que:
+  \[
+    m_x = E[X(t)]=\overline{x(t)}=m_x
+  \]
+  et
+  \[
+    \gamma_{xx}(\tau) = E[X(t)X^{*}(t-\tau)]=\overline{x(t)x^{*}(t-\tau)} = C_{xx}^p(\tau)
+  \]
+\end{prop}
+\section{Corrélation et densité spectrale de puissance}
+Ici on s'interesse la répartition de la puissance d'un SA en fonction de la fréquence (idem que la DSE pour des signaux  à énergie finie). On se restreint à des SAS du 2nd ordre.
+\paragraph{Notation} :
+$x(t,\omega)$ représente le SA ou une des ses réalisation \\
+$X(f)$ représente la TF d'un signal $x$ sous réserve d'existence.
+\begin{thm}[Wiener-Kintchine]
+  \[
+    TF[\gamma_{xx}]=\Gamma_{XX}(f) = \text{ dsp de x(t)}
+  \]
+\end{thm}
+
+\begin{prop}[Cas du TC]
+  \begin{align*}
+    \Gamma_{xy}(f) &= \int_\R \gamma_{xy}(\tau) e^{-j2\pi ft} \d t\\
+    \gamma_{xy}(\tau) & =\int_\R \Gamma_{xy}(f) e^{j 2\pi f\tau} \d f\\
+   \gamma_{xy}(0) & = \int_\R \Gamma_{xy}(f) \d f  = \text{ puissance (statistique)}\\
+  \end{align*}
+\end{prop}
+\begin{prop}[Cas du TD]
+  \begin{align*}
+    \Gamma_{xy}(f) &=\sum \gamma_{xy}[k] e^{-j 2 \pi fk}\\
+    \gamma_{xy}[\tau] & = \int_{-1/2}^{1/2} \Gamma_{xy}(f)e^{j 2\pi f k} \d f\\
+    P_x = \gamma_{xx}[0] &= \int_{-1}^{1} \Gamma_{xx}(f)df
+  \end{align*}
+\end{prop}
+\begin{exemple} cf TP1
+\end{exemple}
+
+\begin{prop}
+  \begin{itemize}
+  \item $|\gamma_{xy}(\tau)| \le \gamma_{xx}(0) =P_x$ 
+  \item $\gamma_{xx}(-\tau)= \gamma_{xx}(\tau)^* \implies \Gamma_{xx}(f) \in \R$
+  \item $\Gamma_{xx}(f)>0$
+  \end{itemize}
+\end{prop}
+\begin{rem}
+  très souvent on a $\gamma_{xx}(\tau) \xrightarrow[+\infty] |m_x|^2$ , ce qui signifie qu'on a aps d'effet  ``mémoire'' àl'infini. Si $m_x \neq 0$ la DSP  comporte une raie à l'origine de valeur $m_x$.
+\end{rem}
+
+\section{Periodogramme}
+
+
+
+\section{Signaux aléatoire particulier}
+\subsection{SA indépendants}
+\subsection{SA décorrélés}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

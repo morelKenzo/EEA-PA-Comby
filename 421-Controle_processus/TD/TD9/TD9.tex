@@ -1,0 +1,140 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\subsection*{Exercice 1 : Système hydraulique}
+On rappelle la loi de Bernoulli : $\rho \frac{V_1^2}{2} + \rho g z_1 +p_1 = \rho \frac{V_2^2}{2} + \rho g z_2 +p_2$ Ce qui donne $q_1 \approx k h_i$\\
+On a aussi la formule $k = \frac{S}{2} \sqrt{2gH_0}$ \\
+
+\begin{enumerate}
+\item  Cuve 1 :\\
+On a la relation de débit $q_e - q_1 = \frac{dv_1}{dt}$ , le volume $V_1 = V_1^0+v_1$, sachant que $v_1 = h_1 * S$, d'où :\\
+$q_e -q_1 = S \frac{dh_1}{dt}$, et puisque $q_1 = kh_1$ on aboutit à :
+\[ q_e- kh_1 = S\frac{dh_1}{dt}\]
+
+ Cuve 2 :\\
+On a ici, $q_1-q_2 = \frac{dv_2}{dt} = S\frac{dh_2}{dt}$ donc :
+\[kh_1 - kh_2 = S\frac{dh_2}{dt}\]
+
+\item On a les relations :
+\begin{align*}
+\frac{dh_1}{dt} &= - \frac{k}{S}h_1 + \frac{1}{S}q_e\\
+\frac{dh_2}{dt} &= \frac{k}{S}h_1- \frac{k}{S}h_2
+\end{align*}
+On pose $a= \frac{k}{S}$ et $b = \frac{1}{S}$, donc en posant $x= \begin{pmatrix}h_1\\h_2\end{pmatrix}$, on a :
+\[\dot{x} = \begin{pmatrix}-a & 0 \\ 0 & -a\end{pmatrix}x + \begin{pmatrix}b\\0\end{pmatrix} q_e\]
+
+\item \begin{align*}
+P_A(\lambda) &= det(p \mathbf{1}-A)\\
+&= (\lambda + a )^2
+\end{align*}
+On a donc une racine double négative, le système est donc globalement asymptotique stable.\\
+
+\item \begin{align*}
+y &= h_1\\
+&= \begin{pmatrix}1&0\end{pmatrix}. \begin{pmatrix}h_1\\h_2\end{pmatrix}\\
+&= Cx
+\end{align*}
+
+A-t-on observabilité du système? \\
+\[O(C,A) = \begin{pmatrix} C\\CA\end{pmatrix} = \begin{pmatrix}1&0\\-a&0\end{pmatrix}\]
+Le système est non observable lorsque $y= h_1$.\\
+
+Si $y = h_2 = \begin{pmatrix}0\\1\end{pmatrix} x$
+\[O(C,A) = \begin{pmatrix} C\\CA\end{pmatrix} = \begin{pmatrix}0&1\\a&-a\end{pmatrix}\]
+Le système est observable lorsque $y = h_2$.\\
+
+Rappel : Équation fondamentale de l'observateur asymptotique :
+\[\left \{\begin{matrix}
+\dot{\hat{x}} = A\hat{x} + B u + L(y-\hat{y})\\
+\hat{y} = C\hat{x}
+\end{matrix}\right. \]
+
+Posons :
+\begin{align*}
+\epsilon_x = x - \hat{x}\\
+\dot{\epsilon_x} = \dot{x}-\dot{\hat{x}}\\
+&= Ax + Bu - (A\hat{x} + Bu + L(y - \hat{y})\\
+&= A(x-\hat{x}) - L(Cx + C\hat{x})\\
+&= A\epsilon_x - LC\epsilon_x
+\intertext{donc :}
+\dot{\epsilon_x} &= (A-LC)\epsilon_x
+\intertext{avec $\epsilon_x(0) = x_0 - \hat{x_0}$}
+\epsilon_x(t) &= e^{(A-LC)t} \epsilon_{x_0}
+\end{align*}
+\begin{align*}
+\hat{x} \longrightarrow_{t \longrightarrow\infty} x &\Leftrightarrow \text{valeurs propres de A-LC à $Re() <0$}
+\end{align*}
+On cherche $L \in \mathbb{R}^{N*1}$ tel que $A-LC$ soit à valeurs propres à partie réelle négative.\\
+
+Soit,
+\begin{align*}
+L &= \begin{pmatrix}l_1\\l2\end{pmatrix}\\
+A-LC &= \begin{pmatrix}-a & -l_1\\a & -a-l_2\end{pmatrix}\\
+P_{A-LC}(p) &= p^2 + (2a+l_2)p + a^2 + a(l_1+l_2)\\
+\Pi_0(p) &= (p - \xi(-a))^2\\
+&= (p + \xi a )^2\\
+&= p^2 + 2\xi ap + \xi^2a^2
+\intertext{d'où, par identification :}
+&\left \{\begin{matrix}
+2a + l_2 = 2 \xi a\\
+a^2 + a(l_1+l_2) = \xi^2a^2
+\end{matrix} \right.
+\intertext{donc, on obtient :}
+l_2 &= 2a(\xi-1)\\
+l_1 &= a(\xi -1) ^2
+\end{align*}
+\end{enumerate}
+
+
+\subsection*{Exercice 2 : système hydraulique avec perturbation}
+
+\begin{enumerate}
+\item On a :
+\begin{align*}
+q_e + q_p -q_1 &= S\frac{dh_1}{dt}\\
+q_1 - q_2 &= S\frac{dh_2}{dt}
+\intertext{d'ou la représentation d'état :}
+\begin{pmatrix}\dot{h_1}\\\dot{h_2}\end{pmatrix} &= \begin{pmatrix}
+-a & 0 \\a & -a\end{pmatrix}. \begin{pmatrix}
+h_1\\h_2\end{pmatrix} + \begin{pmatrix}
+b\\0\end{pmatrix}q_e + \begin{pmatrix}
+b\\0\end{pmatrix}q_p
+\end{align*}
+
+\item On suppose que $q_p \approx cst$
+
+Posons $x = \begin{pmatrix}h_1\\h_2\\q_p\end{pmatrix}$, on a alors :
+\begin{align*}
+\dot{x} &= \begin{pmatrix}\dot{h_1}\\\dot{h_2}\\\dot{q_p}\end{pmatrix}\\
+&= \begin{pmatrix}
+-a & 0 & b\\a & -a 0 \\ 0 & 0& 0\end{pmatrix}.\begin{pmatrix}
+h_1\\h_2\\q_p\end{pmatrix} + \begin{pmatrix}
+b\\0\\00\end{pmatrix} q_e\\
+&= Ax + Bq_e
+\end{align*}
+
+\item Déterminons les valeurs propres :
+\begin{align*}
+det(\lambda \mathbf{1} - A) &= \left | \begin{matrix}
+\lambda + a &0&-b \\ -a & \lambda + a & 0 \\ 0 & 0 & \lambda \end{matrix} \right |\\
+&= \lambda(\lambda + a)^2
+\end{align*}
+
+\item
+\begin{align*}
+\dot{\hat{x}} &= A\hat{x} + B u + L(y-\hat{y})\\
+y &= h_2 = \begin{pmatrix}0&1&0\end{pmatrix} x\\
+O(C,A) &= \begin{pmatrix}C\\CA \\CA^2\end{pmatrix}\\
+ &= \begin{pmatrix}0&1&0\\2&-a&0\\-2a^2&a^2&ab\end{pmatrix}\\
+ det(O(C,A)) &= -a^2b
+\end{align*}
+ donc observable.\\
+
+
+\end{enumerate}
+
+
+
+
+\end{document}

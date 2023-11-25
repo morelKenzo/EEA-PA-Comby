@@ -1,0 +1,194 @@
+\documentclass[../../Cours_M1.tex]{subfiles}
+\newcommand{\nomTD}{TD3 : Stabilité des systèmes linéaires}
+\renewcommand{\nomentete}{UE431 - \nomTD}
+
+\begin{document}
+
+\section*{\nomTD}
+
+
+On considère un système d'entrée $e(t)$ et de sortie $s(t)$ régi par l'équation différentielle suivante :
+\[ \tau^2\frac{d^2s(t)}{dt^2} + \tau\frac{ds(t)}{dt} = -e(t), \text{ avec }
+\left\{
+\begin{array}{rl}
+s(0^+) = & 0 \\
+\frac{ds(t)}{dt} |_{0^+} = & 0 \\
+\tau > & 0
+\end{array}
+\right.
+\]
+
+\subsection*{Généralités}
+\begin{itemize}
+\item Tout système défini par une équation différentielle à coefficients constants est linéaire.
+\item La relation entrée sortie est définie par \[ s(t) = (h*e)(t) \] où $h(t)$ est la réponse impulsionnelle du système, obtenue pour une entrée impulsionnelle $\delta(t)$.
+\item Pour $e(t) = \delta(t)$, on a donc :
+\[ \tau^2 \frac{d^2h}{dt^2} + \tau \frac{dh}{dt} = -\delta(t) \]
+\item \textit{Déf :} Un système est stable s'il retourne spontanément vers son état d'équilibre s'il en est écarté.
+Autrement dit, un système est stable si : 
+\begin{itemize}
+\item $\int_{-\infty}^{+\infty} |h(t)| dt$ converge
+\item $\lim_{t\rightarrow\infty} h(t) = 0$
+\end{itemize}
+\end{itemize}
+
+Le problème est qu'il n'est pas évident de savoir si le système est stable à partir de l'équation différentielle. C'est pour cela que l'on passe dans le domaine de Laplace, et non \textit{Attention, humour !} parce qu'il y a la place d'y passer.
+
+
+\subsection*{Stabilité}
+\begin{itemize}
+\item Dans le cas de signaux causaux, la définition de la transformée de Laplace unilatérale $X(p)$ d'un signal $x(t)$ est :
+\[ X(p) = \int_0^{\infty} x(t) e^{-pt} dt \]
+
+\item On cherche à exprimer $H(p) = \frac{S(p)}{E(p)}$. Pour cela, on passe l'équation différentielle définissant le système dans le domaine de Laplace.
+\begin{align*}
+\tau^2 \frac{d^2h}{dt^2} + \tau \frac{dh}{dt} & = -et) \\
+\tau^2 (p^2 S(p) - \frac{ds(t)}{dt} |_{0^+}) + \tau (S(p)-s(0^+)) & = - E(p) \\
+\tau^2 p^2 S(p) + \tau S(p) & = - E(p)
+\end{align*}
+donc \[ H(p) = -\frac{1}{\tau p (\tau p +1)} \]
+
+\item Décomposition en éléments simples de $H(p)$
+\[ H(p = - \frac{1}{\tau p (\tau p +1)} = \frac{A}{\tau p} + \frac{B}{\tau p + 1} \]
+En multipliant par $\tau p$ et en évaluant en $p = 0$, on obtient $A = -1$.
+En multipliant pat $\tau p +1$ et en évaluant en $p=-1\tau$, on obtient $B = 1$.
+
+Ainsi, \[ H(p) = -\frac{1}{\tau p} + \frac{1}{\tau p + 1} \]
+\[ h(t) = (-\frac{1}{\tau} + \frac{1}{\tau}e^{-\frac{t}{\tau}})u(t) \]
+
+Le système n'est pas stable car $\int_{-\infty}^{+\infty} |h(t)|dt$ diverge. Après une excitation impulsionnelle, le système tend vers une position d'équilibre qui n'est pas la position de repos.
+
+\textit{Généralisation :} Le système est stable si tous les pôles de $H(p)$ sont à parties réelles strictement négatives. (Ici, les pôles sont $p_1 = 0$ et $p_2 = - \frac{1}{\tau}$. C'est $p_1$ qui est responsable de l'instabilité.)
+
+Pour expliciter cette condition, prenons par exemple $H(p) = \frac{N(p)}{D(p)}$ avec $D(p)$ un polynôme de degré 2. On note $\Delta$ son discriminant.
+Si $\Delta < 0$, alors les racines de $D(p)$ sont complexes conjuguées et on peut écrire \[\frac{1}{D(p)} = \frac{A_i}{p-(a \pm jb)}\]
+Or, $\frac{A_i}{p-p_i} = TL[A_i e^{p_it}]$ donc $TL^{-1}[\frac{1}{D(p)}] = A_ie^{at}e^{\pm jb}$.
+
+Le système est stable si $e^{at} \rightarrow_{t\rightarrow \infty} 0$, c'est-à-dire si $a < 0$, soit $Re(p_i) < 0$.
+\end{itemize}
+
+\subsection*{Effet du bouclage sur la stabilité}
+On envisage le bouclage du système linéaire défini précédemment par un gain $k$ réel.
+
+\begin{itemize}
+\item On a immédiatement la fonction de transfert en boucle fermée (formule de Black) :
+\begin{align*}
+G(p) & = \frac{H(p)}{1+kH(p)} \text{ avec } H(p) = -\frac{1}{\tau p (\tau p +1)} \\
+G(p) & = \frac{-1}{\tau p (\tau p + 1) - k} \\
+G(p) & = \frac{-1/\tau^2}{p^2 + p/\tau - k/\tau^2}
+\end{align*}
+
+\item Détermination des pôles de $G(p)$.
+\[D(p) = p^2 + p/\tau - k/\tau^2 \quad \text{donc} \quad \Delta = \frac{1+4k}{\tau^2}\]
+\begin{itemize}
+\item Cas $\Delta > 0$ i.e. $k>-\frac{1}{4}$ : les racines de $D(p)$ sont alors $p_{1,2} = \frac{-1/\tau \pm 1/\tau \sqrt{1+4k}}{2}$
+Si $1+4k \geq 1$ i.e. $k\geq0$, il existe une racine positive et une racine négative : le système est instable.
+Si $0 \leq 1+4k < 1$ i.e. $-\frac{1}{4} \leq k < 0$, alors les deux racines sont strictement négatives : le système est stable.
+\item Cas $\Delta < 0$ i.e. $k < -\frac{1}{4}$ : les racines de $D(p)$ sont $p_{1,2} = \frac{-1/\tau \pm 1/\tau j \sqrt{-(4k+1)}}{2}$.
+Les racines sont à partie réelle strictement négative donc le système est stable.
+\end{itemize}
+En conclusion,
+\begin{align*}
+k \geq 0 & \rightarrow \text{ instable} \\
+k < -\frac{1}{4} & \rightarrow \text{ stable}
+\end{align*} 
+
+Dans cet exemple, on rend le système stable par bouclage avec un gain $k<0$.
+\end{itemize}
+
+\medskip
+
+\noindent De manière générale, le bouclage peut avoir soit un effet stabilisant, soit un effet déstabilisant sur un système.
+
+\subsection*{Étude de la stabilité à partir de la fonction de transfert en boucle ouverte}
+
+On considère toujours le même système bouclé. On étudie sa stabilité à partir du critère de Nyquist, lequel repose sur une étude géométrique de $T(p)$, fonction de transfert en boucle ouverte du système.
+
+On ne considèrera ici que le cas $k>0$.
+
+\[T(p) = \frac{-k}{\tau p(1+\tau p)}\]
+
+\textit{Rappel du critère de Nyquist}
+
+Il est basé sur la relation $\boxed{N=P-Z}$ où 
+\begin{itemize}
+\item $N$ : nombre de tours algébriques autour du point (-1,0) faits par le lieu de Nyquist de $T(p)$
+\item $P$ : nombre de pôles à $Re >0$ de $T(p)$
+\item $Z$ : nombre de zéros à $Re >0$ de $1+T(p)$
+\end{itemize}
+
+Un système est stable en boucle fermée si $Z=0$.\\
+
+\textit{Étapes de la démonstration}
+\begin{enumerate}
+\item On trace le Bode de $T(p)$ : $|T(p)| et Arg(T(p))$
+\item On trace le Nyquist (représentation de $T(p)$ dans le plan complexe)
+\item On compte $N$
+\item On détermine les pôles de $T(p)$ et on compte $P$ le nombre de pôles à $Re>0$ (compris dans le contour de Bromwich)
+\item On en déduit $Z=P-N$ et on conclut sur la stabilité. 
+\end{enumerate}
+
+\textit{Diagramme de Bode}\\
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\draw [>=latex,->] (0,0) -- (0,3) node[left]{$\phi(^o)$} ;
+\draw [>=latex,->] (-1,1) -- (6,1) node[right]{$\omega$};
+
+\draw [red] (0,2) node[left]{$90$} -- (3,2) -- (3,1) -- (6,1);
+
+\draw [>=latex,->] (0,4) -- (0,7) node[left]{$G_{dB}$} ;
+\draw [>=latex,->] (-1,5) -- (6,5) node[right]{$\omega$};
+
+\draw [red] (0,6.5) -- (3,5.5) -- (6,3.5);
+\draw [red,dashed] (3,5.5) -- (3,1) node[below]{$\frac{1}{\tau}$};
+\end{tikzpicture}
+\end{figure}
+
+\textit{Lieu de Nyquist}\\
+D'après le diagramme de Bode :
+\begin{itemize}
+\item quand $\omega \rightarrow 0^+$, $|T(j\omega)| \rightarrow \infty$ et $\phi \rightarrow \pi/2$
+\item $0^+ < \omega < \infty$, $|T(j\omega)| \searrow$ et $\phi \searrow \pi/2$
+\item quand $\omega \rightarrow \infty$, $|T(j\omega)| \rightarrow 0$ et $\phi \rightarrow 0$
+\end{itemize}
+
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\draw 
+(0,-4) -- (0,4)
+(-2,0) -- (4,0)
+;
+\draw [red]
+(0,0.5) node[left]{$A$} arc (90:-90:0.5) node[left]{$D$}
+(0,3)node[left]{$B$} arc(90:-90:3) node[left]{$C$}
+;
+
+\draw
+(5,0) -- (13,0)
+(9,-4) -- (9,4)
+;
+\draw [dashed,red] 
+(9,-3) node[left]{$D$} arc (-90:-270:3) node[left]{$A$}
+;
+\draw [red]
+(9,3) arc (90:-90:1.5) node[left]{$C=B$} arc (90:-90:1.5)
+;
+\end{tikzpicture}
+\caption{Tracé du diagramme de Nyquist avec un contour de Bromwich d'exclusion}
+\end{figure}
+
+\textit{D'après le Nyquist} \\
+Si on parcourt le graphe de $\omega = -\infty$ à $\omega = +\infty$, on fait 1 tour dans le sens horaire de (-1,0) : $N=-1$
+
+\textit{Calcul de P}\\
+Nombre de pôles de $T(p)$ à $Re<0$
+\[T(p) = \frac{-k}{\tau p (1+\tau p)}\quad p_1=0, \quad p_2=-\frac{1}{\tau}\]
+Avec un contour d'exclusion, on a $P=0$
+
+\textit{Calcul de N}\\
+On a $Z=P-N=1$. Le système est instable.
+
+\end{document}

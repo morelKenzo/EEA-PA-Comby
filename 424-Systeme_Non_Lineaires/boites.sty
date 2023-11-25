@@ -1,0 +1,70 @@
+\usepackage{tikz,environ}
+\tikzstyle{mybox} = [draw=black, very thick,
+    rectangle, inner sep=10pt, inner ysep=20pt]
+\tikzstyle{fancytitle} =[draw=black, fill=white, text=black]
+
+
+\NewEnviron{defin}{\par
+\begin{center}
+\begin{tikzpicture}
+\node [mybox] (box){%
+    \begin{minipage}{0.8\textwidth}
+    	\BODY
+	\end{minipage} };
+\node[fancytitle, right=10pt] at (box.north west) {\textbf{Définition}};
+\end{tikzpicture}\end{center}\par
+}
+
+% \NewEnviron{thm}{\par
+% \begin{center}
+% \begin{tikzpicture}
+% \node [mybox] (box){%
+%     \begin{minipage}{0.8\textwidth}
+%     	\BODY
+% 	\end{minipage} };
+% \node[fancytitle, right=10pt] at (box.north west) {\textbf{Théorème}};
+% \end{tikzpicture}\end{center}\par
+%}
+
+\usepackage{thmbox}
+\usepackage{xparse}
+\NewDocumentEnvironment{prop}{o}{%
+\begin{center}\begin{minipage}{0.8\textwidth}
+  \thmbox[M]{\textbf{Proposition \IfNoValueTF{#1}{}{\em (#1)}}}%
+  %\hspace*{-1.5em}%
+  }
+  {%
+  \endthmbox\vspace*{.75ex}\end{minipage}\end{center}%
+  }
+
+\NewDocumentEnvironment{thm}{o}{%
+\begin{center}\begin{minipage}{0.8\textwidth}
+  \thmbox[M]{\textbf{Théorème \IfNoValueTF{#1}{}{\em (#1)}}}%
+  %\hspace*{-1.5em}%
+  }
+  {%
+  \endthmbox\vspace*{.75ex}\end{minipage}\end{center}%
+  }
+
+
+\NewDocumentEnvironment{corol}{o}{%
+	\begin{center}\begin{minipage}{0.8\textwidth}
+			\thmbox[M]{\textbf{Corollaire \IfNoValueTF{#1}{}{\em (#1)}}}%
+			%\hspace*{-1.5em}%
+		}
+		{%
+			\endthmbox\vspace*{.75ex}\end{minipage}\end{center}%
+}
+
+\NewDocumentEnvironment{lemEM}{o}{%
+	\begin{center}\begin{minipage}{0.8\textwidth}
+			\thmbox[M]{\textbf{Lemme ergodique maximal \IfNoValueTF{#1}{}{\em (#1)}}}%
+			%\hspace*{-1.5em}%
+		}
+		{%
+			\endthmbox\vspace*{.75ex}\end{minipage}\end{center}%
+}
+
+\newenvironment{rem}{\par\textbf{Remarque: }\nopagebreak}{\par}
+\newenvironment{exemple}{\par\textbf{Exemple: }\nopagebreak}{\par}
+\newenvironment{preuve}{\par\textit{Démonstration: }\nopagebreak}{\par}

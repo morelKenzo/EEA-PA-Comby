@@ -1,0 +1,222 @@
+% Relu 12.10.14. AA
+
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\subsection*{Exercice 1}
+\begin{itemize}
+\item Montrer que $U(z) = \frac{z}{z-1}E(z)$, avec $u_k = \sum_{j=0}^{k} e_j$ et $Z(e_j) = E(z)$
+
+\begin{align*}
+u_{k-1} & = \sum_{j=0}^{k-1}e_j \\
+u_k & = e_k+u_{k-1} \\
+\intertext{Donc en appliquant la transformée en z et en utilisant le théorème du retard,}
+U(z) & = E(z) +z^{-1}U(z) \\
+U(z) & = \frac{z}{z-1}E(z)
+\end{align*}
+
+\item Montrer que $Z\{ke_k\}=-z\frac{d}{dz}(E(z))$
+\begin{align*}
+-z\frac{d}{dz}(E(z))&= -z\frac{d}{dz}(\skzi e_kz^{-k})\\
+&=-z \skzi e_k(-k)z^{-k-1}\\
+&=\skzi ke_kz^{-k}\\
+&=Z\{ke_k\}\\
+\end{align*}
+\end{itemize}
+
+\subsection*{Exercice 2 :}
+\noindent Méthode : on effectue la transformée inverse pour obtenir le signal temporel. Puis on l'échantillonne avant de passer à sa transformée en Z, où l'on obtient une suite géométrique que l'on simplifie.\\
+
+\begin{enumerate}
+\item \[Y(p)= L[y(t)] = \frac{1}{p(p+a)} = \frac{\alpha}{p}+\frac{\beta}{p+a}\]
+
+On identifie \[\alpha=\frac{1}{a} \text{ et } \beta=\frac{-1}{a} \]
+
+donc par transformée inverse de Laplace, \[y(t)=\frac{1}{a}(1-e^{-at})\mathbf{1}(t)\]
+
+Puis on échantillonne avec $t=k.t_e$ avec $k \in\mathbb{N}$, et on a $y_k=\frac{1}{a}(1-e^{-a.k.T_e})$\\
+On a donc :
+\begin{align*}
+Z\{y_k\} &= Z\{\frac{1}{a}\} - Z\{\frac{1}{a}(e^{-aT_e})^k\}\\
+&= \frac{1}{a}(\frac{z}{z-1}-\frac{1}{1-e^{-aT_e}z^{-1}})\\
+Y(z) &= \frac{1}{a}(\frac{z}{z-1}-\frac{z}{z-e^{-aT_e}})
+\end{align*}
+
+\item On pose $Y(p)= \frac{a}{p^2+a^2} = L\{\sin(at)\}$:\\
+On a donc, \[y_k=\sin(akT_e) = \frac{e^{jakT_e}-e^{-jakT_e}}{2j}\]
+Or , \[Z\{e^{jakT_e}\}=\frac{1}{1-e^{jaT_e}z^{-1}}=\frac{z}{z-e^{jaT_e}}\]
+et , \[Z\{e^{-jakT_e}\}=\frac{1}{1-e^{-jaT_e}z^{-1}}=\frac{z}{z-e^{-jaT_e}}\]
+d'où :
+\begin{align*}
+Y(z) &= \frac{z}{2j}(\frac{1}{z-e^{jaT_e}}-\frac{1}{z-e^{-jaT_e}})\\
+&=\frac{z}{2j}(\frac{e^{jaT_e}-e^{-jaT_e}}{z^2-z(2\cos(aT_e)+1)})\\
+Y(z) &=\frac{z\sin(aT_e)}{z^2-z(2\cos(aT_e)+1)}
+\end{align*}
+
+\item On procède de même que ci-dessus avec $Y(p)= \frac{p}{p^2+a^2} = L\{\cos(at)\}$:\\
+On a donc, \[y_k=\cos(akT_e) = \frac{e^{jakT_e}+e^{-jakT_e}}{2}\]
+
+D'où
+\begin{align*}
+Y(z) &=\frac{z}{2}(2z-\frac{e^{jaT_e}-e^{-jaT_e}}{z^2-z(2\cos(aT_e)+1)}) \\
+Y(z) &=\frac{z(z-\cos(aT_e))}{z^2-z(2\cos(aT_e)+1)}
+\end{align*}
+
+\item Ici, les échantillons sont définis par :
+\[y_0=0 ,y_1=1, y_2=-1 \text{ et } \forall k > 2, y_k=0\]
+On a alors :
+\begin{align*}
+Z\{y_k\} &= \skzi y_k.z^{-k}\\
+Y(z) &= z^{-1} - z^{-2}
+\end{align*}
+
+\item $\forall k \in \N, y_{2k} = 0 \text{ et } y_{2k+1} = 1$. Ainsi,
+\begin{align*}
+Z\{y_k\} & = \skzi 1.z^{-(2k+1)} \\
+& = z^{-1} \skzi z^{-2k} \\
+& = \frac{z}{z^2-1}
+\end{align*}
+
+\item $forall l \in \N, y_k = (-1)^{k+1} \mathbf{1}_k$. Ainsi,
+\begin{align*}
+Z\{y_k\} & = \skzi (-1)^{k+1}z^{-k} \\
+& = - \skzi (-1)^k(z^{-1})^k \\
+& = - \frac{1}{1+z^{-1}} \\
+& = - \frac{z}{z+1}
+\end{align*}
+\end{enumerate}
+
+\subsection*{Exercice 3 :}
+\noindent Méthode : dans le cas général, on réécrit $\frac{Y(z)}{z}$ en décomposant en éléments simples puis on repasse Y(z) sous forme de série pour effectuer la transformée en Z inverse. De plus, pour les fractions rationnelles dont le dénominateur est d'ordre deux ou plus, on utilise la propriété de multiplication par une variable d'évolution :
+\[TZ : \quad k^n x[k] \rightarrow (-z \frac{d}{dz})^n X(z) \] \\
+
+\begin{enumerate}
+\item Pour $h > 0$ et $a \in \mathbb{R^*}$
+\begin{align*}
+Y(z) &= \frac{z}{z-a^h}\\
+&= \frac{1}{1-\frac{a^h}{z}}\\
+&= \skzi (a^h.z^{-1})^k\\
+Y(z) & = Z\{(a^h)^k\}
+\end{align*}
+\bigbreak
+
+\item $Y(z) = \frac{z+1}{(z-3)^2}$\\
+On pose \[\frac{Y(z)}{z}=\frac{z+1}{z(z-3)^2}=\frac{\alpha}{z}+\frac{\beta}{z-3}+\frac{\gamma}{(z-3)^2}\]
+On identifie ensuite $\alpha = \frac{1}{9}$, $\gamma =\frac{4}{3}$ et pour $\beta$ on peut multiplier l'égalité par $(z-3)$ puis faire tendre $z$ vers $+\infty$ pour obtenir que $0 = \alpha + \beta$. D'où $\beta = \frac{-1}{9}$, et ainsi :
+\[Y(z) = \frac{1}{9} - \frac{1}{9}\frac{z}{z-3}+\frac{4}{3}\frac{z}{(z-3)^2}\]
+La transformée inverse donne alors en utilisant la propriété de multiplication :
+\[y_k = \frac{1}{9}.\delta_k - \frac{1}{9}.3^k.\mathbf{1}_k+\frac{4}{3}.k.3^{k-1}.\mathbf{1}_k\]
+\bigbreak
+
+\item $Y(z) =\frac{z+3}{z^2-3z+2}= \frac{z+3}{(z-1)(z-2)}$
+On pose \[\frac{Y(z)}{z}=\frac{\alpha}{z}+\frac{\beta}{z-1}+\frac{\gamma}{z-2}\]
+On identifie ensuite $\alpha = \frac{3}{2}$, $\gamma =5$, $\beta = -4$, d'où :
+\[Y(z) = \frac{3}{2} - 4\frac{z}{z-1}+5\frac{z}{z-2}\]
+La transformée inverse donne alors :
+\[y_k = \frac{3}{2}.\delta_k - 4.\mathbf{1}_k +5.2^k.\mathbf{1}_k\]
+\end{enumerate}
+
+\subsection*{Exercice 5 :}
+L'asservissement analogique considéré est le suivant, où $H(p) = \frac{C}{p(1+0.2p)}$ et $B_0(p) = \frac{1-e^{-T_ep}}{2}$, avec $T_e=0.2s$ et $C=5rad.s^{-1}$.
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\sbEntree{E}
+
+\sbComp{comp}{E}
+\sbRelier[$E(z)$]{E}{comp}
+
+\sbBloc{cna}{CNA, BOZ}{comp}
+\sbRelier[$\epsilon(z)$]{comp}{cna}
+
+\sbBloc[3]{sys}{H(p)}{cna}
+\sbRelier[$U(p)$]{cna}{sys}
+
+\sbSortie[3]{S}{sys}
+\sbRelier[$Y(p)$]{sys}{S}
+
+\sbDecaleNoeudy[4]{S}{R}
+\sbBlocr[8]{can}{CAN}{R}
+\sbRelieryx{sys-S}{can}
+\sbRelierxy{can}{comp}
+
+\end{tikzpicture}
+\end{figure}
+
+\begin{enumerate}
+\item Par propriété du cours, on a :
+\[T(z) = (1-z^{-1}).Z\{^*L^{-1}\{\frac{H(p)}{p}\}\}\]
+On commence par poser $A(p)=\frac{H(p)}{p}=L\{a(t)\}$ et $a_n = a(n.T_e)$, donc
+
+\[T(z) = (1-z^{-1}).Z\{a_n\}\]
+On a alors :
+\[A(p) = \frac{C}{p^2(1+0.2p)} = C(\frac{\alpha}{p^2}+\frac{\beta}{p}+\frac{\gamma}{1+0.2p})\]
+On trouve, $\gamma = 0.04$, $\alpha = 1$ et $\beta=-0.2$. Donc en repassant dans le domaine réel on a:
+\[A(t) = C(t-0.2+0.2e^{-5t})u(t)\]
+Donc en échantillonnant avec $a_n=A(nT_e)$ :
+\[a_n=A(nT_e)=C(n.T_e-0.2 + 0.2e^{-5nT_e})\]
+Ainsi, avec la transformée en Z on a :
+\[Z\{a_n\}=C(T_e\frac{z}{(z-1)^2}-0.2\frac{z}{z-1}+0.2\frac{z}{z-\chi}) \text{ avec } \chi = e^{-5T_e}\]
+d'où avec la formule initiale, on obtient :
+\begin{align*}
+T(z) &= \frac{z-1}{z}Z\{a_n\}\\
+&= C\frac{z-1}{z}(\frac{T_ez}{(z-1)^2}-\frac{0.2z}{z-1}+\frac{0.2z}{z-\chi})\\
+&= C(\frac{T_e}{z-1}-0.2+0.2\frac{z-1}{z-\chi})\\
+&= C.\frac{T_e(z-\chi)-0.2(z^2-(1+\chi)z+\chi)+0.2(z^2-2z+1)}{z^2-(1+\chi)z+\chi}\\
+T(z) &= C.\frac{(T_e+0.2(1+\chi)-0.4)z +(-\chi T_e-0.2\chi+0.2)}{z^2-(1+\chi)z+\chi}
+\end{align*}
+\medbreak
+On pose :\begin{itemize}
+\item $b_1 = C(T_e+0.2(1+\chi)-0.4)$
+\item $b_0 = C(0.2-\chi T_e-0.2\chi)$
+\item $a_1 = -(1+\chi)$
+\item $a_0 = \chi$
+\end{itemize}
+\bigbreak
+\noindent Ainsi, on a :
+\[T(z) = \frac{b_1z+b_0}{z^2+a_1z+a_0}=\frac{B(z)}{A(z)}\]
+\medbreak
+\noindent Remarque :
+
+Les pôles analogiques sont : $p_1=0$ , $p_2 = -5$.
+
+Les pôles discrétisés sont : $p_{z_1}=1$ et $p_{z_2} = \chi$.
+
+(On peut le vérifier avec la relation $p_{z_i}=e^{p_iT_e}$.)
+
+Les zéros du temps discret dépendent de $T_e$.\\
+
+\item On a donc en boucle fermée :
+\begin{align*}
+Y(z) = \frac{T(z)}{1+T(z)}E(z)&=\frac{B(z)}{A(z) + B(z)}E(z)\\
+&=\frac{b_1z+b_0}{z^2+(a_1+b_1)z+a_0} =F(z) E(z)
+\end{align*}
+Les zéros de T(z) sont aussi les zéros de F(z).\\
+
+D'autre part, on cherche $G(z) = \frac{\epsilon (z)}{E(z)}$. Or :
+\begin{align*}
+\epsilon (z) &= E(z) - Y(z)\\
+&= (1-F(z))E(Z)\\
+&=\frac{1}{1+T(z)}E(z)\\
+&=\frac{A(z)}{A(z)+B(z)}\\
+&=G(z) E(z)
+\end{align*}
+
+Ainsi, on a: \[G(z)=\frac{z^2 +a_1z+a_0}{z^2+(a_1+b_1)z+(a_0+b_0)}\]
+
+\item a -- Déterminons la relation de récurrence entrée-sortie du système en boucle fermée. On a en factorisant par $z^2$:
+\[Y(z)=\frac{b_1z^{-1}+b_0z^{-2}}{1+(a_1+b_1)z^{-1}+(a_0+b_0)z^{-2}}E(z)\]
+\[Y(z)(1+(a_1+b_1)z^{-1}+(a_0+b_0)z^{-2}) = E(z)(b_1z^{-1}+b_0z^{-2}) \]
+d'où, avec la transformée inverse, la relation de récurrence suivante :
+\[y_k+(a_1+b_1)y_{k-1}+(a_0+b_0)y_{k-2}=b_1e_{k-1}+b_0e_{k-2}\]
+
+\noindent b -- Déterminons la réponse à un échelon $E(z) = \frac{z}{z-1}$ :
+\[Y(z) = \frac{z}{z-1}\frac{b_1z+b_0}{z^2+(a_1+b_1)z+(a_0+b_0)}\\
+\frac{Y(z)}{z}=\frac{\alpha}{z-1}+\frac{\beta}{z-p_1}+\frac{\alpha}{z-p_2}\]
+d'où:
+\[y_k = (\alpha+\beta p_1^k+\gamma p_2^k).\mathbf{1}_k\]
+\end{enumerate}
+
+
+\end{document}

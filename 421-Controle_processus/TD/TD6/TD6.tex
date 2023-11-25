@@ -1,0 +1,271 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section*{Exercice 1 :}
+Remarque : Avec ces notations on a : $i_q = -C\frac{dv}{dt}$
+
+Lois des noeuds :\\
+\begin{itemize}
+\item $i = i_1 + i_2$
+\item $i = i_3 + i_4$
+\item $i_1 = i_q + i_3$
+\item $i_4 = i_q + i_2$
+\end{itemize}
+
+Lois des mailles :\\
+\begin{itemize}
+\item $R_1i_1 - R_2i_2 - v = 0$
+\item $R_3i_3 + v -R_4i_4 = 0$
+\end{itemize}
+
+\begin{align*}
+R_1i_q + R_1i_3 - R_2i_2 - v = 0\\
+R_3i_3 + v -R_4i_2- R_4i_q = 0
+\intertext{ou encore :}
+-R_1C\frac{dv}{dt} - v + R_1i_3 - R_2i_2 = 0\\
+R_4C\frac{dv}{dt} + v R_3i_3 -R_4i_2 = 0
+\end{align*}
+
+Posons $\Delta = R_1R_4-R_2R_3$
+On a donc :
+\begin{align*}
+i_3 &= \frac{1}{\Delta}(-(r_1+r_2)R_4C\dot{v} - (R_2+R_4)v)\\
+i_2 &= \frac{1}{\Delta}(-(R_3+R_4)R_1C\dot{v}-(R_1+R_3)v)
+\intertext{on a donc :}
+u &= L\frac{di}{dt}+R_1i_1+R_3i_3\\
+&= L\frac{di}{dt} - (R_1 + R_3)i_3 +R_1i_q\\
+& \vdots\\
+u &= L\frac{di}{dt}-\frac{(R_1R_2R_3+R_1R_2R_4+R_1R_3R_4+R_2R_3R_4)C}{\Delta}\dot{v} - \frac{(R_1+R_3)(R_2+R_4)}{\Delta}v
+\intertext{Or, $i = i_1 + i_2$ donc $i = i_q + i_3 + i_2$, donc :}
+i &= -C\dot{v} - \frac{R_1+R_2+R_3+R_4}{\Delta}v - \frac{(R_1R_3+2R_1R_4+R_2R_4)C}{\delta}\dot{v}\\
+&\vdots\\
+i &= -\frac{(R_1+R_2)(R_3+R_4)}{\Delta}\dot{v} - \frac{R_1+R_2+R_3+R_4}{\Delta}v
+\end{align*}
+
+On pose :
+\begin{itemize}
+\item $\alpha_1 = R_1R_2R_3+R_1R_2R_4+R_1R_3R_4+R_2R_3R_4$
+\item $ \alpha_2 = (R_1+R_2)(R_3+R_4)$
+\item $\beta_1 = (R_1+R_3)(R_2+R_4)$
+\item $\beta_2 = R_1+R_2+R_3+R_4$
+\end{itemize}
+\bigbreak
+On a alors :
+\begin{align*}
+u = L\frac{di}{dt} - \frac{\alpha_1C}{\Delta} \dot{v} - \frac{\beta_1}{\Delta}v\\
+i = -\frac{\alpha_2C}{\Delta}\dot{v} - \frac{\beta_2}{\Delta}v
+\end{align*}
+
+Posons $x_1 = i$ et $x_2 = v$ :
+\begin{align*}
+u = L\dot{x_1} - \frac{\alpha_1C}{\Delta} \dot{x_2} - \frac{\beta_1}{\Delta}x_2\\
+x_1 = -\frac{\alpha_2C}{\Delta}\dot{x_2} - \frac{\beta_2}{\Delta}x_2
+\end{align*}
+
+
+
+On a donc le système matriciel suivant :
+\begin{align*}
+\begin{pmatrix}
+L & -\frac{\alpha_1 L}{\Delta} \\
+0 & -\frac{\alpha_2 L}{\Delta}
+\end{pmatrix}.\begin{pmatrix}
+\dot{x}_1 \\
+\dot{x}_2
+\end{pmatrix} &= \begin{pmatrix}
+0 & \frac{\beta_1}{\Delta}\\
+1 & \frac{\beta_2}{\Delta}
+\end{pmatrix}.\begin{pmatrix}
+x_1\\
+x_2
+\end{pmatrix}+\begin{pmatrix}
+1\\
+0
+\end{pmatrix}u
+\intertext{On en déduit alors pour $\frac{\alpha_2CL}{\Delta} \neq 0$ l'équation d'état:}
+\begin{pmatrix}
+\dot{x}_1\\
+\dot{x}_2
+\end{pmatrix} &= \begin{pmatrix}
+-\frac{\alpha_1}{\alpha_2L} & \frac{\beta_1}{\Delta}- \frac{\alpha_1\beta_2}{\alpha_2L\Delta}\\
+-\frac{\Delta}{\alpha_2C} & -\frac{\beta_2}{\alpha_2}
+\end{pmatrix}.\begin{pmatrix}
+x_1\\
+x_2
+\end{pmatrix} + \begin{pmatrix}
+\frac{1}{L}\\
+0
+\end{pmatrix}u\\
+\intertext{Sans oublier l'équation d'obeservation :}
+y&= i = x_1 = \begin{pmatrix}
+1 & 0
+\end{pmatrix}.\begin{pmatrix}
+x_1\\
+x_2
+\end{pmatrix} + 0*u
+\end{align*}
+\bigbreak
+
+\noindent 2- Théorème de caractérisation de la commandabilité :\\
+On considère le système suivant :
+\[(S)= \left \{
+   \begin{matrix}
+   \dot{x} = Ax + Bu & x(0) = x_0 \in \mathbb{R}^n\\
+   y = Cx + Du &
+   \end{matrix}
+   \right.
+\]
+
+\noindent (S) est commandable $\Leftrightarrow$ rang[C(A,B)] = n (matrice de rang plein)\\
+Où C(A,B) = $\begin{pmatrix}
+A^0B & AB & A^2B & ...& A^{n-1}B
+\end{pmatrix}\in \mathbb{R}^{n*n}$\\
+
+Remarque : on est en monovariable $\Leftrightarrow$ $det (C(A,B)) \neq 0$\\
+
+On calcul donc :
+\begin{align*}
+A &= \begin{pmatrix}
+-\frac{\alpha_1}{\alpha_2L} & \frac{\beta_1}{\Delta}- \frac{\alpha_1\beta_2}{\alpha_2L\Delta}\\
+-\frac{\Delta}{\alpha_2C} & -\frac{\beta_2}{\alpha_2}
+\end{pmatrix}\\
+A^0B &= \begin{pmatrix}
+\frac{1}{L}\\
+0
+\end{pmatrix}\\
+AB &= \begin{pmatrix}
+-\frac{\alpha_1}{\alpha_2L^2}\\
+-\frac{\Delta}{\alpha_2LC}
+\end{pmatrix}
+\intertext{On a donc :}
+C(A,B) &= \begin{pmatrix}
+\frac{1}{L} & -\frac{\alpha_1}{\alpha_2L^2}\\
+0 & -\frac{\Delta}{\alpha_2LC}
+\end{pmatrix}
+\intertext{On calcul alors le determinant :}
+det(C(A,B)) = \frac{-\Delta}{\alpha_2L^2C} \neq 0 &\Leftrightarrow \Delta \neq 0 \\ &\Leftrightarrow R_1R_4 - R_2R_3 \neq 0
+\end{align*}
+\bigbreak
+Remarque : si $R_1R_4 = R_2R_3$ le pont est équilibré et $v(t) = 0$ donc le système est non commandable.
+
+
+\section*{Exercice 2 :}
+\noindent 1-a) \begin{align*}
+P_a(\lambda) &= det\begin{pmatrix}
+-1-\lambda & 1 & 0\\
+-1 & -3-\lambda & 0\\
+1 & 1 & -2-\lambda
+\end{pmatrix}\\
+&= (-1-\lambda)(-3-\lambda)(-2-\lambda) + (-2-\lambda)\\
+&= (-2-\lambda)(+3+\lambda +3\lambda + \lambda^2+1)\\
+&= (-2-\lambda)^3
+\end{align*}
+
+\noindent 1-b) $\lambda_0 = -2$ vecteur propre triple\\
+
+\noindent 1-c) Cherchons les vecteurs propres vérifiant $AX = \lambda X$:
+\begin{align*}
+\begin{matrix}
+-x_1 + x_2 &= -2x_1\\
+-x1 -3x_2 &= -2x_2\\
+x_1+x_2 - 3x_3 &= -2x_3
+\end{matrix} &\rightarrow x_1 + x_2 =0
+\end{align*}
+On choisit donc $x_3$ quelconque et $x_1=-x_2$ ce qui correspond à un sous espace propre de dimension 2 et :
+\begin{align*}
+Ker\{ \lambda_0 \mathbb{1}_3 - A\} &= Vect \left\{ \begin{pmatrix}
+1\\-1\\0
+\end{pmatrix} , \begin{pmatrix}
+0\\0\\1
+\end{pmatrix} \right \}
+\end{align*}
+La dimension de ce sous espace propre est $2 \leq 3$ donc A est non diagonalisable.\\
+On a donc deux blocs de Jordan car la multiplicité des valeurs propres de 2 :
+\[J=\begin{pmatrix}
+\lambda_0 & 1 & 0\\
+0 & \lambda_0 & 0\\
+0 & 0 & \lambda_0
+\end{pmatrix} \textbf{ 	ou alors   } \begin{pmatrix}
+\lambda_0 & 0 & 0\\
+0 & \lambda_0 & 1\\
+0 & 0 &\lambda_0
+\end{pmatrix} = J\]
+
+Le but maintenant est de trouver un 3ème vecteur pour compléter la bases de vecteurs propres et avoir $V = \begin{pmatrix}v_1 & v_2 & v_3 \end{pmatrix}$ tel que $V^{-1}AV = J$, avec J l'une des deux matrices contenant un bloc de Jordan.\\
+En posant AV = VJ on a :
+\begin{align*}
+\begin{pmatrix}
+Av_1 & Av_2 & Av_3
+\end{pmatrix}&= \begin{pmatrix}
+\lambda_0v_1 & \lambda_0 v_2 & v_2 + \lambda_0 v_3
+\end{pmatrix}
+\intertext{et on obtient le système: }
+\begin{matrix}
+Av_1\\
+Av_2\\
+Av_3
+\end{matrix} &= \begin{matrix}
+\lambda_0v_1\\
+\lambda_0 v_2\\
+v_2 + \lambda_0 v_3
+\end{matrix}
+\intertext{on obtient donc en particulier pour le vecteur $v_3$ :}
+\begin{pmatrix}
+1 & 1& 0\\
+-1& -1 & 0\\
+1& 1& 0
+\end{pmatrix} v_3 = \begin{pmatrix}
+0\\0\\1
+\end{pmatrix}
+\end{align*}
+On constate qu'il n'est pas possible de déterminer $v_3$ de cette façon, on cherche donc a prendreà la place de $v_2$, $\tilde{v_2} = \alpha v_1 + \beta v_2$ de sorte à avoir $A\tilde{v_2} = \lambda_0 \tilde{v_2}$ (ce qui reste vrai car on prend une combinaison liéaire de 2 vecteur propre du ker) et surtout $(A-\lambda_0 \mathbb{1}_3)v_3 = \tilde{v_2}$. On a donc :
+\begin{align*}
+\begin{pmatrix}
+1 & 1& 0\\
+-1& -1 & 0\\
+1& 1& 0
+\end{pmatrix} v_3 &= \alpha \begin{pmatrix}
+1\\-1\\0
+\end{pmatrix} + \beta \begin{pmatrix}
+0\\0\\1
+\end{pmatrix}
+\intertext{avec , $\beta = \alpha = 1$}
+\tilde{v_2} &= \begin{pmatrix}1\\-1\\1\end{pmatrix}
+\intertext{on résoud alors pour trouver $v_3$ :}
+v_3 = \begin{pmatrix}0\\1\\1\end{pmatrix}
+\intertext{on a donc finalement trouvé V :}
+V &= \begin{pmatrix}
+1&1&0\\-1&-1&1\\0&1&1
+\end{pmatrix}\\
+V^{-1} &= \begin{pmatrix}
+2&1&-1\\-1&-1&1\\1&1&0
+\end{pmatrix}\\
+J &= V^{-1}AV = \begin{pmatrix}
+-2&0&0\\0&-2&1\\0&0&-2
+\end{pmatrix}
+\end{align*}
+On a bien une matrice diagonale par bloc avec un bloc de Jordan.
+On pose $\xi \in \mathbb{R}^3$, $x = V\xi$, et on a le système :
+\begin{align*}
+\left \{ \begin{matrix}
+\dot{x} = Ax + Bu & x_0 \in \mathbb{R}^n\\
+y = Cx + Du &
+\end{matrix} \right. &\rightarrow \left \{ \begin{matrix}
+\dot{\xi} = J\xi + V^{-1}B u &= J\xi + \tilde{B}u\\
+y = CV \xi +D u &= \tilde{C}\xi + \tilde{D} u
+\end{matrix} \right.
+\intertext{avec, }
+\tilde{B} &= \begin{pmatrix}-1\\1\\1\end{pmatrix}\\
+\tilde{C} &= \begin{pmatrix}0 &1&0\end{pmatrix}\\
+\tilde{D} &= 0
+\end{align*}
+\bigbreak
+\noindent 2- \begin{align*}
+\dot{\xi} &= \begin{pmatrix}-2&0&0\\0&-2&1\\0&0&-2\end{pmatrix}\xi + \begin{pmatrix}-1&1&1\end{pmatrix}\\
+y &= \begin{pmatrix}0&1&0\end{pmatrix} \xi\\
+C(A,B) &= \begin{pmatrix}0&1&-4\\1&-3&8\\2&-3&4\end{pmatrix}\\
+det(C(A,B)) &= 0
+\end{align*}
+Non commandable.
+\end{document}

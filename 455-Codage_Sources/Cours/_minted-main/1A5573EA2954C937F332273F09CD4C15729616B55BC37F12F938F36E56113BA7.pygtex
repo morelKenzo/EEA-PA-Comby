@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{[}\PYG{n}{c}\PYG{p}{,}\PYG{n}{k}\PYG{p}{]}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n+nb}{xcorr}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}biased\PYGZsq{}}\PYG{p}{);}
+\PYG{n+nb}{plot}\PYG{p}{(}\PYG{n}{k}\PYG{p}{,}\PYG{n}{c}\PYG{p}{);}\PYG{+w}{ }\PYG{n+nb}{grid}\PYG{p}{;}
+\end{Verbatim}

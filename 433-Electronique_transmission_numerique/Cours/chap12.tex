@@ -1,0 +1,161 @@
+\documentclass[main.tex]{subfiles}
+\newcommand{\snzi}{\sum_{n=0}^{+\infty}}
+\newcommand{\snii}{\sum_{n=0}^{+\infty}}
+\begin{document}
+
+\section{Cellule de base}
+
+La structure d'une cellule de base donnée ci-dessous, fait appel à deux \emph{switches}, chacun commandé par une horloge.
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (0,0)node[left]{$x_c(t)$} to[spst,l=horloge1] (2,0) to[spst,l=horloge2] (4,0)
+    (2,0) to[C,v<=$x_e(t)$] (2,-2) node[ground]{}
+    ;
+  \end{circuitikz}
+  \caption{Cellule de commutation}
+  \label{fig:commut}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+     \begin{axis}%
+       [axis lines = middle,
+       at = {(0,0)},
+      height = 5cm,width =8cm,
+      xlabel = {$t$},
+      ylabel = {$|S(f)|$},
+      ytick=\empty,
+      xmin = 0,xmax = 10, ymin = -0.1, ymax = 1.5,
+      xtick = {3,6,8.5},
+      xticklabels = {$\frac{T_e}{2}$,$T_e$,$T_e+\tau_1$},
+      ]
+      \addplot[no marks, black] plot coordinates {(0,1)(2.5,1)(2.5,0)(6,0)(6,1)(8.5,1)(8.5,0)};
+      \addplot[no marks, black, dotted] plot coordinates
+      {(3.5,0) (3.5,1) (5.5,1)(5.5,0)};
+      \node at (axis cs:1.25,0.5){$h1$} ;
+      \node at (axis cs:4.5,0.5){$h2$} ;
+    \end{axis}
+  \end{tikzpicture}
+\caption{Signaux horloges utilisés}
+\end{figure}
+
+La première horloge présente une période de $T_e + \tau$ et est dissymétrique (haut sur $\tau$ et bas sur $T_e$). La deuxième horloge est presque complémentaire. Elles ont la même durée de passage à l'état haut, mais on s'arrange pour qu'il y ait un intervalle de garde entre les moments ou le switch 1 est passant et le moment où le second est passant, sans jamais avoir les deux passants en même temps.
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (0,0) node[op amp](oa){}
+    (oa.-) -- ++(0,1) to[C,l=$C_2$] ++(2,0) -| (oa.out) to[short,-o] ++(1,0)node[right]{$x_e(t)$}
+    (oa.+) to[spst,mirror] ++(-2,0) coordinate(A) to[C,l=$C_1$] ++(0,-2) node[ground]{}
+    (A) ++ (-2,0)node[left]{$x_c(t)$} to[spst,o-] (A)
+  ;\end{circuitikz}
+  \caption{Schéma électrique d'un échantilloneur bloqueur}
+\end{figure}
+
+
+On suppose $R_{on}C << T_e,\tau_1,\tau_2$. En effet, $R_{on}$ peut être minimisé en diminuant la longueur de la grille $L_G$ de façon à ce que la charge/décharge de C soit considérée comme instantanée par rapport aux autres temps caractéristiques des signaux. On suppose également pour commencer que $x_c(t)$ évolue très lentement par rapport à la période d'échantillonnage $T_e$.\\
+
+De $t=nT_e$ à $t=nT_e + \tau$, $\left\{ \begin{matrix}\text{switch1 passant}\\\text{switch2 bloqué}\end{matrix}\right.\rightarrow \left \{ \begin{matrix} x_E = x_c(nT_e)\\+Q = Cx_c(nT_e) = +Q_1\end{matrix} \right.$\\
+
+De $t=nT_e + \tau$ à $t=nT_e + \tau2 - \frac{\tau_1}{2}$, les deux switchs sont bloqués, la charge +Q n'évolue pas et reste égale à $+Q_1$.\\
+
+De $t=nT_e + \tau_2 - \frac{\tau_1}{2}$ à $t=nT_e + \tau_2 + \frac{\tau_1}{2}$, $\left\{ \begin{matrix}\text{switch1 bloqué}\\\text{switch2 passant}\end{matrix}\right.\rightarrow \left \{ \begin{matrix} x_E = v(nT_e)\\+Q = Cv(nT_e) = +Q_2\end{matrix} \right.$\\
+
+Puis de $t=nT_e + \tau_2 + \frac{\tau_1}{2}$ à $t = (n+1)T_e$, les deux switchs sont bloqués, +Q reste égale à $+Q_2$.\\
+
+Globalement sur une période $T_e$, on effectue un transfert de charges $\Delta Q$ à travers les deux interrupteurs, imposé par les tensions $x_c(nT_e)$ et $v(nT_e)$.\\
+
+On a alors $\Delta Q = C(v(nT_e) - x_c(nT_e))$ sur le temps $T_e$, ce qui correspond au courant échangé via la cellule de base :
+\[I = \frac{\Delta Q}{T_e} = \frac{C}{T_e}((v(nT_e) - x_c(nT_e))\]
+On a une équivalence avec une résistance $R_e = \frac{1}{CF_e}$ à condition que $x_c$ et$v$ évoluent suffisamment lentement par rapport à $T_e$.\\
+
+%\img{0.5}{2/10.png}
+
+La valeur de $R_e$ est contrôlée par la fréquence d'échantillonnage de $F_e$. A la base de "filtres programmables" c'est à dire dont es caractéristiques peuvent être modifiées par $F_e$.\\
+
+\section{Exemple de l'intégrateur}
+
+Si $u$ et $v$ sont assez lents par rapport à $T_e$ et de type sinusoïdal, que l'on a un amplificateur opérationnel parfait, on a $\frac{U(j\omega)}{R_e} = -j\omega C_2V(j\omega)$, donc la fonction de transfert est:
+\[\frac{V(j\omega)}{U(j\omega)} = -\frac{1}{j\omega C_2R_e} = -\frac{1}{j\omega}\frac{C_1F_e}{C_2}\]
+L'intérêt par rapport à un circuit avec une "vraie" résistance $R_e$, est que la fonction de transfert dépend d'un rapport de capacités $\frac{C_1}{C_2}$ et non plus de la valeur de $C_2$ seule.\\
+
+Remarque: $C_1$ et $C_2$ sont des capacités MOS.
+
+%\img{0.5}{2/9.png}
+
+Ce sont des condensateurs planaires de capacité $C=\frac{\epsilon_0 \epsilon_{ox} }{e_{ox}}WL$ où $\epsilon_0$ est la permittivité du vide et vaut $8.85\times 10^{-12}$F/m et $\epsilon_{ox}$ la permittivité relative de l'oxyde (3.8 pour du $SiO_2$).\\
+Mais pour le $SiO_2$ le matériau est amorphe quand il est obtenu par oxydation thermique de Si, tandis que pour le Si, le matériau est cristallin c'est à dire que les atomes de Si sont répartis périodiquement dans l'espace.\\
+Cependant, l'interface est mal définie, "rugueuse" entre les deux et donc l'épaisseur d'oxyde fluctue sur la surface WL.\\
+La valeur de $C_2=\frac{\epsilon_0 \epsilon_{ox} }{e_{ox}}(WL)_2$ et de $C_1=\frac{\epsilon_0 \epsilon_{ox} }{e_{ox}}(WL)_1$ ne sont pas garantie. Mais le rapport $\frac{C_2}{C_1} = \frac{(WL)_2}{(WL)_1}$ est beaucoup mieux contrôlé.\\
+Voir TP1 pour traitement plus précis de cet intégrateur...\\
+
+
+Attention, le système est instable, il intègre son entrée mais aussi les défauts de l'amplificateur opérationnel dont des tensions continues de décalage, ce qui conduit à la saturation rapide de l'AO.\\
+La solution est de mettre une résistance $R_2$ de grande valeur en parallèle de $C_2$, on a un gain fini pour $f<< \frac{1}{2\pi R_2C_2}$. Cette solution est difficilement intégrable.\\
+
+ On peut aussi mettre une contre réaction par un AO câblé en soustracteur.\\
+
+Ce sont les structures avec soustracteur qui sont à la base de "filtres universels programmables", c'est à dire d'un type de filtrage différent suivant la sortie considérée, et de fréquences caractéristiques modifiable par $F_e$.\\
+
+\section{Exemple de filtre passe bas}
+
+On reprend la cellule de commutation de la figure \ref{fig:commut}
+
+Sur une période :
+\begin{align*}
+\intertext{Quand $H_1$ est passant et $H_2$ bloqué:	}
+x(nT_e) &= u(nT_e)\\
+Q_1 &= C_1 u(nT_e)\\
+v(nT_e) &= w((n-1)T_e)\\
+Q_2 &= C_2 w((n-1)T_e)\\
+\intertext{Quand $H_2$ est passant et $H_1$ bloqué:	}
+x((n+\frac{1}{2})T_e) &= v((n+\frac{1}{2})T_e) = w(nT_e)\\
+Q_1 &= C_1 w(nT_e)\\
+Q_2 &= C_2 w(nT_e)
+\end{align*}
+On effectue une re-répartition des charges présentes sur $C_1$ et $C_2$ pendant la première moitié de la période, mais on a conservation de la charge totale :
+\[C_1u(nT_e) + C_2w((n-1)T_e) = (C_1 + C_2)w(nT_e)\]
+C'est une "équation aux différences" liant l'entrée et la sortie du filtre.\\
+
+En écriture simplifiée on a:
+\[w_n = \frac{C_2}{C_1 + C_2}w_{n-1} + \frac{C_1}{C_1 + C_2}u_n\]
+
+Après passage à la transformée en z on a la fonction de transfert du filtre:
+\[\frac{W(z)}{U(z)} = \frac{C_1}{C_1+C_2-C_2z^{-1}} \quad \text{où } z= exp(pT_e)\]
+soit:
+\[H(j\omega) = \frac{C_1}{C_1+C_2-C_2exp(-j\omega T_e)}\]
+Pour $f<<F_e$, $\overline{\omega} << 1$:
+ \[H(j\overline{\omega}) = \frac{C_1}{C_1+C_2-C_2(1-j\overline{\omega})} = \frac{C_1}{C_1+jC_2\overline{\omega}}\]
+C'est une fonction $F_e$-périodique et un filtre passe-bas pour $f<<F_e$.\\
+
+En fait,
+
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}
+      [axis lines =middle,
+      xmin = 0 ,xmax = 15,ymin = 0,ymax=0.7,height=5cm,width=10cm,
+      ytick = \empty,
+      xtick = {0,3,6,9,12},
+      xticklabels ={0,$\pi$,$2\pi$,$3\pi$,$4\pi$},
+      xlabel=$\omega$,ylabel=$|H|$]
+      \addplot[no marks,black,smooth] plot coordinates
+      {(0,0.5) (1,0.2) (5,0.2) (6,0.5) (7,0.2)(11,0.2) (12,0.5) (13,0.2)(17,0.2)};
+
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Spectre de $|H|$}
+\end{figure}
+Le gabarit de filtre n'est pas forcement très satisfaisant. Pour faire mieux, on utilise des filtres numériques avec une conception de filtres par rapport à un cahier des charges donné et des calculs réalisés sur circuit numériques CMOS.
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

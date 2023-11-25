@@ -1,0 +1,431 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Principe fondamentaux: de la cellule de commutation au bras d'onduleur}
+\subsection{Principes}
+
+\begin{itemize}
+\item Conversion statique (Énergie électrique $\to$ Énergie électrique):
+  adapter les tensions, les courants ( mettre  en forme, modifier les amplitudes) pour gérer les transferts de puissances.
+\item Connexion séquentielle en commutation
+
+\begin{center}
+	\begin{tabular}{|c|p{5cm}|p{5cm}|}
+		\hline
+		\diagbox{Entrée}{Sortie} & DC & AC \\
+		\hline
+		AC &  Redresseur (non) commandés &  Gradateurs Cyclo-convertisseurs\\
+		\hline
+		DC &  Hacheurs alimentation à découpage & Onduleurs de tension commutateur de courant\\
+		\hline
+	\end{tabular}
+\end{center}
+\item Composants
+  \begin{itemize}[label = $-$]
+  \item Sources d'alimentation électrique (tension et courant)
+  \item Élements passifs (Inductance, transformateur, condensateur , PAS de résistances)
+  \item Interrupteur de puissance
+  \end{itemize}
+\end{itemize}
+
+\subsection{Sources d'alimentation électrique}
+Il existe théoriquement 2 type de sources:
+\begin{itemize}
+	\item source de tension
+	\item source de courant
+\end{itemize}
+pour deux régimes de fonctionnement
+\begin{itemize}
+	\item régime statique
+	\item régime dynamique/ instantanée.
+\end{itemize}
+
+\subsubsection{Régime statique}
+\paragraph{source de tension}
+\begin{defin}
+  Une source de tension impose la tension quelque soit le courant
+  et on a
+  \[\lim\limits_{f\to0} \left|\frac{\delta V}{V_0}\right| << \lim\limits_{f\to0}\left|\frac{\delta I}{I_0}\right|\]
+\vspace{-2em}
+  \begin{center}
+    \begin{circuitikz}
+      \draw (0,0) to[V, v=$V_v$, i=$i_v$] (2,0);
+    \end{circuitikz}
+  \end{center}
+\end{defin}
+\paragraph{Source de courant} ~
+\begin{defin}
+ Une source de courant impose le courant quelque soit la tension à ses bornes à puissance limitée	et on a
+  \[\lim\limits_{f\to0} \left|\frac{\delta I}{I_0}\right| << \lim\limits_{f\to0}\left|\frac{\delta V}{V_0}\right|\]
+\vspace{-2em}
+  \begin{center}
+    \begin{circuitikz}
+      \draw (0,0) to[V, v=$V_v$, i=$i_v$] (2,0);
+    \end{circuitikz}
+  \end{center}
+
+\end{defin}
+\paragraph{Source instantanées}
+\begin{description}
+\item[de tension] ~
+  \begin{defin}
+   une source instantanée de tension est un  dipôle capable de limiter les variations de tension en présence de variation instantanée de courant.
+    \[\lim\limits_{f\to \infty}\left|\derivp[V_v]{I_v}\right|_{V_0,I_0}  << \left|\frac{V_0}{I_0}\right|\]
+\vspace{-2em}
+    \begin{center}
+      \begin{circuitikz}
+        \draw (0,0) to[R,i=$i_v$, v=$V_v$] (2,0);
+      \end{circuitikz}
+    \end{center}
+  \end{defin}
+\item[De courant] ~
+  \begin{defin}
+   une source instantanée de courant tension est un  dipôle capable de limiter les variations de tension en présence de variation instantanée de courant.
+   \[\lim\limits_{f\to \infty}\left|\derivp[V_v]{I_v}\right|_{V_0,I_0}  << \left|\frac{V_0}{I_0}\right|\]
+   \vspace{-2em}
+    \begin{center}
+    \begin{circuitikz}
+      \draw (0,0) to[R,i=$i_v$, v=$V_v$] (2,0);
+    \end{circuitikz}
+  \end{center}
+  \end{defin}
+\end{description}
+
+\paragraph{Remarque}
+Toutes les sources "réelles" sont limitées en puissance.
+\subsubsection{Règle d'association}
+	\paragraph{Pour une source de tension}
+	\begin{itemize}
+		\item jamais en court-circuit
+		\item peut être ouverte
+	\end{itemize}
+	\paragraph{Pour une source de courant}
+	\begin{itemize}
+		\item jamais ouverte
+		\item peux être court-circuitée
+	\end{itemize}
+\paragraph{Exemple de sources Statique selon leur réversibilité}
+
+\begin{center}
+\begin{tabular}{|c|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|}
+			\hline
+			& réversible en tension & irréversible en tension \\
+			\hline
+			réversible en courant & machine électrique & batterie \\
+			\hline
+			irréversible en courant &  & pile \\
+			\hline
+\end{tabular}
+\end{center}
+\subsection{Interrupteur de puissance}
+
+On utilise des semi-conducteur de puissance pour construire des interrupteurs de puissances.
+\begin{center}
+  \begin{circuitikz}
+    \draw    (0,0) to[spst,i=$i_k$] ++(2,0);
+    \draw (0,-0.5) to [open,v<=$v_k$] ++(2,0);
+  \end{circuitikz} \\
+$K$ fermé : $v_k= 0$, $i_k\neq0$, \\ $K$ ouvert $v_k\neq0$, $i_k=0$
+\end{center}
+
+\begin{prop}
+C'est la commutation qui dissipe de la puissance :
+\[
+  w_k = \int_{t_{com}}^{}v_k(t)i_k(t) \ge 0
+\]
+\end{prop}
+\subsubsection*{Exemple d'interrupteur de puissance}
+
+diode , transistor IGBT, mosfet
+
+à chaque fois , caractéristique statique, symbole , convention fléchage
+
+Le transistor IGBT fonctionnent aux alentour de 10kHz
+
+\subsection{Règle d'association des sources}
+\begin{defin}
+  un interrupteur:
+\begin{itemize}
+	\item ne doit jamais court-circuiter une source de tension
+	\item peux ouvrir une source de tension
+	\item ne doit jamais ouvrir une source de courant
+	\item peux court-circuiter une source de courant
+\end{itemize}
+
+\end{defin}
+
+
+\paragraph{Exemple}
+\begin{figure}[H]
+	\centering
+	\begin{circuitikz}
+		\draw (0,0) to[V,v=$V$] (0,2) to[switch,l=$K_1$] (2,2)  to [switch] (2,0);
+		\draw (0,0) -- (4,0) to[I,l=$K_2$ i<=$i$] (4,2)-- (2,2);
+	\end{circuitikz}
+	\caption{Cellule de Commutation }
+\end{figure}
+Les deux interrupteurs fonctionnent en opposition pour respecter les règles d'associations.
+
+\emph{C'est la structure de base d'association de source ! }
+
+\section{Conversion DC- AC}
+\subsection{Introduction}
+Les onduleurs de tension sont très variés ( large plage de fréquence, frequence, et/ou tension variable ...)
+\subsubsection{Modulation de largeur d'impulsion}
+
+on controle la structure suivante:
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (0,1) node[nigbt,bodydiode](A){$k_1$}
+    (0,-1) node[nigbt,bodydiode](B){$k_2$};
+    \draw (A.E) -- (B.C)
+    (A.C) |- ++(-3,0.5)
+    (B.E) |- ++(-3,-0.5)++(0,-0.2) to[open, v^=$U_{DC}$] ++(0,5)
+    (0,0) to[short,i^=$i_s$,-o] ++(1,0) to[open, v^<=$v_s$] ++(0,-2)
+    ;
+    \draw (A.B) ++(-2,0) to[amp] (A.B) (B.B)++(-2,0) to[amp,mirror] (B.B);
+  \end{circuitikz}
+  \caption{ Cellule de commutation commandée}
+\end{figure}
+\begin{defin}
+  On définit une fonction de modulation tel que :
+\[f_m(t)=
+  \begin{cases}
+    1 & \implies v_s =U_{DC}\\
+    0 & \implies v_s = 0  \\
+  \end{cases}
+\]
+\end{defin}
+\begin{prop}
+  On a en sortie
+
+  \[
+    \begin{cases}
+      i_s= f_m I_{DC}
+      v_s = f_mU_{DC}
+    \end{cases}
+  \]
+\end{prop}
+\begin{description}
+\item[MLI naturelles]
+
+Hysterisis
+\item[MLI calculée, répétée]
+
+Lecture de table, MLI vectorielle, comparaison avec triangle.
+\end{description}
+
+\subsubsection{Grandeur filtrée et moyennée}
+On rappelle la définition d'une valeur moyenne:
+\begin{defin}
+  \[
+    X = <x(t)> = \frac{1}{T_{dec}}\int_{T_dec}^{}x(t)dt
+  \]
+
+\end{defin}
+
+\begin{prop}[Cas de la MLI]
+  On a le rapport cyclique
+  \[
+    \alpha = \frac{m(t)}{A}
+  \]
+  alors :
+\[V_S = <v_s(t)> = U_{DC}<f_m(t)> = \alpha U_{DC} =\frac{m(t)}{A}U_{DC}\]
+\end{prop}
+
+\subsection{Structure d'onduleur monophasé}
+\paragraph{objectif :} Piloter $v_s(t)$ ,avec les contraintes suivantes:
+\begin{itemize}
+\item $\alpha\in[0,1]$
+\item $A =1$
+\item $m(t) = \frac{1}{2}+\frac{m_0}{2}sin(\omega_0t)$
+\end{itemize}
+On a alors :
+\[
+  \boxed{V_s(t) = \frac{U_{DC}}{2}}+\frac{U_{DC}}{2} m_0sin(\omega_0t)
+\]
+
+\subsubsection{Montage en demi-pont}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{circuitikz}
+    \draw (0,0) |- ++(1,1.5) to[amp] ++(2,0) coordinate(A1){}  ++(0.6,0) node[nigbt,bodydiode](A){}
+    (0,0) |- ++(1,-1.5) to[amp,-o] ++(2,0) coordinate(A2){}  ++(0.6,0) node[nigbt,bodydiode](B){};
+    \draw (A1)--(A.B) (A2)--(B.B) (A.E) -- (B.C) coordinate[midway](M);
+    \draw (A.C) -- ++(2,0) to[V,v<=$\frac{U_{DC}}{2}$] ++(0,-2)
+    (B.E) -- ++(2,0) to[V,v_=$\frac{U_{DC}}{2}$] ++(0,2) -- ++(0,0.6);
+    \draw (M) to[I,v^=$v_0$] ++(2,0) ;
+  \end{circuitikz}
+  \caption{Structure en demi-pont}
+\end{figure}
+
+La tension est sinusoidale pure dans la charge :
+\[
+\boxed{v_o(t) = (2f_m-1)\frac{U_{DC}}{2} = \pm \frac{U_{DC}}{2}}
+\]
+
+\begin{enumerate}[label=\alph*)]
+\item pleine onde :
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[axis lines=middle
+        ,samples=41,
+        domain = 0:1.5,
+xmin=0,ymin=-2,xmax=1.5,ymax = 2,
+ticks=none,
+]
+\addplot+[no marks] {1.2*sin(2*pi*deg(x)};
+\addplot+[no marks] plot coordinates {(0,1) (0.5,1) (0.5,-1) (1,-1) (1,1) (1.5,1)};
+      \end{axis}
+    \end{tikzpicture}
+  \end{center}
+
+  \begin{prop}
+    On a
+    $V_{oeff}   =\frac{U_{DC}}{2}$ et $V_{oeff}' = \frac{4}{\pi}\frac{U_{DC}}{2\sqrt{2}} \simeq 48\% U_{DC}$ \\
+    On a un THD de 48\%.
+  \end{prop}
+
+
+\item MLI :
+  \begin{align*}
+    V_0(t) &= V_0sin(\omega t) \text{ et } f_0 \ll f_{dec} \\
+    m(t) &= \frac{A}{2}+\frac{V_0}{U_{DC}}sin(\omega_0t)\\
+    \alpha(t) &= \frac{1}{2} + \frac{V_0}{U_{DC}}sin(\omega_0t)
+  \end{align*}
+
+  On définit :
+  \begin{defin}
+    \begin{description}
+    \item[N] Indice de modulation $\frac{f_{dec}}{f_0} > 1$
+    \item[r] taux de modulation $\frac{2V_0}{U_{DC}} <1 $
+    \end{description}
+  \end{defin}
+  l'analyse spectrale de $v_0(t)$ donne:
+\end{enumerate}
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[axis lines=middle,width=15cm,height=7cm,
+        domain = 0:1.5,
+xmin=0,ymin=0,xmax=12,ymax = 1.5,
+ytick=\empty,
+xtick={1,9,10,11},
+xticklabels={$f_0$ , $f_d-f_0$ ,$f_d$ , $f_0+f_d$},
+]
+\draw[-latex](axis cs:1,0) -- (axis cs:1,1);
+\draw[-latex](axis cs:10,0) -- (axis cs:10,1);
+\draw[-latex](axis cs:9,0) -- (axis cs:9,0.8);
+\draw[-latex](axis cs:11,0) -- (axis cs:11,0.8);
+      \end{axis}
+  \end{tikzpicture}
+
+  \caption{On a tout interet à prendre $N>>1$}
+\end{figure}
+\subsubsection{Montage en pont complet}
+cette fois ci on a le montage:
+\begin{prop}
+  $v_{s1} = f_{m1}U_{DC} $ et $v_{s2}= f_{m2} U_{DC} $
+  \[
+    v_0= (f_{m1}-f_{m2})U_{DC}
+  \]
+\end{prop}
+\begin{enumerate}[label=\alph*)]
+\item Commande bipolaire
+
+  \begin{defin}
+    Pour une commande bipolaire on a besoin que d'une fonction de modulation:
+    \[
+      f_{m2} = 1-f_{m1} = \overline{f_{m1}}
+    \]
+  \end{defin}
+\item Commande unipolaire
+  \begin{itemize}
+  \item pleine onde
+
+    \begin{prop}
+      Avec une commande bipolaire sur un pont complet on a:
+      \begin{itemize}
+      \item amplitude $2\times$ plus grande qu'en 1/2 pont.
+       \item courant non sinus
+       \item pas de réglage d'amplitude
+      \end{itemize}
+    \end{prop}
+
+  \item MLI
+  \end{itemize}
+
+\item Commande unipolaire (3 états)
+  \begin{defin}
+    En commande unipolaire, $f_{m1} \neq f_{m2}$ et on peux avoir trois états pour la charge.
+  \end{defin}
+\end{enumerate}
+
+
+\section{Onduleur de tension triphasé}
+
+
+\subsection{Structure}
+[Schéma]
+
+\subsection{Commande}
+\begin{itemize}
+\item pleine onde
+  \emph{cf TD3}
+\item MLI
+\end{itemize}
+
+\subsection{Vue de la charge triphasé équilibrée, neutre non relié}
+\begin{center}
+
+\begin{tabular}{ll}
+  \begin{minipage}[h]{0.3\linewidth}
+
+\begin{circuitikz}
+  \draw (0,0) to[R] ++(2,0);
+  \draw (0,1) to[R] ++(2,0)node[right]{N'};
+  \draw (0,2) to[R] ++(2,0);
+  \draw (2,0) -- (2,2);
+\end{circuitikz}
+\end{minipage}
+&
+                  \begin{minipage}{0.5\linewidth}
+On a les équations :
+\[
+  \vect{v_{1N'} \\  v_{2N'} \\v_{2N'}} = \frac{U_{DC}}{3}
+  \begin{bmatrix}
+    2& -1 &-1 \\
+    -1 &2 &-1 \\
+    -1& -1&2
+  \end{bmatrix}
+  \vect{f_{m1} \\f_{m2}\\f_{m3}}
+\]
+\end{minipage}
+
+\end{tabular}
+\end{center}
+
+et :
+\[
+m_i = \frac{A}{2}+\frac{Ar}{2}\sin\left(\omega_0t-(i-1)\frac{2\pi}{3}\right)
+\]
+puis:
+\[
+  v_{iN'} = r
+  \frac{U_{DC}}{2}
+  \sin\left(\omega_0t-(i-1)\frac{2\pi}{3}\right)
+\]
+
+Alors :
+\begin{align*}
+  V_{0fonda}^{eff} &= \frac{1}{\sqrt{2}}\frac{2}{2\pi}\int_{0}^{2\pi}V_0(\theta+\beta/2)\cos(\theta)d\theta\\
+                   &=\frac{4U_{DC}}{\sqrt{2}\pi}\int_{0}^{\beta/2}\cos(\theta)d\theta\\
+                   &=\frac{4U_{DC}}{\sqrt{2}\pi} \sin(\beta/2)
+\end{align*}
+\paragraph{MLI}:
+  1 porteuse, 2 modulantes
+
+\end{document}

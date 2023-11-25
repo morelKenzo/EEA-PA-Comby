@@ -1,0 +1,146 @@
+\documentclass[../../Cours_M1.tex]{subfiles}
+\newcommand{\nomTD}{TD2 : Filtres actifs : synthèse et réalisation}
+\renewcommand{\nomentete}{UE431 - \nomTD}
+
+\begin{document}
+
+\section*{\nomTD}
+
+
+\subsection*{Synthèse et réalisation d'un filtre passe-haut}
+
+\subsubsection*{Synthèse}
+On désire synthétiser un filtre passe-haut dont le gabarit est le suivant :
+
+\begin{center}
+\begin{tikzpicture}[scale=1]
+\draw [>=latex,->] (0,0) node[left]{0} -- (8,0) node[right]{$f$} ;
+\draw [>=latex,->] (0,-3) -- (0,1) node[left]{$G_{dB}$};
+
+\draw [dashed] (0,-1) node[left]{$a=-3dB$} -- (6,-1) -- (6,0) node[above]{$f_p=10 kHz$};
+\draw (0,-2) node[left]{$b=-18dB$} -- (3,-2) -- (3,0) node[above]{$f_a = 4kHz$};
+\draw (8,-1) -- (6,-1) -- (6,-3);
+\end{tikzpicture}
+\end{center}
+
+Le gabarit du filtre passe-bas normalisé équivalent est le suivant, avec $f_{ref} = f_a$ et $k=f_a/f_p$* :
+\begin{center}
+\begin{tikzpicture}[scale=1]
+\draw [>=latex,->] (0,0) node[left]{0} -- (8,0) node[right]{$f/f_{ref}$} ;
+\draw [>=latex,->] (0,-3) -- (0,1) node[left]{$G_{dB}$};
+
+\draw [dashed] (0,-2) node[left]{$b=-18dB$} -- (3,-2) -- (3,0) node[above]{1};
+\draw [dashed] (3,-2) -- (6,-2);
+\draw (0,-1) node[left]{$a=-3dB$} -- (3,-1) -- (3,-3);
+\draw (6,0) node[above]{$1/k=2.5$} -- (6,-2) -- (8,-2);
+\end{tikzpicture}
+\end{center}
+
+\[\boxed{H^2(j\omega') = \frac{1}{1+\epsilon^2\omega'^{2n}}}\]
+\begin{itemize}
+\item Calcul de l'ordre $n$ du filtre
+\begin{multicols}{2}
+\begin{align*}
+a_{dB} & = 20 \log(H(j\omega'))|_{\omega'=1} \\
+& = 10 \log \frac{1}{1+\epsilon^2} \\
+10^{-\frac{a_{dB}}{10}} & = 1 + \epsilon^2 \\
+\epsilon & = \sqrt{10^{-\frac{a_{dB}}{10}}-1} \\
+\epsilon & = 1 \text{ pour } a_{dB} = -3 dB
+\end{align*}
+\begin{align*}
+b_{dB} & = 20 \log(H(j\omega'))|_{\omega'=1/k} \\
+& = 10 \log (\frac{1}{1+\epsilon^2k^{-2n}})\\
+10^{-\frac{b_{dB}}{10}} & = 1 + \epsilon^2 k^{-2n} \\
+k^{-2n} & = \frac{10^{-\frac{b_{dB}}{10}}-1}{\epsilon^2} \\
+n & = \frac{\ln (\frac{10^{-\frac{b_{dB}}{10}}-1}{\epsilon^2})}{2\ln(\frac{1}{k})} \\
+n & \approx 2.25 \text{ pour } b_{dB} = -18dB, k = 0.4
+\end{align*}
+\end{multicols}
+On choisit donc l'ordre du filtre : 
+\[ n=3 \]
+
+\item Calcul de la fonction de transfert normalisée $H_{PB}(s)$ du filtre passe-bas prototype, où $s = p/\omega_{ref}$.
+
+\begin{align*}
+H_{PB}(s) & = \frac{1}{\sqrt{1+\epsilon^2(-1)^ns^{2n}}} \\
+H_{PB}^2(s) & = \frac{1}{1-s^6} \text{ avec } n=3
+\end{align*}
+On détermine $H_{PB}$ à partir des racines du dénominateur de $H_{PB}^2$ dont on ne garde que celles à partie réelle strictement négative.
+
+\[1-s^6 = 0 \Leftrightarrow s = e^{j\frac{2k\pi}{6}} = e^{j\frac{k\pi}{3}}, k=0,..5 \]
+Les racines à partie réelle strictement négative sont $e^{j\frac{2\pi}{3}}, e^{j\pi}, e^{-j\frac{2\pi}{3}}$.
+
+\begin{align*}
+H_{PB}(s) & = \frac{1}{(s-e^{j\frac{2\pi}{3}})(s-e^{j\pi})(s-e^{-j\frac{2\pi}{3}})} \\
+& = \frac{1}{(s^2-s(e^{j\frac{2\pi}{3}}+e^{-j\frac{2\pi}{3}})+1)(s+1)} \\
+& = \frac{1}{(s^2-2s\cos(\frac{2\pi}{3})+1)(s+1)} \\
+H_{PB}(s) & = \frac{1}{(s^2+s+1)(s+1)}
+\end{align*}
+
+\item Pour retrouver la fonction de transfert normalisée $H(s)$ du filtre passe-haut, on applique la transformation $s \rightarrow \frac{1}{s}$ :
+\begin{align*}
+H(s) & = \frac{1}{(\frac{1}{s^2} + \frac{1}{s} +1)(\frac{1}{s}+1)} \\
+& = \frac{s^3}{(s^2 + s + 1)(s+1)} \\
+H(p) & = \frac{\frac{p}{2\pi f_a}}{1+\frac{p}{2\pi f_a}} \frac{(\frac{p}{2\pi f_a})^2}{(\frac{p}{2\pi f_a})^2+(\frac{p}{2\pi f_a})+1} \text{ avec } s = p/\omega_{ref} = \frac{p}{2\pi f_a}
+\end{align*}
+\end{itemize}
+
+\subsubsection*{Réalisation}
+
+\begin{itemize}
+\item D'après la forme de $H(p)$ que l'on vient de déterminer, on va cascader un passe-haut d'ordre 1 avec un passe-haut d'ordre 2.
+
+\paragraph{Passe-haut d'ordre 1} On utilise un montage à amplificateur opérationnel (supposé parfait) :
+\begin{center}
+\begin{tikzpicture}[scale = 1]
+  \draw[color=black]
+(1,1) node[op amp] (opamp) {}
+(opamp.+) node[left] {}
+(opamp.-) node[left] {}
+(opamp.out) node[right] {}
+(2,-1) to[open,v_>=$V_s$] (2,1)
+(-1,1.5)--(opamp.-)--(-0.5,1.5)--(-0.5,2.5)to[R, l=$R$](2,2.5)--(2,1)
+(-1,-1) node[ground]{} -- (-1,0.5) --(opamp.+)
+(-1,1.5) to[R,l^=$r$] (-3,1.5) to[C,l^=$C$] (-5,1.5)
+(-5,-1) to[open,v_>=$V_e$] (-5,1.5);
+\end{tikzpicture}
+\end{center}
+
+L'AO étant supposé parfait, on a $V_+ = V_- = 0$ donc $\frac{V_e}{Z_{rC}} + \frac{V_S}{R} = 0$, d'où 
+\[ H_1(p) = -\frac{R}{Z_{rC}} = \frac{-R}{r+\frac{1}{Cp}} = -\frac{R}{r} \frac{rCp}{1+rCp} \]
+Il faut imposer $\frac{R}{r}=1$ et $\frac{1}{rC} = \omega_a$.
+
+Avec $C=1nF, f_1 = 4kHz$, on obtient $R = 39.8k\Omega = r$.
+
+\paragraph{Passe-haut d'ordre 2} On utilise un filtre de Sallen-Key dont la structure a été vue au TD1.
+
+\[ H_2(p) = A \frac{(\frac{p}{\omega_0})^2}{1+2m(\frac{p}{\omega_0})+(\frac{p}{\omega_0})^2} \text{ avec } \omega_0 = \frac{1}{\sqrt{R_1R_2C_1C_2}} \text{ et } m = \frac{R_1(C_1+C_2) + R_1 C_2(1-K)}{2\sqrt{R_1R_2C_1C_2}} \]
+
+Il faut imposer $\omega_0 = \omega_a$ et $m=1/2$. On fixe $ C = C_1 = C_2 = 1nF$ et $R_1 = 30k\Omega$.
+
+\begin{align*}
+\omega_0 = \omega_a & \Rightarrow \frac{1}{C\sqrt{R_1R_2}} = 2\pi f_a\\
+& \Rightarrow R_2 = \frac{1}{4\pi^2f_a^2C^2R_1} \\
+& \Rightarrow R_2 = 52,7 k\Omega \\
+m = \frac{1}{2} & \Rightarrow  \frac{R_12C) + R_1 C(1-K)}{2}\omega_0 = \frac{1}{2} \\
+& \Rightarrow R_1(3C-KC)\omega_a = \frac{1}{2} \\
+& \Rightarrow K = 3 - \frac{1}{\omega_aR_1C} \\
+& \Rightarrow K = 1,67 
+\end{align*}
+
+Remarque : le réglage de $K$ peut se faire par exemple à l'aide d'une résistance $r_2$ variable.
+
+\item Les filtres actifs ont une grande impédance d'entrée et une faible impédance de sortie, ce qui permet de les cascader sans qu'ils aient d'influence les uns sur les autres. La fonction de transfert est alors le produit des fonctions de chacun des filtres.
+En revanche, ces filtres nécessitent d'être alimentés pour fonctionner.
+\end{itemize}
+
+\subsubsection*{Sensibilité}
+On calcule la sensibilité de $\omega_1$ par rapport au paramètre $C$ :
+\[S_C^{\omega_1} = \frac{\frac{d\omega_1}{\omega_1}}{\frac{dC}{C}} = \frac{d\omega_1}{dC}\frac{C}{\omega_1} = -\frac{1}{rC^2}\frac{C}{\omega_ 1} \]
+\[ S_C^{\omega_1}= - 1 \]
+
+De même pour le paramètre $r$ :
+\[ S_r^{\omega_1} = -1 \]
+
+Si $C$ (ou $r$) est connue avec une incertitude de $5\%$, alors l'incertitude engendrée sur $\omega_1$ sera de $5\%$. La précision de la valeur de ces composants est donc primordiale pour obtenir la fréquence $f_a$ désirée.
+\end{document}

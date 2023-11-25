@@ -1,0 +1,100 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+
+On envoie un signal x(t) binaire de valeur a de probabilité p et de valeur -a de probabilité 1-p. On reçoit $y(t) = x(t) + b(t)$ avec $x(t)$ la partie utile du signal et $b(t)$ le bruit.\\
+
+A chaque instant $t$, $x(t)$ et $b(t)$ sont des VA réelles notées $X_t$ et $B_t$, et indépendantes. 
+Le bruit $B_t$ suit une loi gaussienne $N(0,\sigma^2)$.\\
+
+On observe à l'instant $t_0$, $Y_0 = X_0 +B_0$ que l'on compare au seuil $S$. La détection, c'est le cas particulier de l'estimation  mais avec un nombre discret de valeurs possibles.\\
+
+\begin{enumerate}\setlength{\itemsep}{5mm}
+
+\item Avec p = 0.5, les valeurs $+a$ et $-a$ interviennent avec la même probabilité. Le bruit est centré. Le problème est symétrique. Il n'y a pas de raison de privilégier les valeurs strictement positive, ou négative. On pose donc $S = 0$.
+
+\item $B$ est une VA gaussienne centrée et d'écart type $\sigma$ :\[f_B(b) = \frac{1}{\sqrt{2\pi}\sigma}\exp(-\frac{b^2}{2\sigma^2})\]
+
+\item $X$ est certain et $Y=X+B$ avec $B$ : $N(0,\sigma^2)$, donc on peut intuiter que $Y$ suit la loi gaussienne : $N(X,\sigma^2)$.
+
+Sinon : Théorème de changement de variable : $f_Y(y) = f_B(b)|\frac{db}{dy}|_{b tq y =X+b} = f_{B}(y-X)$
+
+\[f_Y(y) = \frac{1}{\sqrt{2\pi}\sigma}\exp(-\frac{(y-x)^2}{2\sigma^2})\]
+
+\item 
+\begin{align*}
+F_Y(S) & = Pr[Y<S] = \int_{-\infty}^{S} f_Y(y) dy \\
+& = \int_{-\infty}^S \frac{1}{\sqrt{2\pi}\sigma}\exp(-\frac{(y-x)^2}{2\sigma^2})dy \\
+& = \int_{-\infty}^{\frac{S-X}{\sigma}} \frac{1}{\sqrt{2\pi}\sigma}\exp(-\frac{1}{2}t^2)dt \\
+& = P(\frac{S-X}{\sigma})
+\intertext{On en déduit donc}
+F_Y(X+3\sigma) & = P(3) = 0.9987 \\
+F_Y(X-3\sigma) & = 1 - P(3) = 0.0013
+\end{align*}
+
+\item On cherche $\frac{a^2}{\sigma^2}$\\
+\begin{align*}
+P_X = E[X^2] = pa^2+(1-p)(-a)^2 = a^2\\
+P_B = E[B^2] = \int_\mathbb{R} \frac{b^2}{\sqrt{2\pi}\sigma}exp(-\frac{1}{2}\frac{b^2}{\sigma ^2}) db = \sigma ^2 
+\end{align*}
+Ainsi, $\frac{a^2}{\sigma^2}$ est égal au rapport signal sur bruit (RSB).
+
+\item Comme $X$ et $B$ sont indépendants, si on fixe $X=a$, on se ramène au cas précédent avec $X$ certain, donc
+\[ f_{Y/X=a}(y) = f_B(y-a) \]
+
+Ainsi,
+\begin{align*}
+Pr[Y<S/X=a] & = \int_{-\infty}^S f_{Y/X=a}(y)dy \\
+& = P(\frac{S-a}{\sigma}
+\end{align*}
+
+\item On commet une erreur si
+\begin{itemize}
+\item on envoie $a$ (probabilité $p$) et qu'on reconstruit $-a$
+\item ou si on envoie $-a$ (probabilité $1-p$ et qu'on reconstruit $a$ 
+\end{itemize}
+
+\begin{align*}
+P_{\epsilon} & = Pr[(Y<S \et X=a) \ou (Y>S \et X = -a)] \\
+& = Pr[(Y<S \et X=a)] + Pr[(Y>S \et X = -a)] \\
+& = Pr[(Y<S / X=a)]Pr[X=a] + Pr[(Y>S / X = -a)]Pr[X=-a] \\
+P_{\epsilon} & = P(\frac{S-a}{\sigma})p+(1-P(\frac{S+a}{\sigma}))(1-p)
+\end{align*}
+
+Remarque : \\
+Si $S\rightarrow+\infty$ (i.e. on reconstruit toujours $-a$), alors on a $P_{\epsilon} \rightarrow p$ (i.e. la probabilité d'erreur correspond à la celle d'envoyer un $a$).
+
+Si $S\rightarrow-\infty$ (i.e. on reconstruit toujours $a$), alors on a $P_{\epsilon} \rightarrow 1-p$ (i.e. la probabilité d'erreur correspond à la celle d'envoyer un $-a$).
+
+\item Condition nécessaire pour avoir un optimum (attention à vérifier aux bornes) :
+
+\[ \frac{dP_{\epsilon}}{dS}|_{S=S_{opt}} =0 \]
+
+\begin{align*}
+\frac{dP_{\epsilon}}{dS}|_{S=S_{opt}} =0 & \leftrightarrow \frac{p}{\sigma}P(\frac{S-a}{\sigma}) - \frac{1-p}{\sigma}P(\frac{S+a}{\sigma}) = 0 \\
+& \leftrightarrow pe^{-\frac{1}{2}(\frac{S-a}{\sigma})^2} - (1-p)e^{-\frac{1}{2}(\frac{S+a}{\sigma})^2} = 0 \\
+& \leftrightarrow S_{opt} = \frac{\sigma^2}{2a}\ln(\frac{1-p}{p})
+\end{align*}
+
+Pour montrer qu'il s'agit d'un minimum, on peut calculer $\frac{d^2P_{\epsilon}}{dS^2}|_{S=S_{opt}}$ et vérifier que c'est positif, ou vérifier que $\frac{dP_{\epsilon}}{dS}$ change de signe en $S_{opt}$.
+
+\item Lorsque $p$ tend vers 1, $S_{opt}$ tend vers $-\infty$. En effet, si on envoie toujours un $a$, pour reconstruire uniquement $a$, il faut toujours être au dessus du seuil.
+
+Lorsque $p$ tend vers 0, alors $S_{opt}$ tend vers $+\infty$.
+
+\item Lorsque $p=\frac{1}{2}$, $S_{opt} = 0$.
+
+\begin{align*}
+P_{\epsilon} & = \frac{1}{2}P(-\frac{a}{\sigma}) + (1-P(\frac{a}{\sigma}))\frac{1}{2} \\
+& = \frac{1}{2}(1+P(-\frac{a}{\sigma})-P(\frac{a}{\sigma}))\\
+P_{\epsilon} & = P(-\frac{a}{\sigma})
+\end{align*}
+
+Lorsque $a/\sigma$ "grand" (bon RSB), alors $P_{\epsilon} = P(-\frac{a}{\sigma}) = 1 - P(\frac{a}{\sigma}) \rightarrow 0$. Si le bruit est faible, l'erreur aussi.
+
+Lorsque $a/\sigma$ "petit", alors $P_{\epsilon} \rightarrow \frac{1}{2}$. Si le bruit est élevée, on a autant de chance d'avoir la bonne valeur que de se tromper.\\
+
+$a/\sigma=3$ : $P_{\epsilon} = 1 - P(3) = 0.0013$
+
+\item Pour diminuer la probabilité d'erreur, on peut par exemple réaliser deux mesures au lieu d'une sur chaque intervalle de temps : cela permet de "moyenner" l'effet du bruit. En effet, pour deux VA $Y_1$ et $Y_2$ décrites par $N(0,\sigma^2)$, on a pour la VA $Y=\frac{Y_1+Y_2}{2}$ un écart type de $\sigma' = \frac{\sigma}{\sqrt{2}}$.
+\end{enumerate}
+\end{document}

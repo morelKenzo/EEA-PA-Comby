@@ -1,0 +1,154 @@
+\usepackage{enumitem}
+\setlist[itemize]{label=\textbullet}
+
+%ensembles usuels
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\Lin}{\mathcal{L}}
+\newcommand{\Img}{\text{Im}}
+\newcommand{\Ker}{\text{Ker}}
+\newcommand{\A}{\text{A}}
+\newcommand{\B}{\text{B}}
+\newcommand{\fromatob}{\A\to\B}
+
+\DeclareFontFamily{U}{wncy}{}
+\DeclareFontShape{U}{wncy}{m}{n}{<->wncyr10}{}
+\DeclareSymbolFont{mcy}{U}{wncy}{m}{n}
+\DeclareMathSymbol{\Sh}{\mathord}{mcy}{"58}
+
+%relations
+
+\newcommand{\eqv}{\Leftrightarrow}
+\newcommand{\tr}{{}^t\! }
+
+\DeclareMathOperator*{\equals}{=}
+
+\newcommand{\limfty}[1]{\xrightarrow[#1 \to +\infty]{}}
+\newcommand{\simfty}{\underset{+\infty}{\sim}}
+
+\newcommand{\intinfty}{\int_{-\infty}^{+\infty}}
+
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\dd}[2]{\frac{\d #1}{\d #2}}
+\newcommand{\ddd}[2]{\frac{\d^2 #1}{\d {#2}^2}}
+\newcommand{\dr}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\divv}{\text{div}}
+\newcommand{\grad}{\text{grad}}
+\newcommand{\et}{\quad\text{ et }\quad}
+\newcommand{\avec}{\quad\text{ avec }\quad}
+\newcommand{\sinon}{\quad\text{ sinon }\quad}
+\newcommand{\skzi}{\sum_{k=-\infty}^{+\infty}}
+%Macros mieux :)
+\newcommand{\chimie}[1]{$\mathrm{#1}$}
+\newcommand{\chimiecite}[1]{\[\mathrm{#1}\]}
+\newcommand{\nchim}{\mathit{n}}
+\newcommand{\xchim}{\mathit{x}}
+\renewcommand{\unit}[1]{~\mathrm{#1}}
+\renewcommand{\d}{\mbox{d}}
+\newcommand{\deriv}[2][]{\frac{\d#1}{\d#2}}
+\newcommand{\derivp}[2][]{\frac{\partial#1}{\partial#2}}
+\newcommand{\derivpp}[2][]{\frac{\partial^2#1}{\partial#2^2}}
+
+\newcommand{\NA}{\mathcal{N}_A}% Avogadro
+\newcommand{\e}{\text{e}}
+\newcommand{\sinc}{\text{sinc}}
+
+\newcommand{\fonct}[4]{%
+\left\lbrace \begin{array}{l}
+{#1}\longrightarrow {#2} \\
+{#3}\longmapsto {#4}
+\end{array}\right.}
+\newcommand{\vect}[1]{%
+  \begin{bmatrix}
+    #1
+  \end{bmatrix}
+}
+
+\makeatletter
+
+\@ifpackageloaded{circuitikz}{%
+\tikzset{every picture/.style={execute at begin picture={%
+   \shorthandoff{:;!?};}}}}{}
+
+\@ifpackageloaded{stmaryrd}{%
+\newcommand{\entint}[1]{\llbracket #1 \rrbracket}}{}
+\@ifpackageloaded{siunitx}{%
+%\newcommand{\gdr}[3]{\ensuremath{#1 = }\SI{#2}{#3}}
+
+}{}
+\@ifpackageloaded{listings}{%
+\usepackage{xcolor}
+
+\AtBeginDocument{%
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    aboveskip={1.0\baselineskip},
+    belowskip={1.0\baselineskip},
+    columns=fixed,
+    extendedchars=true,
+    breaklines=true,
+    tabsize=4,
+    prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+    frame=lines,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    keywordstyle=\color[rgb]{0.627,0.126,0.941},
+    commentstyle=\color[rgb]{0.133,0.545,0.133},
+    stringstyle=\color[rgb]{01,0,0},
+    numbers=left,
+    numberstyle=\small,
+    stepnumber=1,
+    numbersep=10pt,
+    captionpos=t,
+    literate={{á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1}
+}
+\lstset{language=Matlab,%
+    %basicstyle=\color{red},
+    breaklines=true,%
+    morekeywords={matlab2tikz},
+    keywordstyle=\color{blue},%
+    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+    identifierstyle=\color{black},%
+    stringstyle=\color{mylilas},
+    commentstyle=\color{mygreen},%
+    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+    numbers=left,%
+    numberstyle={\tiny \color{black}},% size of the numbers
+    numbersep=9pt, % this defines how far the numbers are from the text
+    emph=[1]{for,end,break},emphstyle=[1]\color{red}, %some words to emphasise
+    literate=
+    {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+    {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+    {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+    {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+    {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+    {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+    {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+    {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+    {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+    {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+    {ç}{{\c c}}1 {Ç}{{\\cite{}  C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+    {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+    {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
+  }
+}}{}
+\makeatother

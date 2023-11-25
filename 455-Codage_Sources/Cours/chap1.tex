@@ -1,0 +1,622 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+\newcommand{\X}{\mathcal{X}}
+\section{Modèles de sources}
+
+On s'intéresse à la compression sans perte d'un message constitué de symboles appartenant à un alphabet fini $\X$.\\
+
+Ces symboles sont:
+\begin{itemize}
+\item les caractères d'un texte
+\item la sortie du quantificateur d'un codeur vidéo.
+\item ...
+\end{itemize}
+\bigbreak
+On fait l'hypothèse que le message est une réalisation d'une suite de variables aléatoires $X_1$,...,$X_n$.\\
+
+\subsection{Modèle stationnaire sans mémoire}
+
+C'est le modèle le plus simple, on suppose que:
+\begin{itemize}
+\item les VA $x_i$ sont distribuées de la même manière, quelque soit $n$ (stationnarité).
+\item les VA sont indépendantes entre elles.
+\end{itemize}
+\smallbreak
+C'est un mauvais modèle, mais il est simple.
+
+Pour décrire ce modèle, il suffit de disposer de $p_i = Pr(X_n=i), \quad \forall i \in \X$.\\
+
+\begin{exemple}
+On considère une source binaire $X$, à valeurs dans $\X = \{0,1\}$, et
+
+\[p_0 = Pr(X=0),\quad p_1 = Pr(X=1) = 1 - p_0\]
+\end{exemple}
+
+\begin{defin}
+\emph{L'information} associée à chaque symbole de la VA X est \[I(i) = -log_2 p_i \text{ (en bits/symbole)} \]
+\end{defin}
+
+\begin{rem}
+C'est une fonction décroissante sur ]0,1] qui s'annule en 1. En effet, l'information associée à quelque chose de certain ($p_i=1$) est nulle, alors que celle associée à quelque chose de peu probable ($p_i\rightarrow 0$) est très grande $(\rightarrow \infty)$.
+\end{rem}
+
+\begin{defin}
+L'information moyenne associé aux symboles de $X$ ou à $X$ est appelée \emph{entropie} de la source $X$.
+ \[H(X) = -\sum_{i\in\X}p_i log_2(p_i) = \sum_{i\in\X}p_i log_2(\frac{1}{p_i})\]
+\end{defin}
+
+
+On rappelle que $log_2(2^n)=n$.
+
+\begin{example}
+ Pour la source binaire:
+
+ si $p_0 = 0.5$ et $p_1 = 0.5$ alors $H(X) = 1$ bit/symbole.
+
+ si $p_0 = 0.01$ et $p_1 = 0.99$ alors $H(X) = 0.08$ bit/symbole.
+\end{example}
+
+\begin{prop}[Propriété de l'entropie]
+
+On considère deux VA $X_1$ et $X_2$
+\begin{align*}
+H(X_1,X_2) &= - \sum_{i\in \X, j \in \X} Pr(X_1=i,X_2=j)log_2(Pr(X_1=i,X_2=j))\\
+&= H(X_2|X_1)+H(X_1)\\
+           &= H(X_1)+H(X_2) \iff X_1 \perp X_2
+\end{align*}
+Plus généralement, si on a N VA iid alors $H(X_1,...,X_N) = N H(X_1)$.\\
+Et on a
+\[\boxed{H(X) \leq log_2|\X|}\text{ (nombre d'élément de $\X$).}\]
+\end{prop}
+
+\subsection{Modèle de Markov d'ordre 1}
+
+\noindent Dans ce modèle, la probabilité d'apparition du symbole $n$ ne dépend que de la réalisation du symbole $n-1$. \\
+
+Les probabilités de transition vérifient donc pour une source stationnaire :
+\[Pr(X_n=a_n|X_{n-1} = a_{n-1},X_{n-2} = a_{n-2},...,X_{1} = a_{1}) = Pr(X_n = a_n |X_{n-1} = a_{n-1})\]
+
+On considère des sources de Markov d'ordre 1 stationnaires, donc:
+\[Pr(X_n=a_n|X_{n-1} = a_{n-1}) = Pr(X_{n-1} = a_n | X_{n-2} = a_{n-1}), \forall n\]
+\begin{defin}
+Pour décrire une source de Markov d'ordre 1 stationnaire, il suffit de décrire ses \emph{probabilités de transition :}
+\[Pr(X_{n}=i|X_{n-1}=j) = p_{i|j},\quad \forall i \in \X, \forall j \in \X\]
+\end{defin}
+\begin{exemple}
+Comment estimer les probabilités de transition ?
+on a la séquence : a a b b a c a b b a
+\begin{itemize}
+\item Modèle sans mémoire:
+
+  on estime $\hat{p_a} = \frac{5}{10}$, $\hat{p_b} = \frac{4}{10}$ et $\hat{p_c} = \frac{1}{10}$\\
+
+\item Modèle de Markov d'ordre 1:
+\begin{align*}
+Pr(X_{n}=i,X_{n-1}=j) &= Pr(X_{n}=i|X_{n-2}=j)Pr(X_{n-1}=j)\\
+&= \frac{Pr(X_{n}=i,X_{n-2}=j)}{Pr(X_{n-1}=j)}
+\end{align*}
+Avec $j=a$, si $i=a$ alors \[Pr(X_n=a|X_{n-1}=a) = \frac{\text{nombre de paires aa}}{\text{nombre de paires débutant par a}}=\frac{1}{4}\]
+si $i = b$ alors \[Pr(X_n=b|X_{n-1}=a) = \frac{\text{nombre de paires ab}}{\text{nombre de paires débutant par a}}=\frac{2}{4}\]
+
+\end{itemize}
+\end{exemple}
+\begin{defin}
+On défini la matrice de transition :
+
+\[\Pi = (p_{a_j|a_i})_{(i,j)} = \begin{pmatrix}
+p_{a_1|a_1} & p_{a_2|a_1} & \dots & p_{a_j|a_1}\\
+p_{a_1|a_2} & p_{a_2|a_2} & \dots & p_{a_j|a_2}\\
+\vdots & & & \\
+p_{a_1|a_J} & p_{a_2|a_j} & \dots & p_{a_J|a_J}\\
+\end{pmatrix}\]
+avec $J = |\X|$ nombre d'éléments de $\X$.\\
+La somme de chaque ligne de $\Pi$ vaut 1.
+\end{defin}
+\begin{exemple}
+On considère une source de Markov binaire:
+\[p_{0|0} = 0.9, \quad p_{1|0} = 0.1, \quad p_{0|1} = 0.3, \quad p_{1|1} = 0.7\]
+On a donc :
+\[\vec{\Pi} = \begin{pmatrix}
+0.9&0.1\\0.3&0.7
+\end{pmatrix}\]
+\end{exemple}
+\begin{defin}
+Pour cette source de Markov, on peut être intéressé par les\emph{ probabilités stationnaires $Pr(x_n=i)$} et on note :
+\begin{align*}
+\vec{p}^T &= [Pr(X_n=a_1), \dots, Pr(X_n = a_J)]\\
+&= [p_{a_1},...,p_{a_J}]
+\end{align*}
+
+\end{defin}
+On peut montrer que $\vec{p}$ satisfait :
+\[\boxed{\vec{p}^T = \vec{p}^T\vec{\Pi}}\]
+\begin{prop}[Entropie d'une source de Markov d'ordre 1]
+
+\begin{align*}
+H(X) &= -\sum_{i \in \X}p_i\sum_{j \in \X}p_{i|j}log_2(p_{i|j})\\
+&= -\sum_{i \in \X}\sum_{j \in \X}p_{i,j}log_2(p_{i|j})
+\end{align*}
+où $p_{i,j} = Pr(X_n = i, X_{n-1} = j)$\\
+\end{prop}
+\begin{proof}
+  On considère une source de markov d'ordre 1 à valeur dans $\X$ et unvecteur de longueur $n$ de VA de cette source $(X_1 \dots X_n) \in \X^n$:
+  \begin{align*}
+    H(X_1\dots \X_n) &= - \sum_{x_1,\dots x_n \in \X^n} P((X_1 ... X_n )=(x_1 ..x_n))\log_2(P((X_1 ... X_n )=(x_1 ..x_n)))\\
+\intertext{On a modèle d'ordre 1 donc: }
+                     &= \sum_{\vec{x}\in\X^n} P(\vec{X}=\vec{x})\left(\sum_{i=2}^{n}\log_2(P(X_i=x_i|X_{i-1}=x_{i-1}))+\log_2(P(X_1=x_1))\right)\\
+                     &=-\sum_{i=2}^{n}\sum_{x_i,x_{i-1}\in\X^2}P(X_i=x_i,X_{i-1}=x_{i-1})\log_2(P(X_{i}=x_i|X_{i-1}=x_{i-1}))
+\intertext{Pour une chaine stationnaire}
+                     &= (n-1)\sum_{x_1,x_2\in\X^2}P(X_1=x_1,X_2=x_2)\log_2(P(X_1=x_1|X_2=x_2))+H(X_1)\\
+    \intertext{L'entropie par symbole (débit d'entropie) de cette source est alors}
+    \lim_{n\to+\infty}\frac{1}{n}H(X_1...X_n) &= -\sum_{x_1,x_2\in\X^2}P(X_1=x_1,X_2=x_2)\log_2(P(X_1=x_1|X_2=x_2))
+  \end{align*}
+\end{proof}
+
+
+
+
+\begin{rem}
+Avec un modèle de Markov, si on essaie de "créer" des mots lettre par lettre, plus on monte dans les ordres, plus la structure de la langue commence à apparaître. À partir de l'ordre 3, il apparaît des mots qui seraient potentiellement de la langue considérée. Ce modèle peut être adapté, comme par exemple pour le correcteur orthographique des téléphones.\\
+
+L'idée générale de la compression d'une source de Markov est d'effectuer des prédictions pour avoir accès aux informations, de sorte qu'il ne reste à transmettre que ce que l'on ne peut pas prédire.\\
+
+\end{rem}
+
+\section{Codes}
+
+\subsection{Définitions et propriétés}
+On considère une source $X$ à valeurs dans $\X = \{a_1,..a_J\}$.
+
+\begin{defin}
+Un \emph{code} est un ensemble binaire de $\{0,1\}^*$  (union de tous les ensembles $\{0,1\}^2 = \{00,11,01,10\}$ , $\{0,1\}^3 = ...$ ...). Un code est donc un sous-ensemble de $\{0,1\}^*$.\\
+\end{defin}
+
+\begin{defin}
+\emph{Une fonction de codage} $c : \X \rightarrow C$ associe à chaque élément de $\X$, un élément de C.\\
+\end{defin}
+
+\begin{defin}
+La \emph{longueur d'un mot de code} associé à $x \in \X$ est notée \[l(x) = l(c(x)) = \text{ nombre de bits de } c(x)\]
+Pour une source sans mémoire avec $p_j = Pr(X=a_j)$. La longueur moyenne du code C associé à $\X$ est:
+\[\overline{l} = \sum_{j=1}^J p_jl(a_j)\]
+\end{defin}
+
+L'objectif du codage sans perte est de minimiser $\overline{l}$ tout en étant capable de décoder le code sans ambiguïté.
+
+
+\begin{defin}
+Un code $C$ (et sa fonction de codage associée $c$) est dit \emph{non singulier} si:
+\[x_1 \neq x_2 \Rightarrow c(x_1) \neq c(x_2) \]
+\end{defin}
+
+\begin{defin}
+\emph{L'extension} $C^*$ d'un code $C$ est l'ensemble de toutes les suites, finies et infinies, de mots provenant du code $C$.
+\end{defin}
+\begin{exemple}
+Si C $=\{0,10\}$ alors $\{C^*=\{0,10,00,010,100,000,1010,...\}$
+\end{exemple}
+\begin{prop}
+Un code C est décodable de façon unique si son extension $C^*$ est non singulière.\\
+Si on prend deux successions de symboles dans $\X$:
+\[x_1x_2...x_N \neq x_1'x_2'...x_{N'} \Rightarrow c(x_1,...x_N)=c(x_1)c(x_2)...c(x_N) \neq c(x_1')...c(x_N')\]
+\end{prop}
+
+\begin{defin}
+Un code C est un code préfixe si aucun mot de code n'est le début d'un autre mot de code.\\
+\end{defin}
+\begin{exemple}
+$\X = \{1,2,3,4\}$\\
+
+\begin{center}
+\begin{tabular}{|c||c|c|c|c|}
+\hline
+X & Singulier & Non singulier & Décodable de manière unique & Préfixe \\
+\hline
+\hline
+1 & 0 & 0 & 10 & 0 \\
+\hline
+2 & 0 & 010 & 00 & 10 \\
+\hline
+3 & 0 & 01 & 11 & 110 \\
+\hline
+4 & 0 & 10 & 110 & 111 \\
+\hline
+\end{tabular}
+\end{center}
+
+\end{exemple}
+
+\begin{rem}
+"Décodable de manière unique" implique "Non singulier".
+\end{rem}
+
+\subsection{Inégalités}
+
+\begin{prop}[Inégalité de Kraft]
+Un code binaire préfixe peut exister à condition que ses longueurs de mot de code $l_1,...l_J$ satisfassent:
+\[\sum_{j=1}^J2^{-l_j} \leq 1 \]
+
+
+\end{prop}
+\begin{proof} Condition nécessaire : \\
+Soit $l_{max}$ la plus grande des longueurs.
+Le nombre de feuilles à la profondeur $l_{max}$ que peut porter un arbre dont la racine est à la profondeur $l_j$ est $2^{l_{max}-l_j}$.\\
+
+Le nombre maximum de feuilles d'un arbre de profondeur $l_{max}$ est $2^{l_{max}}$.\\
+
+On a $\sum_{j=1}^J2^{l_{max}-l_j} \leq 2^{l_{max}}$ d'où le résultat.\\
+
+Condition suffisante : ?
+\end{proof}
+
+
+\begin{prop}[Inégalité de Kraft-McMillan]
+
+Un code binaire décodable de manière unique peut exister à condition que ses longueurs de mot de code $l_1,...l_J$ satisfassent:
+ \[\sum_{j=1}^J2^{-l_j} \leq 1 \]
+\end{prop}
+\begin{proof}
+  Par l'absurde
+\end{proof}
+\begin{rem}
+Attention, ce sont des théorèmes d'existence : ils ne peuvent pas servir à vérifier qu'un code est préfixe ou décodable de manière unique.
+
+\begin{exemple}
+Le code $\{1,00,10\}$ n'est pas préfixe, pourtant on a $\sum 2^{-l_i} = 2^{-1} + 2^{-2} + 2^{-2} = 1$. On sait seulement qu'il existe un code préfixe dont les mots de code ont ces longueurs.
+\end{exemple}
+\end{rem}
+
+\begin{rem}
+On sait que "préfixe" implique "décodable de manière unique". En revanche, si un code est décodable de manière unique, on peut seulement dire qu'il existe un code préfixe équivalent, sans qu'il soit le même.
+\end{rem}
+
+\begin{corol}
+Pour qu'un code binaire soit préfixe (ou décodable de manière uniquer), \emph{il faut} que ses longueurs de mot de code $l_1,...l_J$ satisfassent:
+\[\sum_{j=1}^J2^{-l_j} \leq 1 \]
+\end{corol}
+
+\section{Code de longueur minimale}
+On considère une source $X$ sans mémoire d'alphabet $\X = \{a_1,...,a_J\}$ et de probabilités $p_j = Pr(X=a_j)$.
+On souhaite construire un code préfixe de longueur moyenne minimale associé à $X$.
+Si on note $l_1,...,l_J$ les longueurs des mots de codes associés à $a_1,...a_J$ la longueur moyenne sera:
+\[\overline{l}=\sum_{j=1}^Jp_jl_j\]
+
+On cherche à minimiser $\overline{l}$ en s'assurant que le code reste préfixe, c'est à dire que:
+ \[\sum_{j=1}^J2^{-l_j} \leq 1 \text{ ou } \sum_{j=1}^J2^{-l_j} - 1 \leq 0\]
+
+Il s'agit d'un problème d'optimisation sous contrainte que l'on résout en introduisant le Lagrangien, avec $\mu$ le multiplicateur de Lagrange:
+ \[L(l_1,...l_J,\mu) = \sum_{j=1}^Jp_jl_j + \mu\times (\sum_{j=1}^J2^{-l_j} - 1) \]
+
+Une condition nécessaire d'optimisation est que:
+ \[\left\{ \begin{matrix}
+ \frac{\partial L}{\partial l_j}=0 & \forall j=1,...,J\\
+ \frac{\partial L}{\partial \mu} = 0
+ \end{matrix}\right.\]
+
+ On a donc:
+ \[
+   \begin{cases}
+     \frac{\partial L}{\partial \mu} & = \sum_{j=1}^J2^{-l_j} - 1 = 0 \\
+     \frac{\partial L}{\partial l_j} & = p_j-\mu. 2^{-l_j}.\ln2 = 0 \text{	, }\forall j=1,...,J
+   \end{cases}
+\]
+
+ En sommant ces égalités et en injectant l'égalité précédente de Kraft, on obtient:
+ \[\mu = \frac{1}{ln2}\]
+
+ En remplaçant dans $p_j-\mu. \ln2. 2^{-l_j} = 0$, et en passant au log en base 2:
+ \[\boxed{l_j = -log_2p_j}\]
+ \bigbreak
+ \bigbreak
+ Pour ce choix de longueurs de mots de code, on obtient:
+ \begin{prop}
+    Le meilleur code préfixe a une longueur moyenne au minimum égale à l'entropie de la source.
+ \[ \boxed{ \overline{l} = \sum_{j=1}^J p_j(-log_2p_j) = H(x)}\]
+\end{prop}
+
+\begin{rem}
+ L'entropie (avec une source sans mémoire) donne une borne supérieure de la quantité d'information réelle contenue dans un message. Dans le cas d'un texte, l'entropie au sens d'une source de Makorv diminue quand on augmente l'ordre, jusqu'à se stabiliser au bout d'un certain ordre.
+\end{rem}~
+
+\begin{prop}[Code préfixe à longueur minimale]
+   \begin{itemize}
+    \item Si $p_i\ge p_j$, $l_i\le l_j$
+    \item Les noms de codes associé aux deux symboles les moins probables sont de même longueur
+    \item Les noms de codes associé aux deux symboles les moins probables ne diffère que d'un seul bit à la fin.
+   \end{itemize}
+ \end{prop}
+\subsection{Codage de Huffmann}
+On considère une source $X$ à valeurs dans $\X$, de probabilités associées $p_i=Pr(X=a_i)$, pour $i\in\X$.
+\paragraph{Principe d'un code de Huffmann}
+À partir de ces propriétés, on peut fabriquer un code de Huffmann.
+
+Initialement, on considère une source $X^{(0)}$ à $J$ symboles $\X=\{a_1,\dots a_J\}$
+
+\begin{enumerate}
+\item \textbf{Entrée} $\chi =\{1 ... N\} , \vec{p} = (p_1...p_n)^TT$
+\item Si $N=2$
+  \begin{itemize}
+  \item $\mathcal{C}=\{0,1\}$
+  \item renvoyer $\mathcal{C}$
+  \end{itemize}
+\item Sinon :
+  \begin{itemize}
+  \item Trouve les indices $i$ et $j$ des deux symboles les moins probables.
+  \item Construire $
+    \begin{array}{l}
+      \chi'= \{1,...,i-1,i+1,...,j-1,j+1,...,N\}\\
+      \vec{p}' = (p_1, ...,p_{i-1},p_i+p_j,p_{i+1},...,p_{j-1},p_{j+1},...,p_N)
+    \end{array}$
+    \item $\mathcal{C}' = (\chi',\vec{p}')$.
+    \item On fabrique $\mathcal{C}$ à partir de $\mathcal{C}'$ en rajoutant $0$ ou $1$ à $c_i'$ Soit :
+      \[
+        \mathcal{C}=\{ c_1,...,c_{i-1},(c_i';0),c_{i+1},...,c_{j-1},(c_i',1)\}
+      \]
+  \end{itemize}
+\end{enumerate}
+
+\begin{prop}
+  On montre que la longueur moyenne $\overline{l}$ d'un code de Huffmann associé à une source satisfait
+  \[ H(x) \leq \overline{l} \leq H(X) +1 \]
+  On peut obtenir des codes plus performants en codant des paires de symboles, des triplets... des N-uplets de symboles. Avec ce type de technique, la longueur moyenne $\overline{l}$ par symbole de la source initiale satisfait :
+  \[H(X) \leq \overline{l} \leq H(X)+1 \]
+  L'inconvénient est la taille de la table de Huffmann à gérer.
+\end{prop}
+
+\begin{rem}
+  \begin{itemize}
+  \item Ce type de code est efficace lorsque $H(x) \gg 1$.
+
+  \item Dans le cas ou $H(x)< 1$ il est possible de construire un code de Huffman pour des groupes de $M$ symboles. Dans ce cas on a :
+    \[
+      MH(x) \le \overline{l_M} < MH(x)+1
+    \]
+\end{itemize}
+\end{rem}
+Il reste cependant plusieurs problèmes :
+\begin{itemize}
+\item Grande taille du code de Huffmann
+\item Il faut donner les infos nécessaires aux décodeur pour le décodage:
+  \begin{itemize}
+  \item On transmet le code(couteux)
+  \item On transmet le vecteur de probabilité $\vec{p}$ (plus complexe)
+  \item On utilise un code standardisé (ex: JPEG)
+  \end{itemize}
+\end{itemize}
+\paragraph{Exercice:} Coder l'algorithme de Huffman dans le langage de votre choix.
+
+\subsection{Codage arithmétique}
+
+On considère une source binaire $X$ avec $p_0=Pr(X=0)$ et $p_i=Pr(X=i)$.
+Cette source génère un message $x_{1:N}$ de longueur $N$.
+On va associer un code $\underline{c}(x_{1:N})$ à $x_{1:N}$ qui sera un nombre dans l'intervalle $[0,1[$.
+
+
+\paragraph{Exercice:} Construire une fonction \texttt{a = binaire(x,m)} qui donne les $m$ premier bits de la représentation binaire de $x\in [0,1]$.
+
+On essaie de représenter $\c(x_{1:N})$ avec peu de bits si $x_{1:N}$ est très probable et avec plus de bits si $x_{1:N}$ est moins probable.
+
+\subsubsection{Algorithme de codage arithmétique en précision inifinie}\label{sec:arithm}
+
+On considère une source binaire sans mémoire décritre par $p=(p_0,p_1)^T$ et ayant généré $x = (x_1 ... x_n)$ à coder.
+
+\begin{enumerate}
+\item \textbf{Initialisation} $l_0=0, \quad h_0 = 1,\quad i=1$
+
+\item \textbf{Étapes : pour n allant de 1 à N}
+\begin{enumerate}
+\item Si $x_n=0$ alors $  \begin{cases}
+l_n=l_{n-1} \\
+h_n=l_{n-1}+(h_{n-1}-l_{n-1})p_0
+\end{cases}$
+
+\item Si $x_n=1$ alors $
+  \begin{cases}
+    l_n=l_{n-1}+(h_{n-1}-l_{n-1})p_0 \\ h_n=h_{n-1}
+\end{cases}
+$
+
+\item On a $h_N-l_N=p(x_{1:N})$
+\end{enumerate}
+
+\item On pose \[
+    \lambda(\vec{x}) = \frac{l_N+h_N}{2} \text{ et } \mu(\vec{x}) = \lceil-\log_2(h_n-l_n))\rceil\]
+\item On a alors le code arithmétique associé:
+\[ \overline{c}(\vec{x}) = \lfloor \lambda(\vec{x}) \rfloor _{\mu(\vec{x)+1}} \]
+\end{enumerate}
+où $\lfloor a \rfloor _{\lambda}$ est la représentation binaire de $a$ tronquée à $\lambda$ bits. (Exemple : $\lfloor 0,1011 \rfloor _2 = 0,10$)\\
+
+\subsubsection{Codes arithmétique implantable}
+
+Le code arithmétique vu en \ref{sec:arithm} possède plusieurs défauts:
+\begin{itemize}
+\item Il faut coder tout le vecteur généré pour la source pour obtenir le code arithmétique. Ceci introduit du délai de codage.
+\item Les bornes inf et sup de l'intervalle de codage deviennent de plus en plus proches il faut les représenter en précision infinie.
+\end{itemize}
+L'idée du coadge arithmétique ``pratique'' est d'émettre ou de stocker sur le disque les bits de code dès qu'ils sont déterminé sans ambiguité. On peux alors dilater l'intervalle de codage.
+
+\begin{enumerate}
+\item \textbf{Entrée:} $\vec{p}$, $\vec{x}$
+\item \textbf{Initialisation}$l_0=0, \quad h_0 = 1,\quad, f=0, n=1$
+
+\item \textbf{Étapes : pour k allant de 1 à N}
+  \begin{enumerate}
+  \item Si $x_k=0$ alors $  \begin{cases}
+      l_k=l_{k-1} \\
+      h_k=l_{k-1}+(h_{k-1}-l_{k-1})p_0
+    \end{cases}$
+
+  \item Si $x_k=1$ alors $
+    \begin{cases}
+      l_k=l_{k-1}+(h_{k-1}-l_{k-1})p_0 \\ h_k=h_{k-1}
+    \end{cases}
+    $
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \item Si $[l_k,h_k[ \subset [0,0.5[$ : \\
+    $c = [c,0 \underbracket{1...1}_{f} [$ et $[l_k,h_k [ =  [2l_k,2h_k [ $
+  \item Sinon si $[l_k,h_k[ \subset [0.5,1[$: \\
+    $c =[c,1 \underbracket{0...0}_{f} [$ et $[l_k,h_k[ = [2l_{k}-1,2h_{k}-1[$
+  \item Sinon si $[l_k,h_k[ \subset [0.25,0.75[ $ :\\
+    $f= f+1$, $[l_k,h_k[ = [2l_k-0.5 , 2h_k-0.5[$
+  \end{enumerate}
+\item Tant que $[l_k,h_k[ \subset [0,0.5[ $ ou $[l_k,h_k[ \subset [0.5, 1 [ $ ou  $[l_k,h_k[ \subset [0.25,0.75[$ :\\
+  aller en 4
+\end{enumerate}
+
+\begin{rem}
+  en pratique le codage arithmétique se fait sur des intervalles entiers en partant de $[l_0,h_0[= [0,2^M]$ après découpages, les bornes des intervalles sont arrondies. On test si :
+  \begin{align*}
+    [l_k,h_k] &\subset [0,2^{M-1}[\\
+              &\subset[2^{M-1},2^M[\\
+              &\subset[2^{M-2},2^{M-1}+2^{M-2}]
+  \end{align*}
+Les probabilités d'apparition de chaque symbole sont estimée en cours de codage.
+\end{rem}
+
+\subsubsection{Algorithme de décodage arithmétique en précision infinie}
+Le décodeur arithmétique va chercher à déterminer les selections des sous intervalles faites par le codeur.\\
+
+\textbf{Entrée}: $\vec{c},\vec{p},N$
+\begin{enumerate}
+\item Initialisation : $[l_0,h_0[ = [0,1[$
+  On note $\tilde{\lambda}$ le nombre dont la représentation est $\vec{c}$
+
+\item \textbf{Pour i allant de 1 à n}:
+
+  \begin{itemize}
+  \item Si $\tilde{\lambda}\in[l_{i-1},l_{i-1}+p_0(h_{i-1}-l_{i-1})]$ alors : $x_i=0$ et $[l_i,h_i[ = [l_{i-1},l_{i-1}+p_0(h_{i-1}-l_{i-1})]$
+  \item sinon $x_i=1$ et $[l_i,h_i[ = [l_{i-1}+p_0(h_{i-1}-l_{i-1}),h_{i-1}]$
+    \end{itemize}
+  \end{enumerate}
+
+\subsubsection{Performance}
+
+Il faut montrer que $c(x_{1:N}) \in [l_N,h_N[$ (et qu'alors on pourra décoder), et que cette procédure de codage est efficace, ie $E(\mu(X_1...X_N ))\simeq NH(x)$
+\begin{itemize}
+\item On sait que $c(\vec{x}) \leq \mu(\vec{x})$ et on veut montrer que :
+\[
+\lambda(x)-\lambda(\vec{x}) \leq \frac{h_N-l_N}{2}
+\]
+On considère la représentation binaire de $\lambda(\vec{x})$:
+\[
+  \tilde{\lambda} = \sum_{i=1}^{n}a_i2^{-i}
+\]
+Pour $\tilde{\lambda}(\vec{x})$ on a :
+\[
+  \tilde{\lambda} = \sum_{i=1}^{\mu(\vec{x})+1}a_i2^{-i}
+\]
+D'où:
+
+  \begin{align*}
+  \lambda(\vec{x})-\tilde{\lambda}(\vec{x}) &= \sum_{i=\mu(\vec{x})+2}^{\infty}a_i2^{-i} \\
+                               &\leq \sum_{}^{} 2^{-i}\\
+                               &\leq 2^{-\mu(\vec{x}+1)}
+  \end{align*}
+
+  Or
+  \[
+  \begin{array}{ccccc}
+
+2^{-\mu(\vec{x})+1} &=& 2^{-\left(\lceil -\log_2(h_n-l_n)\rceil+1\right)}&&\\
+1 -\log(h_n-l_n) &\le& \lceil -\log_2 (h_n-l_n)\rceil+1 &\leq& -\log_2(h_n-l_n)+1+1\\
+-2 + \log(h_n-l_n ) & <& \lceil - \log_2( .)\rceil +1 &\le& -1 + \log_2(.)\\
+\frac{h_n-l_n}{4}&\le& 2- &\le& \frac{h_n-l_n}{2}
+  \end{array}
+\]
+
+\item L'efficacité du codage est montrée en calculant la longueur moyenne du code obtenu :
+\[ \overline{l} = \sum_{\vec{x}\in\X^N} p(\vec{x}) \lambda(\vec{x}) \]
+
+En utilisant le premier encadrement de $\lambda(\vec{x})$, alors
+\[ \begin{array}{ccccc}
+- \sum_{\vec{x}} p(\vec{x})( \log_2(p(\vec{x}))-1) & \leq & \overline{l} & < & -\sum_{\vec{x}} p(\vec{x})(\log_2(p(\vec{x}))-2) \\
+NH(X) + 1 & \leq & \overline{l} & < & NH(X) + 2
+\end{array}
+\]
+
+Cette procédure est efficace pour $N\to +\infty$, avec l'$\infty$ petit. Par exemple, pour $N=100$, alors la longueur moyenne sera proche à $1\%$ de l'entropie.
+\end{itemize}
+
+\subsection{Code de Lempel-Ziv-Welch}
+
+\paragraph{Idée}
+Avant l'algorithme arithmétique adaptatif, il fallait avoir les probabilités d'apparition des symboles (Huffmann, codage arithmétique,...). Le code LZW permet de faire une compression sans passer par la phase d'estimation des probabilités des symboles. Par exemple pour un texte, l'alphabet est gros, et le codeur arithmétique ne fonctionne pas très bien pour les gros alphabets, car il utilise d'abord une phase de binarisation.\\
+
+\subsubsection{Codage}
+Le codage de LZW est une variante des codes LZ77 et LZ78 qui utilise un dictionnaire et n'a pas besoin des probabilités de la source. C'est un cde universel.\\
+
+On considère une source $X$ à valeurs dans $\X=\{a,b,c\}$.
+
+\begin{enumerate}
+\item On initialise le dictionnaire de codage à l'aide des symboles de l'alphabet $\X$.
+\item On cherche la plus longue suite de symboles restant à coder et appartenant au dictionnaire et on la code.
+\item On rajoute cette suite suivi du premier symbole non codé $\omega$ au dictionnaire.
+\item Aller en 2 tant qu'il existe des symboles à coder.
+\end{enumerate}
+
+\begin{exemple}
+On a à coder la séquence $aabababca$.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+$a$ & $b$ & $c$ & $aa$ & $ab$ & $ba$ & $aba$ & $abac$ \\
+\hline
+0 & 1 & 2 & 3 & 4 & 5 & 6 & 7\\
+\hline
+\end{tabular}
+\end{center}
+
+On code $a$, on émet 0 et on ajoute $aa$ au dictionnaire.
+
+On code $a$, on émet 0 et on ajoute $ab$ au dictionnaire.
+
+On code $b$, on émet 1 et on ajoute $ba$ au dictionnaire.
+
+On code $ab$, on émet 4 et on ajoute $aba$ au dictionnaire.
+
+On code $aba$, on émet 6 et on ajoute $abac$ au dictionnaire.
+
+On code $c$, on émet 2.
+
+\end{exemple}
+
+\subsubsection{Décodage}
+Le décodage se fait
+\begin{enumerate}
+\item à partir du dictionnaire initial
+\item à chaque décodage d'un mot, on rajoute ce mot suivi de $\omega$ au dictionnaire
+\item $\omega$ n'est déterminé que si on a décodé le mot suivant
+\end{enumerate}
+
+\begin{exemple}
+On a à décoder 001462.\\
+
+On décode $a$, on ajoute $a\omega$ (3) au dictionnaire.
+
+On décode $a$, donc le (3) est $aa$ et on ajoute $a\omega$ (4) au dictionnaire.
+
+On décode $b$, donc le (4) était $ab$ et on ajoute $b\omega$ (5) au dictionnaire.
+
+On décode $ab$, donc le (5) était $ba$ et on ajoute $ab\omega$ (6) au dictionnaire.
+
+On décode $ab\omega$, qui était en fait un $aba$ et on ajoute $aba\omega$ (7) au dictionnaire.
+
+On décode $c$ donc le (7) était $abac$.
+\end{exemple}
+
+En pratique :
+\begin{itemize}
+\item les codes générés sont à nouveau codés à l'aide d'un code de Huffmann
+\item la taille du dictionnaire est limitée, les mots les moins utilisés sont effacés.
+\end{itemize}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

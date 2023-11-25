@@ -1,0 +1,211 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Échelles de temps}
+
+Soit le système $(S)$  (avec $f_1$ et $f_2$ lisses (de classe $C^{\infty}$), avec $x_1\in\R^{n_1}$ et $x_2\in\R^{n_2}$.)
+
+\[
+  \begin{cases}
+    \dot{x_1} & = \epsilon f_1(x_1,x_2,u) \\
+    \dot{x_2} & = f_2(x_1,x_2,u)
+  \end{cases}
+\]
+
+On suppose que $0 < \epsilon \ll 1$. et on pose $\tau = \epsilon t$, alors  $\tau$ est plus lent que $t$. Ainsi, le système $(S)$ dans la nouvelle échelle temporelle est donnée par:
+
+\begin{align*}
+\dd{x_1}{\tau} & = f_1(x_1,x_2,u) ~~\text{ Dynamique lente et d'ordre 0  en } 1/\epsilon \\
+\dd{x_2}{\tau} & = \frac{1}{\epsilon} f_2(x_1,x_2,u) \text{ Dynamique rapide et d'ordre 1 en }1/\epsilon
+\end{align*}
+\begin{prop}
+Ainsi, dans le cas d'un point d'équilibre stable, $x_2$ converge plus rapidement vers $\Sigma_0$ que $x_1$ vers $\Sigma_\epsilon$ avec :
+\[
+  \begin{cases}
+    \Sigma_0 = \{(x_1,x_2,u) ~~|~~ f_2(x_1,x_2,u)=0\} \\
+    \Sigma_\epsilon = \{(x_1,x_2,u) ~~|~~ f_1(x_1,x_2,u)=0 \text{ et }f_2(x_1,x_2,u)=0 \} \subset \Sigma_0
+\end{cases}
+\]
+\end{prop}
+\begin{rem}
+  La variété\footnote{une courbe est une variété de dimension 1,une surface une variété de dimension} $\Sigma_\epsilon$ dégènre en $\Sigma_0$ pour $\epsilon \to 0$.
+\end{rem}
+\section{Détermination du voisinage}
+
+L'objectif est d'avoir seulement à faire converger $x_1 \to x_1^*$.\\
+
+À partir du théorème des fonctions implicites, nous avons l'existence de $X_2 \text{ tq } x_2 = X_2(x_1,u)$.
+
+\begin{defin}
+On définit la variété
+\[ \Sigma_{0,\epsilon} = \{ (x_1,x_2) / f_2(x_1,x_2,u,\epsilon) = 0 \} \]
+avec $\dot{u} = \epsilon v$ où $v$ est une fonction bornée.
+\end{defin}
+
+La variété $\Sigma_{0,\epsilon}$ est obtenue à partir de $\Sigma_0$ avec une faible variation de la commande.
+
+\begin{prop}
+  Soit le système ($S$) avec $rang(\derivp[f_2]{x_2}) = n_2$, alors: \\
+  \begin{center}
+  $\exists X_2(x_1,u,\epsilon)$ tel que $\forall u$ vérifiant $\dot{u} = \epsilon v$, $v$ bornée, \\ $(x_1,x_2) \in \Sigma_{0,\epsilon}$ avec $x_2 = X_2(x_1,u,\epsilon)$.
+\end{center}
+\end{prop}
+
+Interprétation :
+La variété $\Sigma_0 \Leftrightarrow x_2=X_2(x_1,u)$, obtenue pour $\epsilon=0$, continue d'exister pour $\epsilon \neq 0$ et suffisamment petit si $\dot{u}=\epsilon v$, $v$ bornée, c'est à dire pour une dynamique de $u$ lente.
+
+
+\begin{exemple}[MCC]
+\[
+    \begin{cases}
+
+    L\dd{i}{t} & = u-Ri - k\omega \text{ Dynamique électrique}\\
+    J\dd{\omega}{t} & = Ki - \alpha\omega -C_r \text{ Dynamique mécanique temps lent}
+  \end{cases}
+\]
+
+On pose $\epsilon = L << 1$,  on a donc le temps rapide $\tau = \frac{t}{\epsilon}$\\
+
+Identification avec le système (1) : $x_1=\omega$ et $x_2 =i$.
+
+Pour $\epsilon=0$, $\Sigma_0$ est donnée 
+\[ i = \frac{u-k\omega}{R} = X_2(x_1,u) \]
+
+Ainsi, la dynamique lente est donnée par 
+\[ J \dd{\omega}{\tau} = \epsilon(k(\frac{u-k\omega}{R}) - \alpha \omega - C_r) \]
+
+En temps lent, la nouvelle expression est 
+\[ J \dd{\omega}{t} = -(\frac{k^2}{R}+\alpha) \omega - C_r + \frac{k}{R}u \]
+
+On peut améliorer l'approximation de la variété $\Sigma_{0,\epsilon}$ via un DL du 1er ordre.
+
+\[ i = \frac{u-k\omega}{R} + \frac{L}{R}(\dot{u}-\frac{k}{J}(k(\frac{u-k\omega}{R})-\alpha\omega-C_r)) + \mathcal{O}(L^2) \]
+
+Par exemple, si on veut avoir $i_0=0$, alors $\Sigma_0 = k\omega$. Pour garder $i_0=0$ pour $\Sigma_{0,\epsilon}$, on doit imposer une variation lente de $u$ (lente par rapport à $L\deriv[]{t}$ ).
+\[ \dot{u} = -\frac{k}{J}(\alpha\omega+C_r) - \mathcal{O}(L^2) \]
+\end{exemple}
+
+\begin{rem}
+$C_r = -\frac{\dot{u}J}{k}$ est utilisée pour estimer $C_r$ en modulant $\dot{u}$ afin que $i_0$ reste aussi plat que possible et $\omega=0$.
+\end{rem}
+\section{Synthèse de commande hiérarchisante}
+
+\subsection{Hiérarchisation par commande à grand gain}
+\begin{defin}
+  Un  système est de \emph{forme triangulaire}. si il est de la forme:
+  \[
+    \begin{cases}
+
+\dot{x_1} & = f_1(x_1) + x_2 \\
+\dot{x_2} & = f_2(x_1,x_2) + x_3 \\
+& \vdots \\
+\dot{x_n} & = f_n(x_1,\dots x_n) + u 
+    \end{cases}
+  \]
+\end{defin}
+Soit le système (1) triangulaire, où la commande n'intervient que sur $x_2$ linéairement :
+\[
+  \begin{cases}
+    \dot{x_1} & = f_1(x_1,x_2)  \\
+    \dot{x_2} & = f_2(x_1,x_2) + u \end{cases} , \quad x_1 \in \R^{n_1}, x_2 \in \R^{n_2}, u \in\R^{n_2}
+\]
+
+Soit $x_2^*$ la trajectoire consigne à imposer à $x_2$. Avec comme hypothèse $f_2(x_1,x_2)$ bornée, nous appliquons la commande à grand gain
+\[ u = -\frac{K}{\epsilon}(x_2-x_2^*)\]
+où $\epsilon<< 1$ et $K$ matrice diagonale définie positive.
+
+Ainsi, suivant la nouvelle échelle de temps $\tau = \frac{t}{\epsilon}$
+\[
+\left\{    \begin{array}{rll}
+\dd{x_1}{\tau} & = \epsilon f_1(x_1,x_2) &\quad \text{dynamique lente}\\
+\dd{x_2}{\tau} & = \epsilon f_2(x_1,x_2) - k(x_2-x_2^*) &\quad \text{perturbation et dynamique de convergence rapide}
+\end{array}\right.
+\]
+
+$\Sigma_0$ est la variété $x_2 = x_2^*$.
+
+Pour $\epsilon\neq 0$, $\Sigma_{0,\epsilon}$ est la variété $x_2=x_2^*+k\epsilon f_2(x_2,x_2^*)$
+
+La dynamique lente est $\dd{x_1}{\tau} = \epsilon f_1(x_1,x_2^*)$. Par conséquent la consigne $x_2^*$ (commande fictive) peut servir à commander la dynamique lente.
+
+\begin{rem}
+  Avec cette méthode on a simplifié la synthèse :
+  \[
+    \begin{cases}
+      u : x_2 \xrightarrow[1/\epsilon]{} x_2^* \\
+      x_2^* : x_1 \xrightarrow[1/\epsilon]{} x_1^* \\
+    \end{cases}
+  \]
+  Où $x_2^*$ est une commande ``fictive''dans le cas ou $x_1$ est à sortie asservie
+\end{rem}
+\begin{rem}
+  cette méthode à cependant des inconvénients:
+  \begin{itemize}
+  \item Amplification du bruit de mesure ($x_2$)
+  \item Risque de saturation $\frac{K}{\epsilon}\gg 1$.
+  \end{itemize}
+\end{rem}
+\subsection{Commande par backstepping}
+Soit un système sous forme triangulaire (apparition successive des différentes commandes) :
+\begin{align*}
+\dot{x_1} & = f_1(x_1) + x_2 \\
+\dot{x_2} & = f_2(x_1,x_2) + x_3 \\
+& \vdots \\
+\dot{x_n} & = f_n(x_1,\dots x_n) + u 
+\end{align*}
+
+
+On veut trouver $u$ pour imposer une poursuite asymptotique de $x_1$ vers $x_1^*$, pour cela on utilise une commande réalisée via la condition de Lyapunov. La méthode du backstepping synthétise la commande $u$ en plusieurs étapes avec une séparation dynamique pour simplifier le choix de $V(x)$.
+
+\paragraph{Procédure de synthèse}
+
+\paragraph{Étape 1} Afin d'imposer la consigne $x_1^*$, on utilise la fonction de Lyapunov, où $x_1^*$ est un point d'équilibre à atteindre
+\[ V_1(x_1) = \frac{1}{2}(x_1 - x_1^*)^2 \]
+Pour assurer la stabilité, il faut que $\dot{V_1}(x_1)$ soit définie négative.
+\begin{align*}
+\dot{V_1}(x_1) & = (x_1-x_1^*)(\dot{x_1} - \dot{x_1^*}) \\
+& = (x_1 - x_1^*)(f_1(x_1) + x_2 - \dot{x_1^*}) 
+\intertext{On cherche donc $x_2^*$ pour que}
+\dot{V_1}(x_1) & = \alpha_1(x_1-x_1^*)^2 \quad \text{ avec } \alpha_1 < 0 \\
+\intertext{Soit:}
+  x_2^* & = \alpha_1(x_1-x_2^*) - f_1(x_1) + \dot{x_1^*}
+\end{align*}
+$x_2^*$ est une ``consigne fictive''. On doit faire tendre $x_2$ vers $x_2^*$ asymptotiquement et plus rapidement que $x_1$ vers $x_1^*$.
+
+\paragraph{Étape 2} Faire converger $x_2$ vers $x_2^*$. On utilise la nouvelle fonction de Lyapunov 
+\[ V_2(x_1,x_2) = \frac{1}{2}(x_1-x_1^*)^2 + \frac{1}{2}(x_2-x_2^*)^2 \]
+On veut $\dot{V_2}(x_1,x_2)$ définie négative :
+\begin{align*}
+\dot{V_2}(x_1,x_2) & = (x_1-x_1^*)(\dot{x_1} - \dot{x_1^*}) + (x_2-x_2^*)(\dot{x_2} - \dot{x_2^*}) \\
+& = \alpha_1(x_1-x_1^*)^2 + \alpha_2(x_2-x_2^*)^2
+\intertext{Pour avoir une hiérarchisation dynamique, on pose $\alpha_2 < \alpha_1 < 0$ (la dynamique 2 est plus rapide que la 1)}
+(x_2-x_2^*)(\dot{x_2} - \dot{x_2^*}) & = \alpha_2(x_2-x_2^*)^2 \\
+(x_2-x_2^*)(f_2(x_1,x_2) + x_3 - \dot{x_2^*}) & = \alpha_2(x_2-x_2^*)^2 \\
+x_3^* & = \alpha_2(x_2-x_2^*) - f_2(x_1,x_2) + \dot{x_2^*}
+\end{align*}
+
+\paragraph{Étape n}
+Meme démarche: 
+\[ u  = \dot{x_n^*} - f_n(x_1,\dots,x_n) + \alpha_n(x_n-x_n^*) \]
+avec $\alpha_n < \alpha_{n-1} < \dots < \alpha_2 < \alpha_1$
+
+si $\alpha_n \ll \alpha_{n-1} \ll ... \ll \alpha_1$ alors:
+$\dot{V}$ est obtneu par $f_n(x_1,...,x_n)+u-x_n^* = \alpha_n(x_n-x_n^*)$
+
+
+\begin{rem}
+Cette méthode est généralisable à des systèmes sans forme :
+\begin{align*}
+\dot{x_1} & = f_1(x_1) + g_1(x_1)x_2 \\
+\dot{x_2} & = f_2(x_1,x_2) + g_2(x_1,x_2)x_3 \\
+& \vdots \\
+\dot{x_n} & = f_n(x_1,\dots,x_n) + g_n(x_1,\dots,x_n)u
+\end{align*}
+sur $\mathcal{D} = \{x_1,\dots,x_n \text{ tq } g_1 \neq 0,\dots,g_n\neq 0 \}$
+\end{rem}
+Mais les méthodes sont alors peu robuste.
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

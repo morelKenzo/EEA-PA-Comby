@@ -1,0 +1,73 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Intro}
+\section{Modèle de commande}
+
+\section{Couplage réseau}
+
+\[
+  \deriv[(i)]{t} = -[L]^{-1}[R](i) - [L]^{-1}\left\{(v)-p\Omega \deriv[(\Phi_0)]{t}\right\}
+\]
+On a donc égalité des amplitudes et des phases pour la vitesse:
+\[
+  \boxed{(v) = p\Omega \deriv[(\Phi_0)]{t}}
+\]
+
+
+\section{Schéma équivalent Behn-Eschenburg}
+\paragraph{Hypothèse}:
+\begin{itemize}
+\item RPS sinus
+\item MS non saturé , pole lisse , éuilibré
+\end{itemize}
+\begin{center}
+
+\begin{tabular}[c]{rl}
+  \begin{minipage}[c]{0.3\linewidth}
+\begin{circuitikz}
+  \draw (0,0) to[V] ++(0,2) to[L] ++(2,0) to[R] ++(2,0) to[open,v<=$V$] ++(0,-2) -- (0,0);
+\end{circuitikz}
+\end{minipage}
+
+&
+\begin{minipage}[h]{0.5\linewidth}
+
+\[
+  \underline{E} = (j\mathcal{L}\omega+R) \underline{I} + \underline{V}
+\]
+\end{minipage}
+
+\end{tabular}
+\end{center}
+\subsection{Diagramme de Fresnel}
+On considère l'origine de phase sur $V$ et on se place en alternateur ie $\delta = Arg(E)-Arg(V) > 0$
+
+\subsubsection{Surexcitation}
+
+[schema fresnel]
+\begin{prop}
+$
+\|E\| > \|V\|
+$ on a alors :
+\[
+  \begin{cases}
+    P > 0 \\
+     Q >0 \\
+  \end{cases}
+\]
+\end{prop}
+\subsubsection{Sousexcitation}
+[schema fresnel]
+\begin{prop}
+$
+\|E\| < \|V\|
+$ on a alors :
+\[
+  \begin{cases}
+    P > 0 \\
+     Q >0 \\
+  \end{cases}
+\]
+\end{prop}
+
+\end{document}

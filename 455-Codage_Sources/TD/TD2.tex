@@ -1,0 +1,244 @@
+\documentclass{../../td}
+\begin{document}
+\subsection{Quantification scalaire uniforme}
+
+%\imgt{4}
+
+\begin{enumerate}\setlength{\itemsep}{5mm}
+
+\item \begin{align*}
+D & = E[(x-y)^2] \\
+& = \int_{-\infty}^{+\infty} p_X(x)(x_Q(x))^2dx \\
+& = \sum_{i=1}^N \int_{s_{i-1}}^{s_i} p_X(x)(x-y_i)^2 dx
+\end{align*}
+
+\item $N=2$
+%\img{0.5}{5}
+$y_1 = -\frac{\Delta}{2}, \quad y_2 = \frac{\Delta}{2}$
+
+On cherche $\Delta$ qui minimise $D$ :
+\begin{align*}
+D & = \int_{-\infty}^0 p_X(x)(x+\frac{\Delta}{2})^2 dx + \int_0^{\infty}p_X(x)(x-\frac{\Delta}{2})^2 dx \\
+& = \int_{-\infty}^0 p_X(x)(x^2+\frac{\Delta^2}{4}+x\Delta) dx + \int_0^{\infty}p_X(x)(x^2+\frac{\Delta^2}{4}-x\Delta) dx \\
+& = \int_{-\infty}^{\infty} p_X(x)(x^2 + \frac{\Delta^2}{4}) dx + \Delta(\int_{-\infty}^0p_X(x)dx - \int_0^{\infty}p_X(x)dx)
+\intertext{Or, $\int_{-\infty}^0p_X(x)dx + \int_0^{\infty}p_X(x)dx = 0$ ($X$ de valeur moyenne nulle)}
+D & = \int_{-\infty}^{\infty} p_X(x)(x^2 + \frac{\Delta^2}{4}) dx + 2\Delta\int_0^{\infty}p_X(x)dx \\
+& = (\int_{-\infty}^{+\infty} p_X(x)dx)\frac{\Delta^2}{4} - (2\int_0^{\infty} xp_X(x)dx)\Delta + \int_{-\infty}^{+\infty} x^2p_X(x)dx \\
+& = \frac{\Delta^2}{4} - (2\int_0^{\infty} xp_X(x)dx)\Delta + \int_{-\infty}^{+\infty} x^2p_X(x)dx
+\end{align*}
+
+Ainsi, \[ \derivp[D]{\Delta} = 0 \Rightarrow \frac{1}{4}2\Delta - 2\int_0^{\infty} xp_X(x)dx = 0 \Rightarrow \Delta = 4\int_0^{\infty} xp_X(x)dx \]
+
+\item On a maintenant $
+  \begin{cases}
+    y_{i+1}-y_i & = \Delta \\
+    y_{N/2} = -\Delta / 2, & y_{N/2+1} = \Delta / 2
+  \end{cases}$
+
+De plus, $y_{N/2}-y_1 = \Delta(N/2-1)$ donc $y_1 = y_{N/2}-\Delta(N/2-1) = -\Delta(N/2-1/2)$
+
+$y_i = \Delta/2(-N+1)+(i-1)\Delta = (i-N/2-1/2)\Delta$
+
+$S_i=y_i+\Delta/2=\Delta(i-N/2)$
+
+\begin{align*}
+  D & = \int_{-\infty}^{\Delta(1-N/2)}p_X(x)(x+\Delta(N/2-1/2))dx\\
+    &+ \sum_{i=2}^{N-1} \int_{\Delta(i-1-N/2)}^{\Delta(i-N/2)} p_X(x)(x-\Delta(i-\frac{N+1}{2})^2)dx \\
+  &+ \int_{\Delta(N/2-1)}^{\Delta(i-N/2)} p_X(x)(x-\Delta(N/2-1/2))dx
+\end{align*}
+Ensuite, on cherche $\Delta$ tel que $\derivp[D]{\Delta}=0$ mais c'est relou donc on va pas le faire.
+
+\item \begin{enumerate}
+\item $ \Delta = \frac{2A}{4} = \frac{A}{2}$
+\item %\img{0.5}{6}
+\item $D=\frac{\Delta^2}{12}=\frac{A^2}{3\times^{2R}}$
+\end{enumerate}
+\end{enumerate}
+
+\subsection{Quantification}
+\subsection{Quantifiaction et codage entropique}
+\begin{enumerate}\setlength{\itemsep}{5mm}
+
+\item On ne peut pas le dire directement parce que les couples $(R,D)$ n'ont ni $R$, ni $D$ connu pour QSU et QSNU.
+
+\item Sans codeur entropique, on ne se réfère qu'on premier tableau. Pour le même débit, on a toujours $RSB_{QSU} \leq RSB_{SQNU}$, donc la QSNU est meilleure.
+
+\item $D_{min} = \sigma^2 2^{-2R}$
+
+\[RSB_{max} = 10\log_{10} \frac{\sigma^2}{D_{min}} = 6.02R\]
+
+\[D(r) - D_{min}(R) = RSB_{max} - RSB(R) = 6R - RSB(R)\]
+
+Avec un codeur entropique parfait, on a $R=H$ et donc :
+
+\begin{center}
+\begin{tabular}{c|c|c}
+$\log_2 M$ &  QSU & QSNU \\
+\hline
+1 & 1.6 & 1.6 \\
+2 & 2.174 & 2.166 \\
+3 & 2.296 & 2.33 \\
+4 & 2.232 & 2.37 \\
+5 & 2.124 & 2.36 
+\end{tabular} 
+\end{center}
+
+\item C'est QSU + CE qui est meilleur.
+\end{enumerate}
+
+
+\subsection{Codage scalable}
+\begin{enumerate}\setlength{\itemsep}{5mm}
+
+\item
+\begin{enumerate}
+\item $M=2^R$ donc $\Delta = \frac{2X_{max}}{M} = \frac{2X_{max}}{2^R} = X_{max}2^{1-R}$
+
+\item $D = \frac{\Delta^2}{12} = \frac{(X_{max}2^{1-R})^2}{12} = X_{max}^2 \frac{1}{3} 2^{-2R} $
+
+\item $R=3 \Rightarrow M=8$
+%\imgt{3}
+
+\item
+\begin{itemize}
+\item $X_1 = 0.9X_{max} \Rightarrow 111$
+\item $X_2 = -0.1X_{max} \Rightarrow 011$
+\item $X_3 = -0.6X_{max} \Rightarrow 001$
+\end{itemize}
+\end{enumerate}
+
+\item Le train binaire classique est 111 0111 001. Si les six bits de la fin sont perdus, on ne peut que  reconstruire $X_1$.
+
+\item 
+\begin{itemize}
+\item Scalable 1 : on code d'abord $X_1X_2X_3$ avec un bit par $X_i$, puis on la quantifiée avec 2 puis 3 bits. Au final, on code donc $X_1X_2X_3$ sur un train de 3+6+9=18 bits. Si on n'a que les 3 premiers 100, on peut reconstituer $X_1 = 0.5X_{max}$, $X_2=X_3=-0.5X_{max}$.
+\item Scalable 2 : on envoie les premiers bits de $X_1,X_2$ et $X_3$ à la suite, puis les deuxièmes bits, puis les troisièmes. Le train fait donc 9 bits.
+\end{itemize}
+
+\begin{figure}
+\centering
+\begin{tabular}{c|c|c|c|c}
+R & D & Non scalable & Scalable 1 & Scalable 2 \\ 
+\hline
+0 & $\sigma^2$ & 0 & 0 & 0\\
+1 & $\sigma^2 2^{-2}$ & 1 & 1 & 1 \\
+2 & $\sigma^2 2^{-4}$ & 2 & 1+2 & 2 \\
+3 & $\sigma^2 2^{-6}$ & 3 & 1+2+3 & 3 
+\end{tabular}
+\caption{Débit}
+\end{figure}
+
+\item Codage d'image, codage vidéo. \textit{Because why ? Because fuck you that's why.}
+
+\end{enumerate}
+
+
+\subsection{Codage avec information adjacente au décodeur}
+
+
+
+
+\begin{enumerate}
+\item Un exemple de compression d'une sourceX en se servant d'une information adjacente supposée disponible au codeur et au décodeur:\\
+En codage vidéo, le codeur dispose de l'image n-1 (compressée et décompressée) pour coder l'image n.\\
+Le décodeur dispose également de l'image n-1.\\
+
+\item On fabrique $\tilde{X}$ à partir de X et de Y :
+\[\tilde{X} = X-Y\]
+Au décodeur, $\tilde{X}$ sera utilisé pour calculer $\hat{X}$ (l'estimé de X).\\
+
+\item On suppose que Y et donc Z suivent une loi normale de moyenne nulle et d'écart-type respectif $\sigma_Y$ et $\sigma_Z$.
+\begin{enumerate}
+\item \begin{align*}
+E(X) &= E(Y+Z) = E(Y) + E(Z) = 0\\
+\sigma_X^2 &= E((X-E(X))^2) = E(X^2) =E(Y^2 + Z^2 + 2YZ)\\
+&= E(Y^2) + 2E(Y)E(Z) +E(Z^2)\\
+&= \sigma_Y^2 + \sigma_Z^2
+\end{align*}
+
+\item On ne tient compte de Y ni au codeur, ni au décodeur, $\tilde{X} = X$ et $D_1(R) = \sigma_X^2 2^{-2R}$.\\
+
+\item Si on compresse $\tilde{X} = X-Y = Z$, alors $D_2(R) = \sigma_{\tilde{X}}^2 2^{-2R} = (\sigma_X^2 - \sigma_Y^2) 2^{-2R}$. Donc:
+\[D_2(R) \leq D_1(R)\]
+
+\end{enumerate}
+
+\item On n'utilise pas Y au codeur, donc à priori, les performances devraient être moins bonnes.
+
+%\img{0.5}{7.png}
+
+Tout d'abord, X est quantifié à l'aide d'un quantificateur scalaire uniforme de pas $\Delta_1$, centré en 0. X appartient à un intervalle de quantification répété par un index $q_1$, cet intervalle est alors découpé en M sous-intervalle, $m \in \{0,1,...,M-1\}$.
+
+\item \[\Delta_1 = M\Delta_2 \Rightarrow \Delta_2 = \frac{\Delta_1}{M} \]
+
+\item Les m(s) sont équiprobables donc:
+\[H = \sum_{i=1}^{\Delta_2} \frac{1}{\Delta_2}log_2(\frac{1}{\frac{1}{\Delta_2}} = log_2(\Delta_2) \]
+
+C'est le nombre de bits nécessaire.\\
+
+Première méthode:\\
+On quantifie Y au décodeur avec $\Delta_1$:
+
+%\img{0.5}{8.png}
+
+\item Il faut:
+\[
+    \begin{cases}
+      k\Delta_1 - \frac{\Delta_1}{2} \leq Y \leq k\Delta_1 + \frac{\Delta_1}{2}\\
+      k\Delta_1 -\frac{\Delta_1}{2} \leq X \leq k\Delta_1 + \frac{\Delta_1}{2}
+    \end{cases}
+\]
+
+%\img{0.5}{9.png}
+On suppose que $Y = k \Delta_1$ donc, on a $k\Delta_1 - \frac{\Delta_1}{2} \leq k \Delta_1 + Z \leq k\Delta_1 + \frac{\Delta_1}{2}$. Ce qui implique que :
+\[-\frac{\Delta_1}{2} \leq Z \leq \frac{\Delta_1}{2}\]
+
+\item Lorsque Y est très proche de la limite de l'intervalle, on a une distorsion de l'ordre de $\Delta_1^2$, même lorsque $Z << Y$.
+
+\item Deuxième méthode: On découpe l'intervalle de largeur $\Delta_1$ en 0, en M sous-intervalle, et on sélectionne le milieu 0' du sous-intervalle indexé par m.
+Ensuite, Y est quantifié avec $\Delta_1$ mais centré en 0'.\\
+
+%\img{0.5}{10.png}
+
+Première étape: on reconstruit $\hat{\omega}$ à partir de m et $-\frac{\Delta_1}{2} \leq \tilde{\omega} \leq \frac{\Delta_1}{2}$.\\
+Seconde étape: $Y \rightarrow \hat{Y}$\\
+\begin{align*}
+\hat{X} = \hat{Y + \hat{\omega}} \text{ et,} X = Y + Z\\
+\text{donc, } (\hat{X}-X) = (\hat{Y} - Y) + (\hat{\omega} - Z)\\
+(\hat{Y}-Y)^2 \leq \frac{\Delta_1^2}{4}
+\end{align*}
+
+Si $Z \in [-\frac{\Delta_1}{2}; \frac{\Delta_1}{2}]$ alors, $ (Z-\hat{\omega})^2 \leq \Delta_1^2$, sinon $(z-\hat{\omega})^2$ peut être large.
+
+\item $\Delta_1$ assez grand pour que $|Z| \leq \frac{\Delta_1}{2}$.\\
+D(R) augmente aussi et $(\hat{m}-m)$ augmente.
+
+\item Montrons que $Pr(|Z|> \frac{\Delta_1}{2}) = \sqrt{\frac{2}{\pi \sigma_Z^2}} \int_{\frac{\Delta_1}{2}}^{+\infty} exp(-\frac{z^2}{2\sigma_z^2}) dz$, dont la distribution de probabilité est:
+%\img{0.5}{11.png}
+On peut aussi montrer que:
+\begin{align*}
+Pr(|Z|>\frac{\Delta_1}{2}) &= 2 Pr(Z > \frac{\Delta_1}{2})\\
+&= 2 \sqrt{\frac{1}{2\pi \sigma_Z^2}} \int_{\frac{\Delta_1}{2}}^{+\infty} exp(-\frac{z^2}{2\sigma_z^2}) dz
+\end{align*}
+
+On suppose que $ \Delta_2 << \Delta_1$, et $\Delta_2 << \sigma_Z$.\\
+On peut montrer que $|Z| \leq \frac{\Delta_2}{2} \Rightarrow D_1 = \frac{\Delta_2^2}{12}$ et que $|Z| > \frac{\Delta_2}{2} \Rightarrow D_2 = \Delta_2^2$.\\
+
+\begin{align*}
+D &= D_1 Pr(|Z| \leq \frac{\Delta_1}{2}) + D_2 Pr(|Z| > \frac{\Delta_1}{2})\\
+&= \frac{\Delta_2^2}{12} \int_{-\frac{\Delta_1}{2}}^{\frac{\Delta_1}{2}} \frac{1}{\sqrt{2\pi \sigma_Z^2}} exp(-\frac{z^2}{2\sigma_Z^2})dz + \Delta_1^2 \sqrt{\frac{2}{\pi \sigma_Z^2}} \int_{\frac{\Delta_1}{2}}^{+\infty} exp(-\frac{z^2}{2\sigma_Z^2})dz\\
+&= \sqrt{\frac{2}{pi \sigma_z^2}} \left(\frac{\Delta_2^2}{12} \int_{0}^{\frac{\Delta_1}{2}} exp(-\frac{z^2}{2\sigma_Z^2})dz + \Delta_1^2 \int_{\frac{\Delta_1}{2}}^{+\infty} exp(-\frac{z^2}{2\sigma_Z^2})dz\right)
+\end{align*}
+
+\item R est fixé donc M est fixé, et $\Delta_2 = \frac{\Delta_1}{M}$.
+
+On calcul $\frac{\partial D}{\partial \Delta_1}$ et par magie on trouve 0.
+
+\end{enumerate}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

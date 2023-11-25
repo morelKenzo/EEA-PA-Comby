@@ -1,0 +1,40 @@
+\documentclass{../../cours}
+\usepackage{../../raccourcis}
+\usepackage{multicol}
+% Mise en page
+\title{Contrôle de processus}
+\author{Pierre-Antoine Comby}
+\teacher{Samy Tliba}
+\module{421}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\chapter{Echantillonnage des signaux et transformée en z}
+\subfile{chap1.tex}
+\chapter{Fonctions de transfert en z}
+\subfile{chap2.tex}
+
+\chapter{Correcteur RST}
+\subfile{chap3.tex}
+\newpage
+\textbf{À savoir pour le partiel}
+\begin{itemize}
+\item Transformées en $z$ et ses propriétés
+\item Tous les résultats sur les filtres linéaires numériques
+\item Méthode d'obtention des transformées en $z$ d'un système discrétisé
+\item Définitions stabilité, critères algébriques pour la caractériser (connaître Routh-Hurwitz, savoir appliquer Jury)
+\item Réglage d'un correcteur PID analogique, savoir passer en TD (Euler, Tustin, méthode de correspondance pour le zéro)
+\item Transformation en $w$
+\item Correcteur RST
+\item Règle des retards relatifs
+\item Règles de rejet de la perturbation, conséquence sur le polynôme $R$
+\item Être en mesure de déterminer les degrés de polynômes R et S pour résoudre un problème : technique de simplification de pôles / zéros, introduction de polynôme auxiliaire
+\end{itemize}
+
+\chapter{Commande dans l'espace d'état}
+\subfile{chap4.tex}
+\end{document}

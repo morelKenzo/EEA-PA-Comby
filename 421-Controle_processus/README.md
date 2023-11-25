@@ -1,0 +1,2 @@
+ - Le cours a été rédigé en 2015, en cours de révision en 2018.
+ - Les TD et TP ont été rédigé en 2014/2015 .

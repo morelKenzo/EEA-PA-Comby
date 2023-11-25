@@ -1,0 +1,298 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Principe du codage par transformée}
+
+On considère une source $\vec{\mathcal{X}}\in \R^n$ ou $\in \R^{n\times m}$ (images).
+Et une réalisation de cette source $\vec{x} \in \R^n$ ou $\vec{X}\in\R^{n\times m}$.
+
+La représentation naturelle de $\vec{x}$ est la base canonique
+de $\R^n$ .
+Si $\vec{x}$ représente par exemple une suite de $N$ échantillons d'un signal audio, les composantes de $\vec{x}$ auront plus ou moins la meme variance, mais ils ne seronts (en général) pas indépendant  entre eux. POur exploiter cette propriété, on peux:
+\begin{itemize}
+\item réaliser un codage prédictif (voir chapitre 4)
+\item réaliser un codage par transformée
+\end{itemize}
+
+Dans le second cas on essaie d'exprimer $\vec{x}$sur une ``meilleure'' base que la base canonique.
+
+\section{Transformations}
+\begin{prop}
+  Une base de $\R^n$ est ensemble de $n$ vecteurs $\{\vec{u_1} ...\vec{u_n}\}$ linéairement indépendants.
+  Si on pose
+  \[
+    \vec{U} = [ \vec{u_1} ... \vec{u_n}]
+  \]
+  Alors $\vec{U}$ est inversible.
+\end{prop}
+
+\paragraph{Transformation inverse}
+
+\begin{defin}
+  On dispose de $\vec{t}$ vecteur dont les composantes sont exprimées dans la base $\{\vec{u_1} ... \vec{u_n}\}$ dans la base canonique
+    On a :
+    \[
+      \vec{x}= \sum_{i=1}^{n}t_i\vec{u_i} = \vec{U}\vec{t}
+    \]
+\end{defin}
+\paragraph{Transformation directe}
+\begin{defin}
+  On dispose de $\vec{x}$ dont les composantes sont données dans la base canonique.
+  On veux obtenir son vecteur de composante $\vec{t}$ dans la base $\{\vec{u_1} ... \vec{u_n}\}$:
+  \[
+    \vec{t} = \vec{U}^{-1}\vec{x}
+  \]
+\end{defin}
+
+\paragraph{Base unitaires}
+\begin{defin}
+  Une base est dite \emph{unitaire} ssi
+  \[
+    \begin{cases}
+      <\vec{u}_i ,\vec{u}_j> = 0 &\quad\forall i \neq j\\
+      <\vec{u}_i ,\vec{u}_i> = 1 &\quad\forall i \in [1 ... n]
+    \end{cases}
+  \]
+\end{defin}
+\begin{prop}
+  Pour une base unitaire on a:
+  \begin{itemize}
+  \item transformée inverse: $\vec{x}=\vec{Ut}$
+  \item transformée directe: $\vec{t} = \vec{U}^T\vec{x}$
+  \item $\vec{U}^T\vec{U}= \vec{U}\vec{U}^T = \vec{I_n}$
+  \end{itemize}
+
+  une transformée dans une base unitaire préserve la norme quadratique.
+\end{prop}
+\begin{proof}
+  \[
+    \|\vec{t}\|^2 = \vec{t}^T\vec{t} = \vec{x}^T \vec{U}^T\vec{U}\vec{x} = \vec{x}^T\vec{x} =\|\vec{x}\|^2
+  \]
+\end{proof}
+
+\begin{rem}
+  Une transformée est unitaire lorsqu'elle implique une base unitaire.
+\end{rem}
+
+Si on veux transformée une image $\vec{X}\in \R^{n\times n}$ il faut considéré un ensemble de matrice $\vec{U_1 ... U_{n\times n}}\}$ base de $\R^{n\times n}$.
+  Pour réaliser la transformation :
+  \begin{itemize}
+  \item On construit un vecteur $\vec{x} \in R^{n^2}$ à partir des lignes ou des
+    colonnes de $\vec{X}$.
+  \item  Construire la matrice de transformation $\vec{U}\in \R^{n^2\times n^2}$
+  \item Calculer $\vec{t} = \vec{U}^{-1}\vec{x}$
+  \item Reformer $\vec{T} \in \R^{n\times m}$ à partir de $t$.
+  \end{itemize}
+
+\begin{prop}
+Une transformée pour une image $\vec{x}\in \R^{n\times m}$ est dites \emph{séparable} s'il existe une matrice $\vec{U_s}$ telle que la matrice $\vec{T}$ transformée définie précédement puisse s'écrire
+\[
+  \vec{T} = \vec{U_s}^{-1}\vec{x}(\vec{U_s}^{-1})^T
+\]
+et si $U_s$ est unitaire:
+\[
+  \vec{T} = \vec{U_s}^T x \vec{U_s}
+\]
+\end{prop}
+
+\begin{rem}
+  Pour une transformée non séparable on a une complexité en $O(n^4)$.
+  Pour une transformée séparable on a une complexité en $O(2n^3)$
+\end{rem}
+
+\section{Transformée de Karhuman-Loeve}
+
+On considère une source vectorielle, centrée et de matrice de covariance $\vec{\Gamma}$:
+\[
+  \vec{\Gamma} = E(\vec{X.X}^T)
+\]
+\begin{rem}
+  $\vec{\Gamma}$ est symétrique.
+\end{rem}
+On cherche une transformée discrète optimale décrite par $\vec{A}$ et une transformée inverse décrite par $\vec{B}$. qui soit \emph{optimale} au sens de l'EQM. de reconstruction lorsqu'on réalise une réduction à $m$ composantes du vecteur transformé.
+
+Le vecteur transmformé est :
+\[
+  \vec{t} = \vec{A}\vec{x}
+\]
+
+On ne garde que les $m$ premières composantes de $\vec{T}$ pour obtenir $\vec{t}_{m}$.
+\[
+  \vec{t_m} = \vec{I_m} \vec{t} \quad \text{ avec } \vec{I_m} = diag(\underbracket{1, ... ,1 }_{m},\underbracket{0, ..., 0}_{N-m})
+\]
+
+Le vecteur reconstruit est alors :
+\[
+  \hat{\vec{x_m}} =\vec{B}\vec{t_m} = \vec{B}\vec{I}_m\vec{t} =\vec{B}\vec{I_m}\vec{A}\vec{x}
+\]
+
+
+\begin{thm}
+  La matrice de transformation directe qui minimise l'EQM de reconstruction lors d'une reduction à m composante d'une source $X$ en considérant la transformée inverse est telle que
+  \[\vec{B} = \vec{A}^T\]
+  et où $\vec{A}$ est formée des vecteurs propres de $\vec{\Gamma}$ rangés par valeurs propres décroissantes.
+\end{thm}
+
+
+\begin{proof}
+  
+  À partir de l'expression de l'EQM on a:
+  \begin{align*}
+J_m & = \frac{1}{N}E((\vec{x}-\vec{\hat{x}})^T(\vec{x}-\vec{\hat{x}}))                                                \\
+    & = \frac{1}{N} tr(E((\vec{x}-\vec{\hat{x}})(\vec{x}-\vec{\hat{x}})^T))                                           \\
+    & = \frac{1}{N} tr(\vec{t}-\vec{BIA}E(\vec{xx}^T)(\vec{t}-\vec{BI_mA})^T)                                         \\
+    & = \frac{1}{N} tr(\vec{t}-\vec{BIA}\vec{\Gamma}(\vec{t}-\vec{BI_mA})^T)                                               \\
+    & = \frac{1}{N} \left[tr(\vec{\Gamma}) - tr(\vec{BI_mA\Gamma})- tr(\vec{\Gamma}(\vec{BI_mA})^T)+tr(\vec{BI_mA\Gamma A^TI_mB}) \right] \\
+    \intertext{À partir des propriétés élémentaire de la trace (symétrie, bilinéaire)}
+    & = \frac{1}{N}\left[tr(\vec{\Gamma})- tr(\vec{A\Gamma B I_m}) - tr(\vec{AI_mB\Gamma}) + tr(\vec{BI_mA\Gamma A^TI_mB}^T)\right]
+    \end{align*}
+
+    \begin{lemme}
+
+      Pour une fonction matricielle $\vec{Y} =  f(\vec{A}) $ on a :
+      \[
+        D_{\vec{A}}(\vec{B}) =\derivp[tr(\vec{Y})]{A}
+      \]
+      qui est la matrice contenant les dérivées de $tr(\vec{A})$  par rapport aux composante de $\vec{A}$. Alors :
+      \[
+        D_{\vec{A}}(\vec{AB}) = \derivp[tr(\vec{AB})]{A}= \vec{B}^T
+      \]
+      \[
+        D_{\vec{A}}(\vec{ABA}^T) = \vec{AB}^T+\vec{AB}
+      \]
+      \[
+        D_{\vec{A}}(\vec{CABA^TD}) = \vec{C}^T\vec{D}^T\vec{AB}^T+\vec{DCAB}
+      \]
+    \end{lemme}
+    Avec le lemme on a :
+
+    \begin{align*}
+      \derivp[J_m]{\vec{A}} = \frac{1}{N}\left[
+      \vec{0} - 2\vec{\Gamma BI_m}^T+ (\vec{BI_m})^T(\vec{I_mB}^T)^T\vec{A}\vec{\Gamma}+(\vec{I_mB^T})(\vec{BI_m})\vec{A\Gamma} \right]=0
+    \end{align*}
+    On en déduit:
+    \[
+      \vec{I_mB}^T(\vec{I}-\vec{I_mA})\vec{\Gamma} = \vec{0} \tag{(1)}
+    \]
+    On réecrit alors le critère sous la forme:
+
+      \begin{align*}
+        J_m &= \frac{1}{N} tr((\vec{I}-\vec{BI_mA})\vec{\Gamma}) - \frac{1}{N}tr((I-\vec{BI_mA})(\vec{BI_mA})^T) \\
+            &= \frac{1}{N} tr((\vec{I}-\vec{BI_mA})\vec{\Gamma}) - \frac{1}{N} tr(\vec{A}^T\vec{I_m}\vec{B}^T(\vec{I-BI_mA}))
+      \end{align*}
+      En général $\Gamma$ etant inversible, en utilisant (1) on déduit :
+
+      Si $m=n$ on doit avoir $J_n  = 0$ soit :
+        \[
+          tr((\vec{I}-\vec{BA})\vec{\Gamma}) = 0
+        \]
+        Une condition suffisante est que:
+        \[
+          \vec{A} = \vec{B}^{-1}
+        \]
+        Avec (1), mais pour tout $\vec{\Gamma}$ on a alors : \footnote{À développer : écriture par bloc des matrice, $B^TB$ est diagonale }
+        \[
+          \vec{I_mBB}^T = \vec{I_mB}^T\vec{B}\vec{I_m}
+        \]
+        On a alors:
+        \[
+          I_m = \frac{1}{N}tr(\vec{I}-\vec{BI_mA}\vec{\Gamma})
+        \]
+        Si on prend une matrice $\vec{D}$ diagonale inversible et qu'on remplace $\vec{B}$ par $\vec{BD}$ $\vec{A}= \vec{B}^{-1}$ va être remplacé par $\vec{D}^{-1}\vec{A}$
+        \begin{align*}
+          J_m &= \frac{1}{N}((\vec{I}-\vec{BDI_mD}^{-1}\vec{A})\vec{\Gamma}) \\
+              &= \frac{1}{N}((\vec{I}-\vec{BI_mA})\vec{\Gamma})
+        \end{align*}
+        Cette propriété permet de choisir $\vec{B}$ unitaire c'est à dire $\vec{B}^T\vec{B} = \vec{I} $ soit $\vec{A}=\vec{B}$. Alors on remplace dans l'expression de l'EQM:
+
+        \[
+          J_m = \frac{1}{N}tr(\vec{\Gamma}) - \frac{1}{N}tr(\vec{A}^T\vec{I_m}\vec{A}\vec{\Gamma})
+        \]
+        Ainsi pour minimiser l'EQM il faut minimiser :
+        \[
+          tr(\vec{A}^T\vec{I_m}\vec{A}\vec{\Gamma}) = tr(\vec{I_mA\Gamma A}^T)
+        \]
+
+        On note $\vec{a_1}^T ... \vec{a_N}^T $ les lignes de $\vec{A}$ . On a alors:
+        \[
+          K_m = tr(\vec{I_mA\Gamma A^T}) = \sum_{i=1}^{m}\vec{a_i}^T\vec{\Gamma}\vec{a_i}
+        \]
+        qu'il faut minimiser sous le contraintes:
+        \[
+          \vec{a_i}^T\vec{a_i}, \forall i \in [1 ... N]
+        \]
+        On introduit donc le lagrangien:
+        \[
+          \mathcal{L}(\vec{a_1} ...\vec{a_N},\lambda_1 ... \lambda_N) = \sum_{i=1}^{m}\vec{a_i}^T\vec{\Gamma}\vec{a_i} - \sum_{i=1}^{N}\lambda_i(\vec{a_i}^T\vec{a_i}-1)
+        \]
+        On a donc:
+        \[
+          \derivp[\mathcal{L}]{\vec{a_i}}=
+          \begin{cases}
+            2\vec{\Gamma}\vec{a_i}-2\lambda_ia_i & = 0 \quad \forall i \in [1...m] \\
+            -2 \lambda_i\vec{a_i}           & = 0 \quad \forall i \in [m+1...N]
+          \end{cases}
+        \]
+        On a donc $\vec{\Gamma}\vec{a_i} = \lambda_i \vec{a_i}$.
+        Les $\vec{a_i}$ sont les vecteurs propres de $\Gamma_i$ associées aux valeurs propres $\lambda_i$. Alors
+        \[
+          K_m = \sum_{i=}^{m}\lambda_i
+        \]
+        qui est maximisé lorsque les $vec{a_i}$ sont associés aux $m$ plus grandes valeurs propres de $\Gamma$.
+
+\begin{flushright}
+Ouf !
+\end{flushright}
+
+\end{proof}
+\subsection{Mise en oeuvre pratique}
+On dispose d'un signal sonore $ x_1 ... x_M$ centré.
+\begin{enumerate}
+\item On découpe le signal en vecteur de $N$ composante $\vec{x_1} = (x_1 ... x_N),\vec{x_2} = (x_{N+1} ... x_{2N}) ... \vec{x_K}$.
+\item On calcule:
+  \[
+    \vec{\hat{\Gamma}}\frac{1}{K}\sum_{k=1}^{K}\vec{x_k}\vec{x_k}^T
+  \]
+\item On calcule les vecteurs propres $\vec{\gamma_1 ... \gamma_N}$ de $\vec{\Gamma}$ associé aux valeurs propres $\lambda_1 \ge ... \lambda_N$
+\item On construit la matrice de transformation :
+  \[
+    \vec{A} =\vect{\vec{\gamma_1}^T\\ \vec{\gamma_2}^T\\ \vdots \\ \vec{\gamma_N}^T} = \vec{B}^T
+  \]
+\item calculer:
+  \[
+    \vec{t_k} = \vec{A}\vec{x_k} \quad \forall k \in [1... K]
+  \]
+\item Mettre à 0 les $N-m$ derniers coefficient de $\vec{t_k}$.
+\item Calculer
+  \[
+    \hat{\vec{x_k^{(m)}}} =\vec{B} \vec{t_k^{(m)}} \quad \forall k \in [1... K]
+  \]
+
+\end{enumerate}
+
+\begin{rem}
+  La KLT a cependant des défauts:
+  \begin{itemize}
+  \item Elles dépend du signal à compresser.
+  \item Elle n'est pas séparable.
+  \end{itemize}
+  De ce fait elle est très peu utilisée en compression d'image
+\end{rem}
+\section{Transformée sous optimales}
+\subsection{Transformée en cosinus discrete (DCT)}
+La DCT est une très bonne alternative à la KLT.
+\begin{defin}
+  La transformée en cosinus discrète a pour matrice de transformation:
+  \[
+    \vec{u_{i,k}} =\alpha_i \cos \frac{\pi(2k-1)i}{2N}
+  \]
+  Avec $\alpha_0 =\frac{1}{\sqrt{N}}$ et $\alpha_i  = \sqrt{\frac{2}{N}}$.
+\end{defin}
+\begin{rem}
+  La DCT est séparable.
+  En terme de compaction d'énergie elle est presque aussi efficace que la KLT. Elle est utilisée en compression audio (mp4) vidéo (H261 à H265)
+\end{rem}
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

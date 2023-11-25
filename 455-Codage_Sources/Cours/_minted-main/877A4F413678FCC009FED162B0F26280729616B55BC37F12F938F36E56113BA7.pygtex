@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{x}\PYG{p}{=}\PYG{n+nb}{rand}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{)}\PYG{o}{\PYGZgt{}}\PYG{l+m+mf}{0.9}
+\PYG{c}{\PYGZpc{} rand : generateur de loi uniforme}
+\PYG{c}{\PYGZpc{} randn : generateur de loi gaussienne}
+\end{Verbatim}

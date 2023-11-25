@@ -1,0 +1,172 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+
+\paragraph{Pourquoi a-t-on besoin du codage de source ?}
+
+Un téléviseur HD affiche des images de 1920 x 1080 pixels. Chaque pixel est formé d'une combinaison de 3 couleurs RGB, chacune des couleurs étant codée par un nombre sur 8, 10 ou 12 bits. À raison de 25, 50 ou 60 images par seconde, le débit nécessaire est R= 1920 x 1080 x 3 x 8 x 25 = 1,22 Gbits par seconde. \\
+
+En 4G, le débit maximal est de 100 Mbits par seconde (quand on est seul dans la zone) et en ADSL, il est de 20 Mbits par seconde.
+
+Il faut compresser les données avec un facteur 100 au minimum.\\
+
+\emph{"Le taux minimum c'est 25 images par seconde, pour pas avoir l'impression de regarder un dessin animé japonais."}
+\emph{"Des émissions mettent volontairement moins pour qu'on ait l'impression d'avoir trop bu en regardant la télé."}\\
+
+\paragraph{Comment faire de la compression?} Quelles propriétés du signal vidéo peut-on utiliser pour réaliser de la compression?
+On utilise la redondance statistique. Par exemple, pour la vision (ou tech 3D) on utilise les petites différences pour obtenir la profondeur. De la même façon, en stéréo on a deux micros pour l'enregistrement. C'est la ressemblance entre les deux signaux qui nous intéresse ici pour effectuer la compression.\\
+
+La compression est possible à cause de plusieurs propriétés:
+\begin{itemize}
+\item La corrélation temporelle (ressemblance entre deux image successives d'une vidéo ou échantillons audio successifs).
+\item La corrélation spatiale (le fait que certaines zones présentes sont relativement uniforme, ressemblance entre deux pixels voisins).
+\item La corrélation spectrale (ressemblance entre les composantes R, G et B d'une image).
+\item Les propriétés statistiques du signal (un texte contient plus de "e" que de "z" en général).
+\end{itemize}
+
+\paragraph{Exemple d'une chaîne de compression vidéo}
+On considère une vidéo mono-vue (pas en 3D) codée en niveaux de gris.\\
+
+\underline{Transformation}: On applique une transformation à l'image, c'est à dire que l'on cherche à exprimer les blocs de l'image dans une base autre que la base canonique, pour permettre une compression plus facile.\\
+Par exemple :
+
+$\begin{pmatrix}1&1\\1&1\end{pmatrix}$ permet de décrire les zones constantes
+
+$\begin{pmatrix}1&1\\-1&-1\end{pmatrix}$ pour décrire les variations verticales, et
+
+$\begin{pmatrix}1&-1\\1&-1\end{pmatrix}$ pour une variation horizontale.\\
+
+\underline{Quantification}: Elle permet de représenter les pixels transformés sur un nombre limité de bits (et d'en mettre plein à 0). Cette opération est irréversible.\\
+
+\underline{Codeur entropique}: Il exploite la redondance statistique des coefficients quantifiés (il prend les successions et les compresse). On ne peut pas encore envoyer les données sur le réseaux, il faut appliquer un standard de compression.\\
+
+\underline{Standard de compression}: Détermine la manière dont les bits en sortie sont organisés. (constitue les paquets, les numérote etc.)\\
+
+
+On peut alors transmettre l'image. Une fois récupérée, on applique un décodage entropique, puis un désindexation et enfin une transformation inverse.\\
+
+La désindexation permet d'obtenir à partir d'un coefficient quantifié, un nombre qui a la même dynamique qu'un coefficient transformé.(exemple: permet de retrouver un nombre à la bonne échelle, même si ce nombre n'est pas exactement le même).
+\begin{figure}[H]
+  \centering
+\begin{tikzpicture}
+  \sbEntree{E}
+  \sbBlocL{t}{Transformée}{E}
+  \sbBlocL{q}{Quantificateur}{t}
+  \sbBlocL{c}{Codeur entropique}{q}
+  \sbSortie{S}{c}
+\end{tikzpicture}
+\begin{figure}[H]
+  \centering
+
+  \caption{utilisation d'un décodeur local}
+\end{figure}
+\caption{Chaine de compression}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+\begin{tikzpicture}
+  \sbEntree{E}
+  \sbBlocL{d}{decodeur entropique}{E}
+  \sbBlocL{D}{Désindexeur}{d}
+  \sbBlocL{t}{Transformée inverse}{D}
+  \sbSortie{S}{t}
+\end{tikzpicture}
+\caption{Chaine de décompression}
+\end{figure}
+
+\paragraph{Comment transmettre une vidéo?} appliquer ce shcéma (JPEG) à chaque image et transmettre? non, trop lourd.
+On peut comparer l'image 2 à l'image précédente non pas 1 mais $\hat{1}$ l'estimée de l'image reçue par le récepteur, et l'on envoie la différence. Puis pour envoyer l'image 3, on estime la différence précédente, on y ajoute l'image estimée de la première image et on calcule la différence, que l'on envoie au travers des différentes transformations. Et ainsi de suite.\\
+
+De ce fait, au niveau du récepteur on mémorise l'image précédente à laquelle on ajoute les différences.\\
+
+Cette structure de codeur était celle des premiers codeurs vidéo (H261, MPEPZ). H265 encore utilisé a aussi cette structure.\\
+
+\noindent Notations :\\
+$I_n$: image numéro n\\
+$\hat{I_n}$ : image numéro n au décodeur\\
+$f(\hat{I_n}) = \tilde{I_{n+1}}$: image n+1 prédite\\
+
+
+On va étudier deux cas :
+\begin{enumerate}
+\item pas de décodeur au niveau du codeur mais on a un prédicteur.
+\begin{align*}
+\tilde{I_{n+1}} &= T^{-1}(Q^{-1}(Q(T(I_{n+1} - f(I_n))))) + \tilde{I_{n+1}}\\
+&= I_{n+1} - f(I_n) + E_{n+1} + \tilde{I_{n+1}} \text{	avec, E le bruit}
+\end{align*}
+$f(I_n)$ et $\tilde{I_{n+1}}$ ne se compensent pas totalement.
+\bigbreak
+
+\item On fait la prédiction a partir des images codées précédemment.
+\begin{align*}
+\tilde{I_{n+1}} &= T^{-1}(Q^{-1}(Q(T(I_{n+1} - f(\hat{I_n}))))) + f(\hat{I_n}\\
+&= I_{n+1} - f(\hat{I_n}) + E_n +f(\hat{I_n})\\
+&= I_{n+1} + E_n
+\end{align*}
+L'utilisation d'un décodeur au niveau du codeur (décodeur local) permet d'éviter une accumulation des erreurs au niveau des images décodées.
+\end{enumerate}
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[thick,scale=0.9, every node/.style={scale=0.9}]
+    \sbEntree{E}
+    \node[above] at (E) {...$I_2,I_1$};
+    \sbComp{a}{E}
+    \sbRelier{E}{a}
+    \sbBlocL[6]{c}{Transformée}{a}
+    \sbBlocL[6]{d}{Quantification}{c}
+    \sbBlocL[5]{e}{
+      \begin{tabular}{c}
+        Codeur\\ entropique
+      \end{tabular}}{d}
+    \sbSortie{s}{e}
+    \sbRelier{e}{s}
+    \sbDecaleNoeudy[10]{d-e}{Ret}
+    \sbBlocr{D}{Désindéxation}{Ret}
+    \sbBlocrL{T}{
+        \begin{tabular}{c}
+          Transformée\\inverse
+        \end{tabular}}{D}
+    \sbRelieryx{d-e}{D}
+    \sbCompSum[-6]{C1}{T}{+}{ }{ }{+}
+    \sbRelier{T}{C1}
+    \sbBlocrL{m}{Mémoire}{C1}
+    \sbRelierxy{m}{a}
+    \sbDecaleNoeudx[5]{m-a}{int}
+    \node[left] (is) at (m-a){};
+    \node[left=0.5em] at (m-a) {$\hat{I_1}$};
+    \node[right] (ie) at (int){};
+    \draw[-] (is) to[spst] (ie);
+    \sbRelierxy{int}{C1}
+  \end{tikzpicture}
+  \caption{Utilisation d'un décodeur local}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+  \sbEntree{E}
+  \sbBlocL{d}{\begin{tabular}{c}
+                decodeur \\entropique
+              \end{tabular}}{E}
+  \sbBlocL{D}{Désindexeur}{d}
+  \sbBlocL{t}{\begin{tabular}{c}
+          Transformée\\inverse
+        \end{tabular}}{D}
+  \sbCompSum[8]{c}{t}{ }{+}{+}{ }
+  \sbRelier{t}{c}
+  \node[below=4em,rectangle,draw](m) at (c) {Mémoire};
+  \sbRelier{m}{c}
+  \sbSortie{S}{c}
+  \sbRelier[$\hat{I_2}\hat{I_1}$]{c}{S}
+  \end{tikzpicture}
+  \caption{Décodeur à mémoire}
+\end{figure}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

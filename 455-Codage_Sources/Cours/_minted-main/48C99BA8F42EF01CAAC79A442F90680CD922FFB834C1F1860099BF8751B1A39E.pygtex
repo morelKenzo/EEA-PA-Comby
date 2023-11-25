@@ -1,0 +1,50 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+ch}{\PYGZsh{}!/usr/bin/env python3}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{from} \PYG{n+nn}{scipy} \PYG{k+kn}{import} \PYG{n}{integrate}
+\PYG{k+kn}{from} \PYG{n+nn}{scipy.stats} \PYG{k+kn}{import} \PYG{n}{norm}
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pyplot} \PYG{k}{as} \PYG{n+nn}{plt}
+
+\PYG{k}{def} \PYG{n+nf}{ddp}\PYG{p}{(}\PYG{n}{x}\PYG{p}{):}
+    \PYG{n}{mean} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{sigma} \PYG{o}{=} \PYG{l+m+mi}{1}
+    \PYG{k}{return} \PYG{n}{norm}\PYG{o}{.}\PYG{n}{pdf}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,}\PYG{n}{mean}\PYG{p}{,}\PYG{n}{sigma}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{quant}\PYG{p}{(}\PYG{n}{centroids}\PYG{p}{,} \PYG{n}{X}\PYG{p}{):}
+    \PYG{n}{bornes} \PYG{o}{=} \PYG{p}{(}\PYG{n}{centroids}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{+}\PYG{n}{centroids}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:])}\PYG{o}{/}\PYG{l+m+mi}{2}
+    \PYG{n}{bornes} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{bornes}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}\PYG{p}{)}
+    \PYG{n}{bornes} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{bornes}\PYG{p}{,}\PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}\PYG{p}{)}
+    \PYG{n}{xquant} \PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{X}\PYG{p}{))}
+    \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{X}\PYG{p}{)):}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{bornes}\PYG{p}{)):}
+            \PYG{k}{if} \PYG{n}{X}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}\PYG{o}{\PYGZgt{}=}\PYG{n}{bornes}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o+ow}{and} \PYG{n}{X}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{\PYGZlt{}}\PYG{n}{bornes}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]:}
+                \PYG{n}{xquant}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{=} \PYG{n}{centroids}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+    \PYG{k}{return} \PYG{n}{xquant}
+\PYG{k}{def} \PYG{n+nf}{llyodMax}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{M}\PYG{p}{,}\PYG{n}{maxiter}\PYG{o}{=}\PYG{l+m+mi}{1000}\PYG{p}{,}\PYG{n}{eps}\PYG{o}{=}\PYG{l+m+mf}{1e\PYGZhy{}6}\PYG{p}{):}
+    \PYG{c+c1}{\PYGZsh{}répartition uniforme des bornes}
+    \PYG{n}{step} \PYG{o}{=} \PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{n}{X}\PYG{p}{)}\PYG{o}{\PYGZhy{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{min}\PYG{p}{(}\PYG{n}{X}\PYG{p}{))}\PYG{o}{/}\PYG{p}{(}\PYG{n}{M}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{)}
+    \PYG{n}{Xmin} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{min}\PYG{p}{(}\PYG{n}{X}\PYG{p}{)}
+    \PYG{n}{bornes} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([}\PYG{n}{i}\PYG{o}{*}\PYG{n}{step}\PYG{o}{+}\PYG{n}{Xmin} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{M}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)])}
+    \PYG{n}{bornes} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{bornes}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}\PYG{p}{)}
+    \PYG{n}{bornes} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{bornes}\PYG{p}{,}\PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}\PYG{p}{)}
+    \PYG{n}{centroids} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{M}\PYG{p}{)}
+    \PYG{k}{for}  \PYG{n}{it} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{maxiter}\PYG{p}{):}
+        \PYG{n}{old\PYGZus{}centroids} \PYG{o}{=} \PYG{n}{centroids}\PYG{o}{.}\PYG{n}{copy}\PYG{p}{()}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{M}\PYG{p}{):} 
+            \PYG{n}{centroids}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{integrate}\PYG{o}{.}\PYG{n}{quad}\PYG{p}{(}\PYG{k}{lambda} \PYG{n}{x}\PYG{p}{:} \PYG{n}{x}\PYG{o}{*}\PYG{n}{ddp}\PYG{p}{(}\PYG{n}{x}\PYG{p}{),}\PYG{n}{bornes}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],}\PYG{n}{bornes}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{])[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYGZbs{}
+                         \PYG{o}{/}\PYG{n}{integrate}\PYG{o}{.}\PYG{n}{quad}\PYG{p}{(}\PYG{k}{lambda} \PYG{n}{x}\PYG{p}{:} \PYG{n}{ddp}\PYG{p}{(}\PYG{n}{x}\PYG{p}{),}\PYG{n}{bornes}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],}\PYG{n}{bornes}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{])[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{n}{bornes}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{centroids}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{+}\PYG{n}{centroids}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:])}\PYG{o}{/}\PYG{l+m+mi}{2}
+        \PYG{n}{err} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linalg}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{centroids}\PYG{o}{\PYGZhy{}}\PYG{n}{old\PYGZus{}centroids}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n}{err} \PYG{o}{\PYGZlt{}} \PYG{n}{eps} \PYG{p}{:}
+            \PYG{k}{break}
+    \PYG{k}{return} \PYG{n}{centroids}    
+
+\PYG{n}{M} \PYG{o}{=} \PYG{l+m+mi}{4}
+\PYG{n}{X} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{normal}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1000}\PYG{p}{)}
+\PYG{n}{centroids} \PYG{o}{=} \PYG{n}{llyodMax}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{M}\PYG{p}{)}
+\PYG{n}{bornes} \PYG{o}{=} \PYG{p}{(}\PYG{n}{centroids}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{+}\PYG{n}{centroids}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:])}\PYG{o}{/}\PYG{l+m+mi}{2}
+\PYG{n}{bornes} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{bornes}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}\PYG{p}{);} \PYG{n}{bornes} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{bornes}\PYG{p}{,}\PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{()}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{X}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{quant}\PYG{p}{(}\PYG{n}{bornes}\PYG{p}{,}\PYG{n}{X}\PYG{p}{))}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+\end{Verbatim}

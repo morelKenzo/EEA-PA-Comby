@@ -1,0 +1,78 @@
+\documentclass{../../td}{subfiles}
+\usepackage{../../raccourcis}
+\begin{document}
+\subsection*{Exercice I : Stabilité au sens de Lagrange et de Lyapunov}
+
+\begin{enumerate}\setlength{\itemsep}{1cm}
+
+%---------------- Question 1
+\item \begin{enumerate}\renewcommand{\theenumi}{\alph{enumi}}\setlength{\itemsep}{8mm}
+
+\item On défini le système par \[\dot{x}=(6t\sin t - 2t)x\] donc 
+\begin{align*}
+\frac{dx}{x} & = (6t \sin t - 2t) dt \\
+[\ln(u)]_{x_0}^x & = 6( [-\tau \cos \tau ]_{t_0}^t + \int_{t_0}^t \cos \tau d \tau - [\tau^2]_{t_0}^t \\
+\ln(x) - \ln(x_0) & = -6t\cos t + 6t_0\cos t_0 + 6\sin t - 6\sin t_0 - t^2 + t_0^2 
+\end{align*}
+
+Donc on a la trajectoire :
+\[ x(t) = x_0 \exp(-6t\cos t + 6t_0\cos t_0 + 6\sin t - 6\sin t_0 - t^2 + t_0^2) \]
+
+\item Stabilité au sens de Lyapunov :
+\[ \forall \epsilon > 0, \exists \delta >0 \text{ tq } ||x_0|| \leq \delta \Rightarrow ||x|| \leq \epsilon \]
+
+Soit $\epsilon>0 \text{ tq } |x(t)| \leq \epsilon$. Exprimons $\delta$ en fonction de $\epsilon$ tel que $|x_0| \leq \delta$.
+\begin{align*}
+|x(t)| & \leq |x_0| \exp (6t_0 \cos t_0 - 6\sin t_0 + t_0^2 + 6 + 6 t - t^2) \\
+\text{Or, } & 0 < (3-t)^2 = 9-6t+t^2 \Rightarrow 6t-t^2 < 9 \\
+\text{ donc } |x(t)| & \leq |x_0| C \quad \avec C = \exp(6t_0 \cos t_0 - 6\sin t_0 + t_0^2 + 12) > 0 \\
+\Rightarrow \delta & = \frac{\epsilon}{C}
+\end{align*}
+Le fait que le $\delta$ dépende de $t_0$ n'empêche pas que l'origine soit stable au sens de Lyapunov. Cela montre que la stabilité n'est pas uniforme.
+
+\item Stabilité au sens de Lagrange :
+\[ \forall \delta > 0, \exists \epsilon >0 \text{ tq } |x_0| \leq \delta \Rightarrow |x| \leq \epsilon \]
+
+$t_0=2\pi n$ et $t=t_0 + \pi$
+
+\begin{align*}
+x(t) & = x_0 \exp(6.2\pi n + A\pi^2 n^2 - 6(2\pi n + \pi) - (2\pi n + \pi)^2) \\
+& = x_0\exp((4n+1)\pi(6-\pi)) \to \infty \text{ si } n \to \infty
+\end{align*}
+
+$|x_0| \leq \delta$ alors que $\nexists \epsilon > 0 \text{ tq } |x| \leq \epsilon$ : l'origine n'est pas stable au sens de Lagrange.
+
+
+\end{enumerate}
+
+% --------------- Question 2
+\item \begin{enumerate}\renewcommand{\theenumi}{\alph{enumi}}\setlength{\itemsep}{8mm}
+\item On définit le système par
+\[ \dot{x} = -\frac{x}{t+1} \]
+
+\begin{align*}
+\frac{dx}{x} & = - \frac{dt}{t+1} \\
+\ln(\frac{x}{x_0})  & = \ln(\frac{1+t_0}{1+t}) \\
+\end{align*}
+
+Donc on a la trajectoire :
+\[ x(t) = x_0 \frac{1+t_0}{1+t} \]
+
+\item Stabilité au sens de Lagrange :
+\[ \forall \delta > 0, \exists \epsilon >0 \text{ tq } |x_0| \leq \delta \Rightarrow |x| \leq \epsilon \]
+
+Soit $\delta > 0 \text{ tq } |x_0| \leq \delta$, il faut exprimer $\epsilon$ en fonction de $\delta \text{ tq } |x(t)| \leq \epsilon$.
+
+\[ |x(t)| = |x_0|\frac{1+t_0}{1+t} \avec t,t_0>0 \et t\geq t_0 \text{ donc } \frac{1+t_0}{1+t} \leq 1\]
+
+On prend $\epsilon=\delta$ et l'origine est stable au sens de Lagrange.
+
+\item Stabilité au sens de Lyapunov :
+\[ \forall \epsilon > 0, \exists \delta >0 \text{ tq } |x_0| \leq \delta \Rightarrow |x| \leq \epsilon \]
+
+Soit $\epsilon>0$. On pose $\delta=\epsilon$
+\[ |x_0| \leq \delta=\epsilon \Rightarrow |x| = |x_0|\frac{1+t_0}{1+t} \leq \epsilon \frac{1+t_0}{1+t} \leq \epsilon \] chibrage de l'exo
+\end{enumerate}
+\end{enumerate}
+
+\end{document}

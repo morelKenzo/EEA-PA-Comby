@@ -1,0 +1,121 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+
+On considère une variable aléatoire scalaire et réelle $Y$ de densité de probabilité :
+\[ f_Y(y) = \frac{1}{X}e^{-\frac{y}{X}}u(x) \]
+où $u(y)$ est la fonction échelon d'Heaviside et X un paramètre réel, inconnu, positif et supposé certain dans un premier temps.
+
+\begin{enumerate}
+\item Calcul de la valeur moyenne et de l'écart type de la VA $Y$
+\begin{multicols}{2}
+\begin{align*}
+m_Y & = E[Y] = \int_{\mathbb{R}} y f_Y(y) dy \\
+& = \int_0^{\infty} y \frac{1}{X} e^{-\frac{y}{x}} dy \\
+& = [y(-e^{-\frac{y}{X}})]_0^{\infty} - \int_0^{\infty} (-e^{-\frac{y}{X}}) dy \\
+& = \int_0^{\infty} (-e^{-\frac{y}{X}}) dy \\
+& = [-Xe^{-\frac{y}{X}}]_0^{\infty} \\
+& m_Y = X \\
+\intertext{De plus,}
+\sigma_Y^2 & = E[(Y-m_Y)^2] \\
+& = E[Y^2] - m_Y^2 \\
+E[Y^2] & = \int_0^{\infty} y^2\frac{1}{X}e^{-\frac{y}{X}}dy \\
+& = [y^2(-e^{-\frac{y}{X}})]_0^{\infty} + 2X\int_0^{\infty}y\frac{1}{X}e^{-\frac{y}{X}}dy \\
+& = 2Xm_Y = 2X^2\\
+\sigma_Y^2 & = 2X^2 - X^2 = X^2 \\
+\sigma_Y & = X
+\end{align*}
+\end{multicols}
+\[ \boxed{m_Y = \sigma_Y = X} \]
+
+\item On considère $N$ VA $Y_n, n=1..N$ indépendantes et identiquement distribuées.
+
+On note $(y_1,...y_N)$ les réalisations de $(Y_1,...Y_N)$.\\
+
+Grâce au résultat précédent $m_Y = X$, on peut estimer 
+\[ \hat{x} = \frac{\sum_{n=1}^Ny_n}{N} \]
+\[ \hat{X} = \frac{\sum_{n=1}^NY_n}{N} \]
+
+De plus, l'estimateur est non biaisé car 
+\[ E[\hat{X}] = \frac{\sum_{n=1}^N E[Y_n]}{X} = X \]
+
+\item On souhaite exprimer la ddp conjointe des VA $Y_1,...Y_N$
+\begin{align*}
+f_\mathbf{Y}(\mathbf{y}) & = f_{Y_1, ... Y_N}(y_1,...y_N) \\
+& = \prod_ {n=1}^N f_{Y_n}(y_n) \text{ par indépendance de } Y_1,...Y_N \\
+& = \frac{1}{X^N} \exp(-\frac{\sum_ {n=1}^N Y_n}{X}) u(y_1)...u(y_N)
+\end{align*}
+
+\item On utilise l'estimateur du maximum de vraisemblance 
+\[ \hat{x}_{MV} = \arg \max_X f_\mathbf{Y}(\mathbf{y}) \]
+$\hat{x}_{MV}$ est la valeur de $x$ qui rend les valeurs $y_1,...y_N$ les plus probables.
+
+Condition nécessaire (non suffisante) :
+\begin{align*}
+\frac{d f_{\mathbf{Y}} (\mathbf{y}) }{dX} |_{X = \hat{x}_{MV}} = 0 & \Leftrightarrow ...\\
+& \Leftrightarrow (-\frac{N}{X} + \frac{\sum_{n=1}^N y_n}{X^2}) f_{\mathbf{Y}}(\mathbf{y}) |_{X = \hat{x}_{MV}} = 0 \\
+& \Rightarrow \frac{-N}{\hat{x}_{MV}} + \frac{\sum_{n=1}^N y_n}{\hat{x}_{MV}^2} = 0 \\
+& \Rightarrow \hat{x}_{MV} = \frac{\sum_{n=1}^N y_n}{N} \\
+& \Rightarrow \hat{X}_{MV} = \frac{\sum_{n=1}^N Y_n}{N}
+\intertext{Vérifier que c'est un maximum :}
+\frac{d^2 f_{\mathbf{Y}} (\mathbf{y}) }{dX^2} > \text{ ou }& < 0 ? \\
+\frac{d f_{\mathbf{Y}} (\mathbf{y}) }{dX} > 0 & \text{ pour } x\rightarrow 0^+ \\
+\end{align*}
+
+Calculons la moyenne et l'écart type de $\hat{X}_{MV}$
+\begin{align*}
+E[\hat{X}_{MV}] & = ... = X \\
+\sigma_{MV}^2 & = E[(\hat{X}_{MV} - X)^2] \\
+& = E[(\frac{\sum_{n=1}^N Y_n}{N} - \frac{NX}{N})^2] \\
+& = E[(\frac{\sum_{n=1}^N (Y_n-X)}{N})^2] \\
+& = \frac{1}{N^2} (\sum_{n=1}^N E[(Y_n-X)^2] + \sum_{i \neq j} E[(Y_i-X)(Y_j-X)] \\
+& = \frac{NX^2}{N^2} \\
+\sigma_{MV} & = \frac{X}{\sqrt{N}}
+\end{align*}
+
+\item On a beaucoup plus d'\textit{a priori} (d'informations sur X sans faire l'expérience) avec $\alpha = 1$ qu'avec $\alpha = 10$.
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[scale=2,samples=50,domain=0:5]
+			\draw[-stealth] (0,0) -- (5,0) node[right] {$x$};
+			\draw[-stealth] (0,0) -- (0,1.5) node[above] {$f_X(x)$};
+			\draw plot (\x,{exp(-\x)});
+			\draw[dashed] plot (\x,{0.1*exp(-\x*0.1)});
+\end{tikzpicture}
+\caption{Tracé de $f_X(x)$ pour $\alpha=1$ (--) et $\alpha=10$ (- -)}
+\end{figure}
+
+La courbe pour $\alpha=10$ est beaucoup plus étalée : \[ \sigma_{X,\alpha = 1} < \sigma_{X,\alpha = 10} \]
+
+
+
+\item $\hat{x}_{MAP}  = \arg \max_X f_{X/\mathbf{Y} = \mathbf{y}} (x) $
+
+Or,
+\begin{align*}
+f_{X/\mathbf{Y}   = \mathbf{y}} (x) & = f_{\mathbf{Y}, X = x} (\mathbf{y}) \frac{f_X(x)}{f_{\mathbf{Y}}(\mathbf{y})} \\
+& = \prod_{n=1}^N f_{Y_i,X=x(y_i)}\frac{f_X(x)}{f_{\mathbf{Y}}(\mathbf{y})}  \\
+& = g(x)u(y_1)...u(y_N)\frac{1}{f_{\mathbf{Y}}(\mathbf{y})}
+\intertext{Ainsi,}
+\hat{x}_{MAP} & = \arg \max_X f_{X/\mathbf{Y} =\mathbf{y}} (x) = \arg \max g(x)
+\end{align*}
+
+Condition nécessaire :
+\begin{align*}
+\frac{dg(x)}{dx}|_{x=\hat{X}_{MAP}} = 0 & \Leftrightarrow \hat{X}_{MAP} = \frac{-N\alpha + \sqrt{\alpha^2N^2 + 4\alpha \sum_{n=1}^Ny_n}}{2} \\
+& \Leftrightarrow \hat{X}_{MAP} = \frac{-N\alpha + \alpha N \sqrt{1 + \frac{4}{\alpha N^2} \sum_{n=1}^Ny_n}}{2}
+\end{align*}
+
+\item Si $\alpha \rightarrow +\infty$, 
+\begin{align*}
+\hat{X}_{MAP} & \approx \frac{-N\alpha + \alpha N (1 + \frac{1}{2}\frac{4}{\alpha N^2} \sum_{n=1}^Ny_n}){2} \\
+\hat{X}_{MAP} & \approx \frac{\sum_{n=1}^NY_n}{N} = \hat{X}_{MV}
+\end{align*}
+On n'a pas d'a priori sur X, on n'a que les observations.\\
+
+
+Si $\alpha \rightarrow 0$, $m_X$ et $\sigma_X \rightarrow 0$ : $\hat{X}_{MAP} \rightarrow 0$.
+
+L'a priori est fort.
+\end{enumerate}
+\end{document}

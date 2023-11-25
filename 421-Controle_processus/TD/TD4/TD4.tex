@@ -1,0 +1,312 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\subsection*{Exercice 1 : Asservissement par synthèse d'un correcteur RST}
+On considère la fonction de transfert: \[G(p) = \frac{1}{p(1+\tau p)}\]
+
+Rappel : (TD précédent)
+\begin{align*}
+G(z) & = \frac{B(z)}{A(z)} \\
+& = \frac{b_1z+b_0}{(z-1)(z-D)} \avec D=e^{-T_e/2}\\
+& =\frac{b_1z+b_0}{z^2+a_1z+a_0}  \\
+n & = deg(A) = 2 \\
+m & = deg(B) = 1 \\
+\end{align*}
+
+\begin{enumerate}
+
+\item Il y a plusieurs façon de représenter le correcteur RST :
+\begin{itemize}
+\item $\nu(z)=-\frac{S(z)}{R(z)}Y(z) + \frac{T(z)}{R(z)}E(z)$
+
+Les conditions de causalité sont alors : $\tau \leq p$ et $\sigma \leq p$.\\
+
+\item $\nu(z)=\frac{S}{R}[-Y(z) + \frac{T}{S}E(z)] $
+
+Causalité : $\tau \leq p$ et $\sigma \leq p$.\\
+
+\item $\nu(z)=\frac{T}{R}[-\frac{S}{T}Y(z) + E(z)]$
+
+Causalité : $\tau \leq p$ et $\sigma \leq p$.\\
+\end{itemize}
+
+
+\item On a : $Y(p)= G(p)[\nu(p) + P(p)]$, $P(p) = \frac{P_0}{p}$ et $\nu(p) = B_0(p)\nu^*(p)$\\
+
+\begin{align*}
+Y(p) &=  G(p)[\nu(p) + P(p)]\\
+&= G(p)[B_0(p)\nu^*(p)+\frac{P_0}{p}]\\
+&= \frac{1-e^{-T_ep}}{p}G(p)\nu^*(p) + G(p)\frac{P_0}{p}\\
+\intertext{On pose $A(p) = \frac{G(p)}{p}$, et on a après transformée inverse de Laplace :}
+y(t) &= (a*\nu^*)(t)-(a*\nu^*)(t-T_e)+a(t)P_0\\
+\intertext{après discrétisation on obtient : }
+y_k & = a_k*\nu_k-a_{k-1}*\nu_{k-1} + a_kP_0\\
+\intertext{après transformée en $z$ on a alors :}
+Y(z) &= A(z)\nu(z)-z^{-1}A(z)\nu(z)+A(z)P_0\\
+&=(1-z^{-1})A(z)\nu(z)+A(z)P_0\\
+&= G(z)\nu(z)+(1-z^{-1})A(z)(1-z^{-1})^{-1}P_0\\
+&= G(z)\nu(z)+G(z)P_0\frac{z}{z-1}\\
+Y(z)&= G(z)(\nu(z)+p(z))
+\end{align*}
+\bigbreak
+
+\item Calcul de R et S.
+
+On considère l'exigence 1 du cahier des charges :\\
+$p_{1,2}=\omega_0 (-\xi \pm j\sqrt{1-\xi^2})$, avec $\omega_0 = 1.5$ et $\xi=0.7$
+
+$p_3 = -3\omega_0 \xi$\\
+
+Comme $z_i = e^{T_ep_i}$, avec $\Omega = \omega_0 \sqrt{1-\xi^2}$,
+
+$z_1 = e^{-T_e\omega_0\xi}(cos(\Omega T_e) +j sin(\Omega T_e))$
+
+$z_2 = \overline{z_1}$
+
+$z_3 = e^{-3\omega_0 \xi T_e}$\\
+
+En boucle fermée, l'asservissement considéré donne en posant $G(z) = \frac{B(z)}{A(z)}$,
+\[Y(z) = \frac{BT}{AR+BS}E(z) + \frac{BR}{AR+BS}p(z)\]
+On pose $H_d(z) = \frac{B_d(z)}{\Pi_d(z)} = \frac{BT}{AR+BS}$, avec $deg(\Pi_d)=q$ et $deg(B_d)=\mu$. Les pôles (continus) imposés par le cahier des charges conduisent à la forme suivante pour le polynôme caractéristique :
+\begin{align*}
+\Pi_d(z) &= (z-z_1)(z-z_2)(z-z_3)\\
+&= z^3+C_2z^2+C_1z+C_0\\
+\intertext{avec}
+C_0 &= z_1z_2z_1 = -e^{-5\omega_0 \xi T_e}\\
+C_1 &= z_1z_2 + z_2z_3 + z_3z_1 = (e^{-2 \xi \omega_0 T_e}+2e^{-4\xi \omega_0 T_e}cos(\Omega T_e))\\
+C_2 &= -z_1-z_2-z_3 = -(e^{-3\xi \omega_0 T_e}+2e^{-\xi \omega_0 T_e}cos(\Omega T_e))\\
+\end{align*}
+
+
+
+On s'intéresse à l'exigence 2 du cahier des charges :
+Pour $E(z) = 0$ i.e $e_k = 0$, et $P(z) = P_0 \frac{z}{z-1}$,
+\[\lim_{\rightarrow\infty} y_k =0\]
+
+Ainsi, avec le théorème de la valeur finale on a :
+\begin{align*}
+\lim_{z\rightarrow 1} \frac{z-1}{z}Y(z) = \lim_{z\rightarrow 1} \frac{BR}{AR+BS}P_0 =0
+\Leftrightarrow & \lim_{z\rightarrow 1} B(z)R(z) = 0\\
+\Leftrightarrow & R(z) = (z-1)^l \tilde{R}(z)\text{\indent avec, } l\geq 1\\
+\end{align*}
+
+Par simplicité, on prend donc $l=1$.
+
+\[\frac{B(z)T(z)}{A(z)R(z)+B(z)S(z)} = \frac{B_d(z)}{\Pi_d(z)}\]
+donc $B(z)T(z) = B_d(z)$ et $A(z)(z-1)\tilde{R}(z)+B(z)S(z)=\Pi_d(z)$\\
+donc avec $\tilde{A}(z) = (z-1)A(z)$, \[\boxed{\tilde{A}(z)\tilde{R}(z) + B(z)S(z) = \Pi_d(z)}\]
+
+
+Soit $\tilde{n} = deg(\tilde{A}) = n+1$ et $\tilde{\rho} = deg(\tilde{R})$\\
+
+1) Égalité des degrés : $deg(\tilde{A}\tilde{R})=deg(AR)<deg(BS)$ par causalité, donc
+\[\tilde{n}+\tilde{\rho} = q = 3\]
+
+2) Nombre d'inconnues = nombre d'équations : \\
+$\tilde{R}$ monique $\rightarrow \tilde{\rho}$ inconnues\\
+$S$ non monique $\rightarrow \sigma +1$ inconnues\\
+$\Pi_d$ monique $\rightarrow q$ inconnues\\
+donc on a \[\tilde{\rho}+\sigma +1 = q\]
+
+3) Causalité du correcteur $\frac{S(z)}{R(z)}$, donc on a nécessairement $\sigma \leq \rho = \tilde{\rho}+1$
+d'où on a
+\[ \sigma = \tilde{n} -1 \leq \tilde{\rho} + 1 = q - \tilde{n} +1 \]
+
+donc
+\[q \geq 2\tilde{n}-2 = 4\]
+
+Or, on avait déterminé  $q=3$, donc il faut donc introduire $A_0(z)$ un polynôme auxiliaire/observable de degrés $k$ qui doit être monique dans le numérateur et le dénominateur.
+Les racines de $A_0(z)$ sont choisies plus rapide que $z_1$, $z_2$, et $z_3$ (d'au moins une décade).
+
+
+On pose donc : $\frac{BT}{AR+BS} = \frac{B_d}{\Pi_d}\frac{A_0}{A_0}$ d'où :
+\begin{align*}
+AR+BS & = \Pi_d A_0\\
+\tilde{A}\tilde{R} + BS & = \Pi_d A_0
+\end{align*}
+1) Égalité des degrés
+\[\tilde{n} + \tilde{\rho} = q + k \text{ avec, $q=3$ donné}\]
+
+2) Nombre d'inconnues = nombre d'équations
+\[ \tilde{\rho} + \sigma +1 = q +k\]
+
+3) Causalité
+\[\tilde{\rho} \geq \sigma -1\]
+
+Avec 1) et 2),
+\[\sigma = \tilde{n}-1 = 2\]
+
+Avec 3) et 1)
+\[-\tilde{n}+q+k \geq \tilde{n}-2\]
+\[k \geq 2\tilde{n}-2 -q = k_{min} = 1
+\]
+
+\textbf{Bilan :}\\
+On a donc :
+\[ k \geq 1, \quad \sigma = 2, \quad \tilde{\rho} \geq 1\]
+Idéalement, on prend $k=1$ et la racine de $A_0$ doit être prise plus rapide (au moins une décade) que $z_1,z_2$ et $z_3$\\
+\[A_0(z) = z-z_0 \avec z_0 = e^{-30\xi \omega_0 T_e}\]
+
+
+On a alors :
+\begin{align*}
+\tilde{R}(z) &= z + r_0 \\
+S(z) &= s_2z^2+s_1z+s_0\\
+\tilde{\Pi_d}(z) &= \Pi_d(z)A_0(z)\\
+&=(z^3+C_2z^2+C_3z+C_0)(z-z_0)\\
+&= z^4+\tilde{C_3}z^3+\tilde{C_2}z^2+\tilde{C_1}z+\tilde{C_0}\\
+\avec \tilde{C}_3 & = C_2 - z_0 \\
+\tilde{C}_2 &= C_1 - z_0C_2 \\
+\tilde{C}_1 &= C_0 - z_0C_1 \\
+\tilde{C}_0 &= -z_0C_0
+\intertext{et}
+\tilde{A}(z) &= (z-1)A(z) = (z-1)(z^2+a_1z+a_0)\\
+&= z^3 + \tilde{a_2}z^2+\tilde{a_1}z+\tilde{a_0} \\
+\avec \tilde{a_2}& =a_1-1\\
+\tilde{a_1}& =a_0-a_1\\
+\tilde{a_0}& = -a_0
+\end{align*}
+
+L'équation $\tilde{A}\tilde{R} + BS = \Pi_dA_0$ peut donc se réécrire sous la forme matricielle suivante :
+
+\[
+\left[
+\begin{array}{cccc}
+1 & b_1 & 0 & 0 \\
+\tilde{a}_2 & b_0 & b_1 & 0 \\
+\tilde{a}_1 & 0& b_0 & b_1 \\
+\tilde{a}_0 & 0 & 0 & b_0
+\end{array}
+\right]
+\left[
+\begin{array}{c}
+r_0 \\
+s_2 \\
+s_1 \\
+s_0
+\end{array}
+\right]
+=
+\left[
+\begin{array}{c}
+\tilde{C}_3 - \tilde{a}_2 \\
+\tilde{C}_2 - \tilde{a}_1 \\
+\tilde{C}_1 - \tilde{a}_0 \\
+\tilde{C}_0
+\end{array}
+\right]
+\]
+
+La résolution de cette équation donne les polynômes
+\begin{align*}
+R(z) & = (z-1)(z+r_0)\\
+S(z) & = s_2+z^2+s_1z+s_0
+\end{align*}
+
+Il ne reste qu'à déterminer le polynôme $T(z)$.
+
+\[ \text{Rappel : } B(z)T(z) = B_d(z)A_0(z)\]
+\[\frac{BT}{AR+BS} = \frac{B_d}{\Pi_d}\frac{A_0}{A_0}\]
+
+On note : $\mu = deg B_d$, et on a $k = deg A_0$\\
+Par causalité, \[deg(B_dA_0) = \mu +k \leq deg(\Pi_dA_0) = q + k\]
+\[ \mu \leq k = 3 \]
+En boucle ouverte : on a le retard $n-m = 2-1 = 1$
+\[q-\mu \geq 1 \longrightarrow \mu \leq q-1 = 2\]
+L'égalité des numérateurs donne alors $m+\tau = \mu + k$ donc
+\[\mu = m+\tau-k = \tau\]
+\[\tau \leq 2\]
+
+Avec $B_d(z) = B(z)\tilde{B}(z)$,
+\begin{align*}
+BT & = B_dA_0 \\
+B(z)T(z) &= B(z)\tilde{B}(z)A_0(z) \\
+T(z) &= \tilde{B}(z)(z-z_0)
+\end{align*}
+
+Solution la plus simple pour $\tau \leq 2$ : $\tilde{B}(z) = 1$ donc $B_d(z) = B(z)$, et \[T(z) = A_0(z)\]
+
+\item
+\begin{align*}
+Y(z) & = \frac{B_d(z)}{\Pi_d(z)}E(z) + \frac{B_p(z)}{\Pi_d(z)}P(z)
+\intertext{En l'absence de perturbation, on veut que pour}
+E(z) & = \frac{E_0z}{z-1}
+\intertext{on ait :}
+Y(z) & = \frac{E_0z T_e}{(z-1)^2}\\
+\intertext{donc}
+\frac{B_d(z)}{\Pi_d(z)} & = \frac{T_e}{z-1} \longrightarrow \Pi_d(z) = z-1
+\end{align*}
+
+Compensation du zéro de B(z) avec $B(z) = b_1z+b_0 = b_1(z+\frac{b_0}{b_1})$
+or, $b_0 = 0.2(1-2D)$, et $b_1 = 0.2D$, donc $\frac{b_0}{b_1}= \frac{1-2D}{D}$ avec $D=e{-1}$
+donc $ \frac{b_0}{b_1} = \frac{0.052848}{0.073576} < 1$ donc le zéro est stable et on peut le compenser.
+
+
+$H_d(z) = \frac{T_e}{z-1}  \rightarrow $ retard $=q-\mu = 1 \geq m-n$. OK. \\
+
+Modèle admissible :
+\[\frac{BT}{AR+BS} = \frac{B_d}{\Pi_d} \frac{A_0}{A_0}\]
+\begin{align*}
+\lim_{n \rightarrow \infty} y_n = 0 & \Leftrightarrow \lim_{z \rightarrow 1} \frac{z-1}{z}\frac{BR}{AR+BS} p(z) = 0\\
+& \Leftrightarrow \lim_{z \rightarrow 1} \frac{z-1}{z}\frac{BR}{\Pi_dA_0} p(z) = 0\\
+& \Leftrightarrow \lim_{z \rightarrow 1} \frac{z-1}{z} \frac{BR}{(z-1)A_0(z)} \frac{p_0 z}{z-1} = 0
+\end{align*}
+
+Il faut, $R(z) = (z-1)^l\tilde{R}(z)$ avec $l \geq 2$.
+On prend $l = 2$.
+
+\begin{align*}
+B(z) &= b_1(z+ \frac{b_0}{b_1})\\
+&=B_s(z)B_{ns}(z)\\
+\avec B_s(z) & = (z+\frac{b_0}{b_1})\\
+\et  B_{ns}(z) & = b_1
+\intertext{on a donc :}
+\frac{B_sB_{ns}T}{AR+B_sB_{ns}S}&= \frac{B_dA_0}{\Pi_d A_0}
+\intertext{Comme $R = (z-1)^2\tilde{R}(z)$, en posant $\tilde{R} = B_s\hat{R}$ ($\hat{R}$ monique) et $\tilde{A}(z) = (z-1)^2A(z)$ on obtient }
+\frac{B_{ns}T}{\tilde{A}\hat{R}+B_{ns}S}&= \frac{B_dA_0}{\Pi_d A_0}
+\intertext{D'où l'équation diophantine}
+\tilde{A}\hat{R}+B_{ns}S & = \Pi_dA_0
+\end{align*}
+
+On pose $\hat{\rho} = deg(\hat{R}) $ et $\tilde{n}=deg(\tilde{A})=n+l=4$.\\
+
+1) Égalité des degrés :
+\[\tilde{n} + \hat{\rho} = q+k \]
+
+2) Nombre d'inconnues = nombre d'équations :
+\[\hat{rho} + \sigma +1 = q+k \]
+
+3) Causalité :
+\[\rho \geq \sigma \]
+
+Avec 1) et 2),
+\[\sigma = \tilde{n}-1 = 3\]
+
+Comme $\rho = l + \hat{\rho} + m_S$,
+\[ \sigma = \tilde{n}-1 \ leq l + m_S + \hat{\rho} = l + m_S + q + k - \tilde{n}\]
+\[ \rightarrow k \geq k_{min} = 3 \]
+
+On choisit $k=3$, et on a alors $\hat{\rho}=0$.
+
+Par conséquent, on a $\hat{R}(z) = 1$ et on prend $S(z) = s_3z^3 + s_2z^2 + s_1z^1 + s_0$.
+
+L'équation se ramène donc à
+\[\tilde{A}+B_{nS}S = \Pi_dA_0\]
+\[S = \frac{1}{b_1}(\Pi_dA_0 - \tilde{A}) \]
+
+Comme $\Pi_dA_0 = (z-1)A_0$ avec $A_0=(z-z_1)(z-z_2)(z-z_3)=z^3+C_2z^2+C_1z+C_0$
+\[\Pi_dA_0 = z^4 + \gamma_3z^3 + \gamma_2z^2 + \gamma_1z + \gamma_0\]
+avec $\gamma_3 = c_2-1, \gamma_2 = c_1-c_2, \gamma_1 = c_0-c_1, \gamma_0=-c_0$.\\
+
+De plus, $\tilde{A}(z) = (z-1)^2 A(z) = z^4 + \tilde{a}_3z^3 + \tilde{a}_2z^2 + \tilde{a}_1z^1 + \tilde{a}_0$\\
+avec $\tilde{a}_3 = a_1 -2, \tilde{a}_2 = 1 -2a_1+a_0, \tilde{a}_1 = a_1-2a_0, \tilde{a}_0 = a_0$\\
+
+On a donc, \[\forall j =0,...,3, \quad s_j=\frac{\gamma_j-\tilde{a}_j}{b_1}\]
+
+Il reste donc à déterminer le polynôme $T(z)$.
+
+
+\end{enumerate}
+
+\end{document}

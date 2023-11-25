@@ -1,0 +1,226 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Origine de l'énergie solaire}
+L'énergie provient du rayonnement émis par le soleil après avoir
+parcouru jusqu'a la Terre distante de \SI{1,496e11}{m}.
+\subsection{Constitution du Soleil}
+Le soleil (de rayon $R_s$=\SI{1,392e9}{m}) peux se décomposer en trois couches:
+
+
+\begin{enumerate}
+\item \textbf{Le coeur:}
+
+  C'est la qu'a lieu la réaction nucléaire de fusion qui libère (beaucoup)
+  d'énergie. Cette zone occupe un quart du rayon solaire, et possèd eune
+  température de 15 millions de Kelvin.On estime que \SI{4.26}{tonnes}de matière y sont consommé chaque seconde pour  \SI{383e15}{GW} de puissance.
+  C'est un processus autorégulé (le soleil ne va pas s'effondrer ou exploser
+  dans les années qui viennent).
+
+\item \textbf{La zone de radiation}:
+
+La zone de radiation entre 0.25 et 0.7 du rayon solaire, très dense (98\% de la masse du soleil). Les atomes d'hygrogène et hélium ionisé émettent des photons absorbés par d'autre ions pas de convection thermique.
+\item \textbf{La zone de convection:}
+  Échange thermique par convection amenant la chaleur vers m'extérieur,on passe de 2 million à 5800K.
+  La photosphère  produit le rayonnnement solaire, épaisse d'environ 400km et de température moyenne 5781K.
+\end{enumerate}
+
+\subsection{Rayonnement produit et loi utiles}
+
+Le rayonnement produit par le soleil à les caractéristique d'un corp noir:
+
+\[
+  B_\nu(T) = \frac{2h\nu^3}{c^2} \frac{1}{exp(\beta h \nu)-1} \text{ou  encore }
+  B_\lambda(T) = \frac{2hc^2}{\lambda^5} \frac{1}{exp(\beta h c/\lambda)-1}
+\]
+
+Ces expressions se simplifient en faisant des hypothèses sur les niveaus d'énergies:
+\begin{itemize}
+\item Loi de Rayleight-Jeans  $h\nu \ll kT $ : $B_\nu^{RJ}(T)=\frac{2\nu^2}{c^2}kT$
+\item Loi de Wien $h\nu \gg kT$ : $B_\nu^W (T) = \frac{2h\nu^3}{c^2}exp(-\frac{h\nu}{kT})$
+\end{itemize}
+
+La puissance surfacique reçue en fonction de la température est elle d'après la loi de Boltzmann:
+\[
+  P_s = \sigma T^4
+\]
+\subsection{Notion d'Air-Masse}
+
+\begin{defin}
+On nomme \emph{air-masse} l'épaisseur atmosphérique effectivement traversée normalisé à l'épaisseur traversé jusqu'au niveau de la mer pour un soleil au zénith, en condition normale de pression:
+\[
+  m = \frac{P}{1013}\frac{1}{sin(\alpha)}exp\left(\frac{-z}{7.8}\right)
+\]
+\begin{itemize}[label=--]
+\item $P$ : Pression atmosphérique en hPa ou millibar
+\item $\mathbf{\alpha}$ : élévation du soleil sur l'horizon
+\item $z$ :  altitude en km (7.8 km est l'épaisseur moyenne de l'atmosphère)
+\end{itemize}
+\end{defin}
+
+On défini alors les conditions d'ensoleillement par les lettres AM suivi de $m$:
+  \begin{itemize}
+  \item AM0 correspond aux conditions hors atmosphère
+  \item AM1 au sol lorsque le soleil est au zénith
+  \item AM2 au sol lorsque le soleil est à $30^o$ sur l'horizon.
+  \end{itemize}
+
+En pratique le flux reçu ne dépasse 1000$W/m^2$ (1367 $W/m^2$ pour AM0).
+Les conditions standartd des qualification des cellules sont un spectre $AM1.5$, une puissance incidente de 1000$W/m^2$ et une température de $25^o$C.
+
+
+\emph{blabla sur le rayonnement direct et indirect}
+
+
+\section{Principe de la conversion: la cellule photovoltaïque}
+\subsection{Historique}
+Le developpement de l'exploitation de l'énergie solaire s'est fais au long des découvertes scientifiques majeures du XIXème et XXème siècle:
+
+\begin{description}
+\item[1839] Découverte de l'effet photovoltaïque par Antoine Becquerel sur un couple electrochimique
+\item[1877] 1ère cellule PV au sélénium
+\item[1954] 1ère cellule PV au silicium rendement de 4,5\% à 6\%.
+\item[1955] 1ère commercialisation de cellule PV 14mW (2\%).
+\item[1958] Satellite Vanguard-1 avec des cellules PV qui fonctionnent pendant 8 ans.
+\item[Années 60] Montée des rendements et puissances.
+\item[1963] Japon : 242 W sur une maison
+\item[1970] Mission Solar One (Université du Delaware)
+\item[1981] Premier avion Solaire ``Solar Challenger'' Paris-Manston (Angleterre) 262km.
+\end{description}
+
+\subsection{La jonction PN}
+\emph{cf UE 232}
+\subsection{Effet photovoltaïque}
+
+Un photon suffisament énergétique peux créer une paire électron/trou dans la zone de transition, contribuant ainsi à augmenter le courant inverse (contribution du courant de génération-recombinaison).
+
+Il faut pour cela que l'énergie du photon soit supérieur à l'énergie de gap (Pour le silicium $E_g=1.1eV$).
+
+\subsection{La photodiode}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw[fill=gray!10] (0,0) rectangle (7,4);
+    \draw[fill=gray!40] (0,1) rectangle ++(7,2);
+    \draw (0.5,5) node[above]{K} -- (0.5,4)
+    (0.5,-1) node[below]{A} -- (0.5,0)
+    (0.5,0.5) node{N} (0.5,2.5) node{I} (0.5,3.5)node{P};
+    \draw[latex-latex] (3.5,2.7) node(E)[left]{$e^-$} -- ++(2,-1) node[right](T){$t^+$} coordinate[midway](P);
+    \node (Pstart) at (6.5,5.2) {$h\nu$};
+    \draw[-latex,decorate,decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}] (Pstart) -- (P);
+
+    \draw (11,0)node[below]{A} to[photodiode] ++ (0,4) node[above]{K};
+  \end{tikzpicture}
+  \caption{Schéma de la photodiode}
+\end{figure}
+
+
+Pour des photon d'énergie $E=h\nu$ on créer un courant:
+\[
+  I_{ph} = q_e \eta \phi_p = q_e \eta \frac{\lambda}{hc} \phi_e
+\]
+où
+\begin{itemize}
+\item $q_e$ charge électrique.
+\item $\eta$ rendement quantique.
+\item $\phi_p$ fux de photon reçu par la photodiode.
+\end{itemize}
+
+\subsubsection{Caractéristique courant-tension}
+
+\begin{prop}[Rappel sur la diode]
+  \begin{itemize}
+  \item Une étude théorique (développé dans le cours UE 232 de Saphire) permet
+    de montrer que la caractéristique de la diode en convention générateur:
+
+\[
+  I_d = - I_s \left(exp\left(\frac{q_eV}{kT}\right)-1\right)
+\]
+
+On a typiquement $I_s = $\SI{10e-12}{A.cm^{-2}} et$k = k_B = $\SI{1.3807e-23}{J/K}.
+
+
+\item  En ajoutant le courant issus de la création de la paire électron trou on a le courant d'une photodiode:
+  \[
+    I = I_{ph}- I_s \left(exp\left(\frac{q_eV}{kT}\right)-1\right)
+  \]
+\end{itemize}
+\end{prop}
+
+\subsubsection{Schéma équivalent d'une photodiode}
+
+
+On peux construire le schéma équivalent:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw
+    (0,0) to[I,i=$I_{ph}$] ++(0,2) -- ++(1,0) coordinate(A) to[diode,i>^=$I_d$] ++(0,-2) -- (0,0)
+    (A) -- ++(1,0) to[R,l=$R_s$,i=$I_p$] ++(3,0) to[open,v<=$V_p$]++(0,-2) --++(-3,0)
+    (A) ++(1,0) to[R,l=$R_{sh}$] ++(0,-2) -- (0,0);
+  \end{tikzpicture}
+  \caption{Schéma équivalent}
+\end{figure}
+Avec:
+\begin{itemize}
+\item Resistance de contact et connexion: $R_s=5$ à $20m\Omega$
+\item Fuite de courant aux bords de la jonction : $R_{sh}=20$ à $200\Omega$/
+\end{itemize}
+
+\subsection{Devenir des photons}
+
+
+quand un photon frappe un matériaux de silicium il peut se  produire trois phénomènes:
+\begin{itemize}
+\item Le photon peut traverser le silicium (photon à faible énergie)
+\item Le photon peut se réfléchir sur la surface(30\% silicium, descend à 3\% avec une couche anti reflet)
+\item Le photon peut être absorbé par le matériau. Si l'énergie du photon est supérieur à l'énergie de gap celui ci génère une paire électron trou et un échauffement.
+\end{itemize}
+\begin{rem}
+  Les photons UV ne génère qu'une seule paire d'electron-trou, le reste de l'énergie est convertie en chaleur. Ce qui représente environ 28\% de perte  de l'énergie incidente.
+\end{rem}
+
+\subsection{Rendement}
+
+La répartition spectrale de la puissance émise par le soleil est telle qu'elle est constituée majoritairement de photon possédant une énergie supérieure à la bande interdite du silicium (1.1eV). L'énergie en excès est convertie en chaleur (photons: AM1.5 25\% en théorie).
+
+Le rendement maximal théorique est de 50\% à AM1.5.
+
+\begin{prop}
+  En pratique 25\% de l'énergie du rayonnement solaire est convertie en electricité utile.
+\end{prop}
+
+
+\subsection{Caractéristique du générateur}
+\begin{defin}
+  La cellule photovoltaïque est un générateur élementaire à courant continu qui convertit directement l'énergie lumineuse en énergie électrique.
+
+\end{defin}
+La tension est basse car inférieur à la tension de polarisation directe de la jonction (0.5 V à 0.8V pour le silicium)
+
+\begin{prop}
+  La puissance crète pour une cellule 10cm x 10cm est de l'ordre du Watt: 0.6V , 5A soit 3W pour du silicium monocristallin.
+\end{prop}
+
+\section{Mise en oeuvre}
+
+
+On assemble différentes élements photovoltaique en série et parallèle pour augmenter la tension et (resp.) le courant disponible.
+
+Les cellules solaire utilisent des matériaux sous différentes formes, avec de différents rendements :
+
+
+\subsection{CAractéristique d'une cellule}
+
+
+
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

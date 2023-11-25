@@ -1,0 +1,182 @@
+\documentclass{../../td}
+\usepackage{../../raccourcis}
+\begin{document}
+\subsection*{Exercice 1: Stabilité en non linéaire}
+\begin{enumerate}
+\item
+
+LE bout de l'autre génie.
+
+
+\[x(t) = x_0 \frac{1+t_0}{1+t}\]
+\[\forall  \epsilon > 0 \exists \delta > 0 \text{ tq } ||x_0|| \leq \delta \Rightarrow ||x(t) || \leq \epsilon\]
+contraposée
+\[\exists \epsilon \text{ tq } \forall \delta >0, ||x_0|| \leq \delta \et ||x(t) || \geq \epsilon\]
+\begin{align*}
+|x(t)| = |x_0| \frac{1+t_0}{1+t} &> \frac{|x_0|t_0}{1+t}\\
+& > |x_0| = \epsilon \text{ si } t_0 \rightarrow \infty
+\end{align*}
+
+\end{enumerate}
+
+
+\subsection*{Exercice 2: Pendule simple}
+
+\begin{enumerate}
+\item
+\begin{enumerate}
+\item On applique le PFD selon l'axe $u_\theta$ :\\
+\begin{align*}
+m\ddot{\theta}l &= -mg.sin(\theta)\\
+\ddot{\theta} &= -\frac{g}{l} sin(\theta)
+\end{align*}
+
+\item On pose le vecteur $x = \begin{pmatrix}x_1\\x_2\end{pmatrix} = \begin{pmatrix}\theta \\ \dot{\theta}\end{pmatrix}$, on a donc le système d'état:\\
+\[ \dot{x} = \begin{pmatrix}\dot{x_1} \\ \dot{x_2}\end{pmatrix}\ = \begin{pmatrix}x_2 \\ -\frac{g}{l} sin(x_1)\end{pmatrix}\]\\
+
+\item On a $E = \frac{1}{2}m v^2$ avec  $v= l\dot{\theta}$ :
+\[\boxed{E = \frac{ml^2}{2} x_2^2}\]
+Et $P = mgl(1-cos(\theta))$:
+\[\boxed{P = mgl(1-cos(x_1))}\]
+
+\item On pose $V(x) = E + P$ d'où en zéro:
+\begin{align*}
+V(0) &= \frac{ml^2}{2} x_{20}^2 + mgl(1-cos(x_{10})) = 0
+\intertext{si $x \neq 0$ et $|x_1| < 2 \pi$, alors $cos(x_1)<1$ donc $E+P >0$}
+\frac{\partial V}{\partial x_1} &= mgl.sin(x_1)\\
+\frac{\partial V}{\partial x_2} &= ml^2 x_2\\
+\dot{V}(x) &= \dot{x_1} mglsin(x_1) + ml^2x_2\dot{x_2}\\
+\dot{V}(x) &= \dot{x_1} mglsin(x_1) + ml^2x_2(-\frac{g}{l}sin(x_1)) = 0\\
+\end{align*}
+Pour $|x_1| < \pi$, l'origine sera stable
+
+Il n'existe pas de Q(x) tel que $\dot{V(x) \leq -Q(x)}$\\
+Barhashin : $\dot{V}(x) = \{ x_2 \in \R \et |x_1| < 2\pi \}$ \\
+Pas de stabilité asymptotique
+
+\end{enumerate}
+\item
+\begin{enumerate}
+
+\item On applique le PFD selon l'axe $u_\theta$ :\\
+\begin{align*}
+m\ddot{\theta}l &= -mg.sin(\theta) - \alpha l \dot{\theta}\\
+\ddot{\theta} &= -\frac{g}{l} sin(\theta) -\alpha \frac{1}{m}\dot{\theta}
+\end{align*}
+
+\item On pose le vecteur $x = \begin{pmatrix}x_1\\x_2\end{pmatrix} = \begin{pmatrix}\theta \\ \dot{\theta}\end{pmatrix}$, on a donc le système d'état:\\
+\[ \dot{x} = \begin{pmatrix}\dot{x_1} \\ \dot{x_2}\end{pmatrix}\ = \begin{pmatrix}x_2 \\ -\frac{g}{l} sin(x_1)- \frac{\alpha}{m}x_2\end{pmatrix}\]\\
+
+\item On a $E = \frac{1}{2}m v^2$ avec  $v= l\dot{\theta}$ :
+\[\boxed{E = \frac{ml^2}{2} x_2^2}\]
+Et $P = mgl(1-cos(\theta))$:
+\[\boxed{P = mgl(1-cos(x_1))}\]
+
+\item On pose $V(x) = E + P$ d'où en zéro:
+\begin{align*}
+V(0) &= \frac{ml^2}{2} x_{20}^2 + mgl(1-cos(x_{10})) = 0
+\intertext{si $x \neq 0$ et $|x_1| < 2 \pi$, alors $cos(x_1)<1$ donc $E+P >0$}
+\frac{\partial V}{\partial x_1} &= mgl.sin(x_1)\\
+\frac{\partial V}{\partial x_2} &= ml^2 x_2\\
+\dot{V}(x) &= \dot{x_1} mglsin(x_1) + ml^2x_2\dot{x_2}\\
+\dot{V}(x) &= \dot{x_1} mglsin(x_1) + ml^2x_2(-\frac{g}{l}sin(x_1))-\frac{\alpha}{m}x_2 - l^2\alpha x_2^2 \leq 0\\
+\intertext{Pour $|x_1| < \pi$, l'origine sera stable}
+\end{align*}
+Il n'existe pas de Q(x) tel que $\dot{V(x) \leq -Q(x)}$\\
+Barhashin : 
+\begin{align*}
+\dot{V(x)} = 0 \Rightarrow x_2 =0 \Rightarrow \dot{x_1} = 0\\
+\text{ pour } |x_1- < \pi \Rightarrow x_2 = 0\\
+\text{ donc } \dot{x_2} = 0 \Rightarrow sin(x_1) = 0
+\end{align*}
+Si $x_1 = 0$, $\pi$ , $-\pi$ il n'y a pas de stabilité asymptotique.\\
+
+L'origine est stable asymptotiquement pour $(x_1,x_2) \ in ]-\pi ; \pi[\times \R$
+\[
+V(x) = \begin{pmatrix}
+x_1 & x_2\end{pmatrix}. \begin{pmatrix}
+\frac{\alpha^2}{2m^2} & \frac{\alpha}{2m} \\ \frac{\alpha}{2m} & 1 \end{pmatrix} \begin{pmatrix}
+x_1 \\x_2
+\end{pmatrix} + \frac{g}{l}(1-cos(x_1))\]
+\[V(0) = 0\]
+\[V(x) = \begin{pmatrix}
+x_1 & x_2\end{pmatrix} P \begin{pmatrix}
+x_1 \\ x_2
+\end{pmatrix} + \frac{g}{l}(1 - cos(x_1))\]
+Or, $P >0$ car:
+\[\frac{\alpha^2}{2m^2}>0 \et \frac{\alpha^2}{2m^2} - \frac{\alpha}{4m^2}>0 \et |x_1| < 0\pi\]
+donc:
+
+\[P \begin{pmatrix}
+P_{11} & P_{12} \\
+P_{12}^T & P_{22}
+\end{pmatrix} >0 \Leftrightarrow (Lemme de Schur) P_{11} >0 \et (peutetre) P_{11} - P_{12}P_{22}^+P_{12}^T
+ >0 (P^+ est la pseudo inverse)
+\]
+\begin{align*}
+\dot{V}(x) &= -\frac{1}{2}(\frac{g\alpha}{lm})x_1 sin(x_1) - \frac{\alpha}{2m} x_2^2  \leq 0\\
+&\leq -\frac{g\alpha}{4lm} x_1sin(x_1) - \frac{\alpha}{4m}x_2^2 = Q(x)
+\end{align*}
+
+L'origine est localement asymptotiquement stable.
+\end{enumerate}
+
+
+\subsection*{Exercice 3: Exemple de systèmes}
+
+\begin{enumerate}
+\item \begin{enumerate}
+On pose $V(x) = \frac{1}{2}(x_1^2 + x_2^2)$, et on a bien $V(0) = 0$.
+$\dot{V}(x) = x_1\dot{x_1} + x_2 \dot{x_2} = -(x_1^2 + x_2^2)$.\\
+On a alors $V(x) \leq -Q(x)$ avec $Q(x) = \frac{x_1^2 + x_2^2}{2}$, donc l'origine est globalement asymptotiquement stable.\\
+
+\item Vérifions la stabilité exponentielle: 
+$\exists \alpha>0$, $\beta>0$, $\gamma>0$, et $x>1$ tel que $\dot{V} \leq - \gamma||x--^c$ et $\alpha||x||^c \leq V(x) \leq \beta ||x||^c$\\
+Pour la norme euclidienne, on prend $c=2$ et avec $\gamma = 1$\\
+$\dot{V} \leq -\gamma||x||^2$\\
+Avec $\alpha = \frac{1}{4}$ et $\beta = 1$ la condition 2 est respectée donc on a la stabilité exponentielle.
+\end{enumerate}
+
+\item On considère le système suivant:
+  \[       \begin{cases}
+      \dot{x_1} = x_2 + x_3^4 \\
+      \dot{x_2} = -5sin(x_1) - x_2 + u_1 \\
+      \dot{x_3} = -kx_3 + u_2 \\
+    \end{cases}
+\]
+\begin{enumerate}
+\item Pour $u_1 = u_2 = 0$, l'origine est stable car $\dot{x} = 0 $.\\
+
+\item Pour linéariser, on passe par la matrice du jacobien prise en (0,0,0):
+\[
+\begin{pmatrix}
+\delta \dot{x_1} \\\delta \dot{x_2} \\\delta \dot{x_3}
+\end{pmatrix} = \begin{pmatrix}
+0 & 1& 0\\-5 & -1 & 0\\0 & 0& -k
+\end{pmatrix}.\begin{pmatrix}
+\delta x_1 \\ \delta x_2 \\ \delta x_3
+\end{pmatrix} = A \begin{pmatrix}
+\delta x_1 \\ \delta x_2 \\ \delta x_3
+\end{pmatrix}\]
+\[
+det(\lambda I - A) = (\lambda  + k)(\lambda^2 + \lambda + 5)
+\]
+La stabilité suivant le critère de Routh donne que c'est stable si $k>0$
+
+\item \[V(x) = 5(1-cos(x_1)) + \frac{1}{2} \dot{x_2}^2 + \frac{3}{2k}x_3^4
+|x_1| < 2\pi\]
+\[\dot{V}(x) = 5x_3^4sinx_1 - x_2^2 \leq -x_3^4 - x_2^2 \leq 0 \text{(ne marche pas car ne dépend pas de $x_1$)}\]
+\[\dot{V}(x) \leq \frac{5}{2} x_3^4 sin x_1 -\frac{1}{2}x_2^2 - 3 x_3^4 \leq -\frac{1}{2}x_3^4 - \frac{1}{2}x_2^2\]
+\[Q(x) = -\frac{5}{2}x_3^4sinx_1 + \frac{1}{2}x_2^2 + 3x_3^4 \geq 0 \text{ a condition que } |x_1| < \pi
+\]
+\end{enumerate}
+
+\end{enumerate}
+\end{enumerate}
+\end{document}
+    
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:

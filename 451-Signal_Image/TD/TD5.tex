@@ -1,0 +1,235 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+
+\subsection*{Signal sinusoïdal à phase équirépartie}
+On considère le signal aléatoire \[X_t=x(t)=E_0\sin(2\pi f_o t + \Phi) \]
+
+$\phi$ est une variable aléatoire uniformément répartie sur $[0,2\pi[$
+
+$E_0$, $f_0$ sont des grandeurs déterministes strictement positives.
+
+\begin{enumerate}
+\item À $t$ donné, $f_{X,t}(x,t)=f_{Xt}(x)=f_X(x,t)$
+
+Méthode : changement de variable
+\[ \Phi \rightarrow X_t = x(t) = g(\Phi) = E_0\sin(2\pi f_0t + \Phi) \]
+
+\[f_{\Phi}(\phi) = 
+\left\{
+\begin{array}{ll}
+\frac{1}{2\pi} & \si \phi \in [0,2\pi[ \\
+0 & \sinon
+\end{array} 
+\right.
+\]
+
+$X_t = x(t) \in [-E_0,E_0]$ donc $f_{Xt}(x) = 0,$ pour tout $x$ tel que $|x| >E_0$.
+
+Théorème de changement de variables aléatoires.
+
+Soit $x$ tel que $|x| < E_0$
+
+\[f_{Xt}(x) = f_X(x,t) = f_{\Phi}(\phi)|\frac{d\phi}{dx}||_{\phi,g(\phi)=x}\]
+
+
+Pour tout $x\in[-E_0,E_0]$ (sauf les points où la dérivée s'annule, ensemble de mesure nulle), il y a deux points d'intersection $\phi_i\in[0,2\pi[$
+
+\[f_X(x,t) = \sum_{i=1}^2 f_{\Phi}(\phi_i)\frac{1}{|\frac{dx}{d\phi}|}|_{\phi_i,g(\phi_i)=x} \]
+
+\[\frac{dx}{d\phi}=E_0\cos(2\pi f_0t + \phi) \text{ donc } 
+|\frac{dx}{d\phi}|_{\phi=\phi_1} = |\frac{dx}{d\phi}|_{\phi=\phi_2}
+\]
+\[\frac{dx}{d\phi}|_{\phi=\phi_i} = \sqrt{E_0^2\cos^2(2\pi f_0t + \phi_i)}=\sqrt{E_0^2(1-\sin^2(2\pi f_0t + \phi_i))}=\sqrt{E_0^2-x^2}\]
+
+Ainsi, on a 
+\[f_{X_t}(x) = f_X(x,t) =
+\left\{
+\begin{array}{ll}
+0 \si |x| \geq E_0 \\
+\frac{1}{\pi \sqrt{E_0^2-x^2}} & \sinon
+\end{array}
+\right.
+\]
+
+Remarque : $f_X(x,t)$ est finie en $x=\pm E_0$ car $\Phi$ VA continue et g fonction continue $\rightarrow X_t$ est une VA continue.
+
+Pour conclure quant à la stationnarité à l'ordre un, on regarde si $E[x(t)]$ dépend du temps
+
+Or, $E[x(t)]=\int_{\mathbb{R}} x_t f_X(x_t,t)dx_t$ et $f_X(x_t,t)$ ne dépend pas de $t$, donc la VA $x(t)$ est stationnaire à l'ordre un.
+
+Autre méthode : fonction de répartition
+
+$F_X(x,t = F_{X_t}(x) = P[X_t < x]$
+
+\item 
+\begin{align*}
+E[x(t)] & = \int_{\mathbb{R}}xf_X(x,t)dx = ... = 0 \\
+\text{ ou } & = E[E_0\sin(2\pi f_0 t+\phi)] \\
+& = \int_{\mathbb{R}}E_0\sin(2\pi f_0 t + \phi) f_{\phi}(\phi)d\phi \\
+& = E_0 \int_0^{2\pi} \frac{1}{2\pi}\sin(2\pi f_0t + \phi) d\phi  = 0 \\
+\intertext{La moyenne statistique ne dépend pas de l'origine des temps : stationnarité du moment d'ordre 1.}
+\overline{x(t)} & = \frac{1}{T_0} \int_{[T_0]}E_0\sin(2\pi f_0t + \phi) dt = 0
+\end{align*}
+
+La moyenne temporelle ne dépend pas de $\phi$ (de la réalisation) : ergodicité du moment d'ordre 1.
+
+
+\item 
+\begin{align*}
+E[x(t)x(t-\tau)] & = \gamma_{xx}(t,t-\tau) \\
+& = E[E_0^2\sin(2\pi f_0 t + \phi) \sin(2\pi f_0 (t-\tau)+\phi) ] \\
+& = \frac{E_0^2}{2} E[\cos(2\pi f_0 \tau) - \cos(4\pi f_0t - 2\pi f_0 \tau + 2\phi) ]\\
+& = \frac{E_0^2}{2} \cos(2\pi f_0 \tau) 
+\intertext{$E[x(t)x(t-\tau)]$ ne dépend pas de l'origine des temps, donc on a $E[x(t)x(t-\tau)]=\gamma_{xx}(\tau)$ : stationnarité du moment d'ordre 2}
+\overline{x(t)x(t-\tau)} & = \frac{E_0^2}{2} (\overline{\cos(2\pi f_0\tau)} - \overline{\cos(4\pi f_0 t - 2\pi f_0 \tau + 2 \phi)}) \\
+& = \frac{E_0^2}{2} \cos(2\pi f_0 \tau)
+\intertext{$\overline{x(t)x(t-\tau)}$ ne dépend pas de $\phi$ (de la réalisation) : ergodicité du moment d'ordre 2}
+\end{align*}
+
+On a donc ergodicité et stationnarité, à l'ordre 1 et 2.
+
+Remarque : on a donc égalité des moments d'ordre 1 et 2 :
+\[ \gamma_{xx}(\tau) = \overline{x(t)x(t-\tau)}\]
+\[ \gamma_{xx}(0) = P_x = \frac{E_0^2}{2} < \infty \text{ et stationnarité du moment d'ordre 1 et 2} \longrightarrow \text{ stationnaire au sens large}\]
+
+\item Pour calculer une DSP d'un signal stationnaire au sens large : $\Gamma_{xx}(f) = TF[\gamma_{xx}(\tau)]$
+\begin{align*}
+\Gamma_{xx}(f) & = TF[\gamma_{xx}(\tau)] \\
+& = TF[\frac{E_0^2}{2}\cos(2\pi f_0 \tau) ] \\
+& = \frac{1}{2} \frac{E_0^2}{2} (\delta(f_0-f) + \delta(f_0+f))
+\end{align*} 
+
+\end{enumerate}
+
+\subsection*{Propriétés de la fonction de corrélation}
+
+On considère $x(t)$ un SA scalaire et stationnaire.
+
+\begin{enumerate}
+\item
+\begin{align*}
+m_{x(t)} & = m_x \text{ par stationnarité} \\
+& = E[x(t)] \\
+\gamma_{xx}(\tau) & = E[x(t)x^*(t-\tau)] \\
+\Gamma_{xx}(f) & = TF[\gamma_{xx}(\tau)](f)
+\end{align*}
+
+\item 
+\begin{align*}
+P_x & = E[|x(t)|^2] \\
+& = E[x(t)x^*(t)] \\
+& = \gamma_{xx}(0) \\
+\gamma_{xx}(\tau) & = TF^{-1}[\Gamma_{xx}(f)](\tau) \\
+& = \int_{\mathbb{R}} \Gamma_{xx}(f)e^{j2\pi f \tau} df \\
+P_x & = \int_{\mathbb{R}} \Gamma_{xx}(f)df
+\end{align*}
+
+\item 
+\begin{align*}
+\gamma_{xx}(-\tau) & = E[x(t)x^*(t+\tau)] \\
+& = E[x(t)x^*(t+\tau)]^{**} \\
+& = E[x^*(t)x(t+\tau)]^* \\
+& = E[x(t+\tau)x^*(t)]^* \\
+& = \gamma_{xx}(\tau)^* 
+\intertext{Ainsi,}
+\Gamma_{xx}^*(f) & = ( \int_{\R} \gamma_{xx}(\tau)e^{-j2\pi f\tau} d\tau)^*  \\
+& = \int_{\R} \gamma_{xx}^*(\tau)e^{j2\pi f\tau} d\tau \\
+& =\int_{\R} \gamma_{xx}(-\tau)e^{j2\pi f\tau} d\tau \\
+& =\int_{\R} \gamma_{xx}(\tau')e^{-j2\pi f\tau'} d\tau' \\
+& = \Gamma_{xx}(f)
+\intertext{Donc $\Gamma_{xx}(f) \in \R$}
+\end{align*}
+
+
+\item 
+On suppose que $x(t) \in \mathbb{R}$
+Montrons que $\Gamma_{xx}(\tau)$ est paire  :
+\begin{align*}
+\Gamma_{xx}(-f) &= \int_\mathbb{R} \gamma_{xx}(\tau)e^{-j2\pi(-f)\tau} d\tau\\
+&= \int_\mathbb{R} \gamma_{xx}(-\tau)e^{-j2\pi f\tau} d\tau \text{en posant $\tau = -\tau'$}\\
+&= \int_\mathbb{R} \gamma_{xx}^*(\tau)e^{-j2\pi f\tau} d\tau\\
+&= \int_\mathbb{R} \gamma_{xx}(\tau)e^{-j2\pi f\tau} d\tau \text{ car $x$ est réel} \\
+&=\Gamma_{xx}(f)
+\end{align*}
+Ainsi, $\Gamma_{xx}(f)$ est bien paire.
+
+\item 
+Montrons que $\gamma_{xy}(-\tau)=\gamma_{yx}^*(-\tau)$\\
+\begin{align*}
+\forall \tau \in \mathbb{R}\\
+\gamma_{xy}(-\tau) &= E[x(t)y^*(t+\tau)]*^*\\
+&= E[y(t+\tau)x^*(t)]^*\\
+&=\gamma_{xy}(\tau)^*
+\end{align*}
+Remarque : on retrouve la formule du 3. si y(t) = x(t).
+
+
+\item 
+\begin{itemize}
+\item $\gamma_{xx}(0)$ est le maximum de l'autocorrélation.
+\item donc sa dérivée en 0 est nulle.
+\item et sa dérivée seconde est négative pour assurer la concavité (car maximum).
+\end{itemize}
+
+Remarque : FL(filtre linéaire) = SL(système linéaire) + temps invariant.\\
+si x(t) est stationnaire alors x'(t) aussi et :
+$m_{x'} = E[x'(t)] = E[\frac{dx(t)}{dt}] = \frac{d}{dt}E[x(t)]$ car l'espérance ne dépent pas du temps donc l'interversion est possible.\\
+$\gamma_{xx}'(\tau) = \frac{d}{d\tau}E[x(t)x^*(t-\tau)] = E[x(t)\frac{\partial}{\partial \tau}x^*(t-\tau)] = -\gamma_{xx}(\tau)$\\
+
+\item 
+\begin{align*}
+\gamma_{xx}(\tau) &= \int_\mathbb{R} \Gamma_{xx}(f)e^{+j2\pi f\tau}df\\
+\gamma_{xx}'(\tau) &= \frac{d}{d\tau} \gamma_{xx}(\tau) = \int_\mathbb{R}(j2\pi f) \Gamma_{xx}(\tau)e^{+j2\pi f \tau} df\\
+\gamma_{xx}''(\tau) &= \int_\mathbb{R}(j2\pi f)^2 \Gamma_{xx}(\tau)e^{+j2\pi f \tau} df\\
+|\gamma_{xx}(\tau)| &\leq \int_\mathbb{R} |\Gamma_{xx}(f)|df = \int_\mathbb{R} \Gamma_{xx}(f)df = \gamma_{xx}(0)\\
+%|\gamma_{xx}(\tau)| &< + \infty \texte{ si $\Gamma_{xx}(f)$ décroit plus vite que $\frac{1}{f}$ en $\pm \infty$}\\
+|\gamma_{xx}'(\tau)|  &\leq \int_\mathbb{R} 2 \pi |f| \Gamma_{xx}(f) df < + \infty \text{ si $\Gamma_{xx}(f)$ décroit plus vite que $\frac{1}{f^2}$ en $\pm \infty$}\\
+\intertext{et ainsi de suite pour des ordres supérieurs}
+\gamma_{xx}'(0)&=0 \intertext{ car $f\Gamma_{xx}(f)$ est impaire donc l'intégrale est nulle sur $\mathbb{R}$. Ou alors, $\gamma'$ est réelle et égal à $j$ fois un réel, donc est nulle.}
+\end{align*}
+
+\item 
+$s(t) = (h*e)(t) = \int_\mathbb{R}h(\theta)e(t-\theta) d\theta$ avec h la réponse impulsionnelle.\\
+\begin{align*}
+m_s &= E[s(t)]\\
+&= E[\int_\mathbb{R} h(\theta)e(t-\theta)d\theta]\\
+&= \int_\mathbb{R}h(\theta)E[e(t-\theta)] d\theta\\
+&= m_e \int_\mathbb{R} d\theta\\
+&= H(0) m_e \\
+H(f) &= \int_\mathbb{R}h(t)e^{-j2\pi ft}dt\\
+H(0) &= \int_\mathbb{R}h(t)dt
+\end{align*}
+
+\item 
+$\Gamma_{ss}(f)$ en fonction de $H(f)$, $\Gamma_{ee}(f)$. Formules des interférences : 
+\begin{align*}
+\Gamma_{ss}(f) &= H(f)H^*(f)\Gamma_{ee}(f)\\
+&= |H(f)|^2\Gamma_{ee}(f)df\\
+P_s &= \int_\mathbb{R} \Gamma_{ss}(f) df = \int_\mathbb{R} |H(f|^2 \Gamma_{ee}(f) df \geq 0
+\end{align*}
+On suppose par l'absurde qu'il existe $f_0 \in \mathbb{R}$ tel que $\Gamma_{ee}(f_0) < 0$
+
+$\Rightarrow \exists(f_1,f_2) \in \mathbb{R}^2 \avec f_2 > f_0 > f_1$ tel que \[\forall f \in ]f_1,f_2[,  \Gamma_{ee}(f) < 0\]
+On utilise un filtre passe-bande idéal de gain unitaire et : 
+\[P_s = \int_\mathbb{R}\Gamma_{ss}(f)df = \int_{f_1}^{f_2}|H(f)|^2 \Gamma_{ee}(f) df < 0\] 
+Impossible donc $\forall f \in \R, \Gamma_{ee}(f) \geq 0$.
+
+
+\item 
+On considère deux signaux stationnaires dans leur ensemble. La formule des interférences donne :
+\begin{align*}
+\Gamma_{s_1s_2}(f) &= H_1(f)H_2^*(f)\Gamma_{e_1e_2}(f)\\
+\intertext{Montrons que : } \gamma_{xx'}(\tau) &= -\gamma_{xx}'(\tau)
+\intertext{Avec $H_1(f) = 1$ et $H_2(f) = j2\pi f$ (dérivateur de $x$), on a :}
+\Gamma{xx'}(f) &= -j2\pi f \Gamma{xx}(f)
+\intertext{Par transformée de Fourier inverse il vient :}
+\gamma_{xx'}(\tau) &= -\gamma_{xx}'(\tau)\\
+\intertext{De même, avec $H_1(f) = H_2(f) = j2\pi f$, on a :}
+\Gamma{x'x'}(f) &= -(j2\pi f)^2\Gamma{xx}(f)
+\intertext{avec la transformée inverse de Fourier il vient :}
+\gamma_{x'x'}(\tau) &= -\gamma_{xx}''(\tau)\\
+\end{align*}
+
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,259 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+
+L'idée du codage prédictif est d'utiliser les corrélations (ressemblances) temporelles ou spatiales du signal à compresser.
+
+\paragraph{Rappels sur la corrélation}
+
+On considère une source $X$ qui émet un signal constitué de $x_1,\dots,x_N$ considérés comme une réalisation d'une suite de variables aléatoires $X_1,\dots,X_N$ de moyenne nulle.
+
+
+
+La fonction de corrélation permet de mesurer la ressemblance entre échantillons voisins :
+\[ \gamma_x(n,k) = E(X_nX_{n+k}) \]
+
+Pour un signal stationnaire (dont les caractéristiques statistiques n'évoluent pas au cours du temps :
+\[ \gamma_x(n,k) = \gamma_x(k) = E(X_nX_{n+k}), \forall n\]
+
+En pratique, on estime la corrélation à partir des échantillons du signal à compresser.
+\begin{itemize}
+\item Estimateur biaisé :
+\[ \hat{\gamma_x^{B}}(k) =
+  \begin{cases}
+\displaystyle\frac{1}{N}\sum_{i=1}^{N-k} x_i x_{i+k}, \forall k \geq 0 \\[2em]
+\displaystyle\frac{1}{N} \sum_{i=-k}^N x_i x_{i+k}, \forall k \leq 0
+\end{cases}
+\]
+\item Estimateur non biaisé
+\[
+  \hat{\gamma_x^{NB}}(k) =\frac{1}{N-|k|} \sum_{i=1}^{N-k} x_i x_{i+k} \forall k \geq 0
+\]
+
+\end{itemize}
+\begin{rem}
+  On préfère l'estimateur biaisé car il est plus stable numériquement.
+\end{rem}
+Avec Matlab, on l'obtient avec :
+\begin{minted}{matlab}
+[c,k] = xcorr(x,'biased');
+plot(k,c); grid;
+\end{minted}
+
+$\gamma_x(k)$ est maximale en 0 et est égale à l'énergie $\sigma^2$ du signal.
+\section{Codage prédictif en boucle ouverte}
+Schéma en boucle ouverte:
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=0.8,transform shape]
+    \sbEntree{E}
+    \node[above left] (X) at (E) {$x_n$};
+    \draw (E.east) -- ++(-2em,0) (E.south) -- ++(0,4pt) ;
+    \sbDecaleNoeudy[5]{E}{mem}
+    \sbBloc{mem2}{Mémoire}{mem}
+    \sbBlocL{pred}{Prédiction}{mem2}
+    \sbRelieryx{E}{mem2}
+    \sbDecaleNoeudy[-5]{pred}{comp2}
+    \sbComp{comp}{comp2}
+    \sbRelierxy{pred}{comp}
+    \sbRelier{E}{comp}
+    \sbBlocL{Q}{Quantif}{comp}
+    \sbBlocL{C}{Codage entropique}{Q}
+    \sbSortie[5]{S}{C}
+    \sbRelier[0100..1]{C}{S}
+  \end{tikzpicture}
+  \caption{Emetteur en boucle ouverte}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=0.8,transform shape]
+    \sbEntree{E}
+    \sbBlocL{Dc}{Décodeur entropique}{E}
+    \sbBlocL{Di}{Desindexation}{Dc}
+    \sbSumb[7]{comp}{Di}
+    \sbRelier{Di}{comp}
+    \sbDecaleNoeudy[5]{comp}{comp2}
+    \sbBloc{pred}{Prédicteur}{comp2}
+    \sbBlocL{mem}{Mémoire}{pred}
+    \sbDecaleNoeudy[-5]{mem}{S}
+    \sbSortie[5]{X}{S}
+    \sbRelierxy{pred}{comp}
+    \sbRelieryx{X}{mem}
+    \sbRelier{comp}{X}
+  \end{tikzpicture}
+  \caption{Recepteur en boucle ouverte}
+\end{figure}
+
+Ca marche mais la quantification introduit des erreurs qui peuvent s'accumuler. On s'en sort en réinitialisant le codeur régulièrement.
+
+
+\subsection{Prédicteur linéaire optimal à 1 pas}
+
+On souhaite prédire la valeur de $X_n$ à partir de la valeur de $X_{n-1}$.
+
+Le prédicteur sera linéaire :
+\[\hat{X_n} = a_1 X_{n-1} \]
+
+On cherche la valeur de $a_1$ qui minimise $e = E((X_n-\hat{X_n})^2)$
+
+\begin{align*}
+e & = E((X_n-a_1X_{n-1})^2) \\
+& = E(X_n^2 -a_1^2 X_{n-1}^2 - 2a_1X_{n-1}X_n) \\
+& = E(X_n^2) + a_1^2E(X_{n-1}^2) - 2a_1E(X_{n-1}X_n)\\
+e & = \gamma_x(0) + a_1^2 \gamma_x(0) - 2a_1 \gamma_x(1)  \text{ par stationnarité}\\
+\derivp[e]{a_1}|_{\hat{a_1}} = 0 & \Leftrightarrow 2 \hat{a_1} \gamma_x(0) - 2 \gamma_x(1) = 0\\
+& \Rightarrow \hat{a_1} = \frac{\gamma_x(1)}{\gamma_x(0)}
+\end{align*}
+
+\begin{rem}
+Lorsque le signal sera très corrélé, $\gamma_x(1) \approx \gamma_x(0)$ et $\hat{a_1} \approx 1$. Pour un signal peu corrélé, $\gamma_x(1) \approx 0$ et $\hat{a_1} \approx 0$.
+\end{rem}
+
+Pour la valeur de $\hat{a_1}$ obtenue, on a
+\begin{align*}
+\hat{e} & = \gamma_x(0) + (\frac{\gamma_x(1)}{\gamma_x(0)})^2 \gamma_x(0) - 2 \frac{\gamma_x(1)^2}{\gamma_x(0)} \\
+& = \frac{\gamma_x(0)^2-\gamma_x(1)^2}{\gamma_x(0)} \leq \gamma_x(0)
+\end{align*}
+
+$\hat{e}$ est l'énergie de la partie qui n'a pas pu être prédite de $x_1,\dots,x_N$.\\
+
+Lorsque le signal est fortement corrélé, $\gamma_x(1)\simeq \gamma_x(0)$ et  $\hat{a_1}\simeq 1$.
+
+Le résidu de prédiction a une variance plus faible. Si on le quantifie, il permettra de reconstituer le signal initial avec une distorsion plus faible.
+\subsection{Prédiction à $p$ pas}
+
+
+On cherche à prédire $\vec{X_n}$ à partir des échantillons précédents $X_{n-1},\dots,X_{n-p}$.
+
+\newcommand{\ap}{\vec{a}}
+\newcommand{\Xn}{\vec{X_n}}
+\newcommand{\cp}{\vec{c}}
+\newcommand{\Rp}{\vec{R}}
+
+\[ \hat{X_n} = a_1 X_{n-1} + \dots + a_pX_{n-p} = \ap^T \Xn \quad\text{avec}\quad \ap^T=(a_1\dots a_p) \text{ et } \Xn^T = (X_{n-1} \dots X_{n-p})\]
+
+On cherche $\ap$ minimisant
+\begin{align*}
+e & = E((X_n-\hat{X_n})^2) \\
+& = E((X_n-\ap^T\Xn)^2) \\
+& = E(X_n^2) + \ap^T E(\Xn\Xn^T) \ap -2\ap^t E(X_n\Xn) \\
+\text{Or, } E(X_n\Xn)& =(E(X_nX_{n-1}),\dots,E(X_nX_{n-p}))^T \\
+& = (\gamma_x(1), \gamma_x(2),\dots,\gamma_x(p))^T = \cp \\
+\text{De plus, } E(\Xn\Xn^T) & =
+\left[
+\begin{array}{cccc}
+E(X_{n-1}X_{n-1}) &E(X_{n-1}X_{n-2}) & \dots & E(X_{n-1}X_{n-p}) \\
+E(X_{n-2}X_{n-1}) & \ddots & & \vdots \\
+\vdots & & \ddots & \vdots \\
+E(X_{n-p}X_{n-1}) & \dots & \dots & E(X_{n-p}X_{n-p})
+\end{array}
+\right] \\
+& =
+\left[
+\begin{array}{cccc}
+\gamma_x(0) & \gamma_x(1) & \dots & \gamma_x(p-1) \\
+\gamma_x(1) & \gamma_x(0) & & \vdots \\
+\vdots & & \ddots & \gamma_x(1) \\
+\gamma_x(p-1) & \dots & \gamma_x(1) & \gamma_x(0)
+\end{array}
+\right] = \Rp\\
+\text{ donc } e & = \gamma_x(0) + \ap^T \Rp \ap - 2 \ap^T \cp
+\end{align*}
+
+\[ \left.\derivp[e]{\ap}\right|_{\hat{\ap}} =  0  \quad \Leftrightarrow \quad \vec{0} + 2 \Rp\hat{\ap} - 2\cp = 0  \quad \Rightarrow \quad \hat{\ap} = \Rp^{-1} \cp \]
+
+Pour cette valeur de $\hat{\ap}$, on a
+\begin{align*}
+\hat{e} & = \gamma_x(0) + \cp^T \Rp^{-1} \Rp \Rp^{-1} \cp -2\cp^T\Rp^{-1}\cp \\
+& = \gamma_x(0) - \cp^T \Rp^{-1} \cp \leq \gamma_x(0)
+\end{align*}
+
+Ce prédicteur à $p$ pas est en général plus efficace que le prédicteur à 1 pas mais il est plus complexe.
+
+\subsection{Mise en oeuvre du prédicteur}
+
+Il faut que le récepteur disposent également des coefficients de prédiction optimal. Il peuvent :
+\begin{itemize}
+\item être transmis mais cela coute du débit
+\item Etre réestimés au récepteur mais cela rend le récepteur plus complexe.
+\end{itemize}
+Pour le réglage du prédicteur, on distingue plusieurs méthodes :
+
+\subsubsection{Fenêtres fixes}
+
+  On découpe le signal en blocs de $M$ échantillons et on recalcule le prédicteur sur chaque bloc.
+
+  Les échantillons de la $m$-ième fenêtres (pour$(m-1)M+1$ à $mM$):
+  \begin{itemize}
+  \item servent à extimer $\hat{\gamma}_x(k)$ et les coefficients de prédiction utilisé pour la $m+1$-ème fenêtre.
+  \item sont comprimés en utilisant le prédicteur optimal calculé das la fenêtre $m-1$.
+  \item Le recepteur fait les mêmes opérations.
+  \end{itemize}
+  \begin{rem}
+    Pour la première fenêtre  on utilise le prédicteur à 1 pas.
+
+    Cette méthode ne fonctionne que pour des compressions sans pertes ou  a débit élevé.
+  \end{rem}
+  Avantages :
+  \begin{itemize}
+  \item sa simplicité de mise ne œuvre
+  \item permet de s'adapter aux non-stationnarités
+  \end{itemize}
+  Inconvénient :
+  \begin{itemize}
+  \item débit nécessaire à la transmission des $\vec{\hat{a}}_{opt}$.
+  \end{itemize}
+
+\subsubsection{Fenêtres glissantes}
+
+On travaille sur une fenêtre glissante contenant les N échantillons décalés : $\vec{\hat{X}}_n = (\hat{x}_{n-1}, ..., \hat{x}_{n-N})^T$.
+\begin{itemize}
+\item On estime $\gamma_x(k)$ à partir des échantillons.
+\item On en déduit le prédicteur à $p$ pas.
+\item On prédi $x_n$ et on compresse le résidu.
+\item Au récepteur dans le cas c'un codage sans pertes on dispose également de $x_{n-N} ... x_{n-1}$. et on va pouvoir faire les mêmes opérations pour obtenir $\hat{x_n}$ auquel il rajoutera le résidu du codeur.
+
+\end{itemize}
+  \begin{rem}
+    Pour les $N$ premiers échantillons on peux utiliser un prédicteur à 1 pas avec $a=0$ ou $a=0$
+  \end{rem}
+
+Avantages :
+  \begin{itemize}
+  \item Il est très adaptatif.
+  \item On ne transmet plus $\vec{\hat{a}}_{opt}$
+  \end{itemize}
+
+  Inconvénient :
+  \begin{itemize}
+  \item et bien... c'est pas simple.
+  \end{itemize}
+
+\section{Schéma de prédiction en boucle fermée}
+
+Dans les schémas de codage avec pertes le récepteur dispose de $\tilde{x}_{n-M} ... \tilde{x}_{n-1}$ qui sont différents de $x_{n-M} ... x_{n-1}$.
+
+Les fonctions de corrélations estimées ainsi que les prédicteurs seront différents. L'erreur entre le signal initial et le signal reconstitué aura tendance à augmenter.
+
+Pour résoudre ce problème le codeur va comprendre un décodeur ``local'' qui va permettre d'estimer $\tilde{x}_{n-M} ... \tilde{x}_{n-1}$. Ensuite $\gamma_x$ et le prédicteurs seront estimée à partir de $\tilde{x}$ et non de $x$.
+
+On montre qu'avec ce schéma les erreurs de quantification ne s'accumule pas.
+
+\[
+  x_n-\tilde{x}_n= x_n -\hat{x}_n+\hat{x}_n+\tilde{x}_n = e_n - \tilde{e}_n
+\]
+
+Sur le $n$-ième échantillion on a seulement l'erreur de quantification associé a cet échantillon.
+
+\begin{rem}
+  La qualité du prédicteur va influencer le débit et  dans une moindre mesure la distorsion 
+\end{rem}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

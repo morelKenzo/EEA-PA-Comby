@@ -1,0 +1,33 @@
+\documentclass[openany]{../../cours}
+\usepackage{../../raccourcis}
+% bug avec minted sinon
+\let\framed\relax \let\endframed\relax
+ \let\shaded\relax \let\endshaded\relax
+ \let\leftbar\relax \let\endleftbar\relax
+ \let\snugshade\relax \let\endsnugshade\relax
+ \usepackage{minted}
+ \setminted{linenos=true, tabsize=4, fontsize=\small, xleftmargin=5pt, xrightmargin=5pt,frame=lines,framesep=2mm}
+ \usetikzlibrary{mindmap,backgrounds}
+ %Mise en page
+
+\author{Pierre-Antoine Comby}
+\teacher{Emmanuel Aldea \\ Thomas Rodet}
+\module{453}
+\title{Traitement d'Image}
+\renewcommand{\vec}{\mathbf}
+\usepackage{multicol}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\chapter{Introduction au traitement d'image}
+\subfile{chap1.tex}
+\chapter{Inversion de donnée en imagerie}
+\subfile{chap2.tex}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

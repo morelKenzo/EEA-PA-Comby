@@ -1,0 +1,108 @@
+\documentclass[openany]{../../cours}
+\usepackage{../../raccourcis}
+% Mise en page
+\title{ Electronique numérique\\ pour la transmission}
+\author{Pierre-Antoine Comby}
+\teacher{François Sammouth \\ Jean-Pierre Barbeau}
+\module{UE433}
+
+\usetikzlibrary{trees}
+\renewcommand{\thechapter}{\thepart-\arabic{chapter}}
+\makeatletter
+\@addtoreset{chapter}{part}
+\makeatother
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+\chapter*{Introduction}
+
+Suite à l'UE 431 nous nous intéresserons dans cette UE aux aspects numériques du traitement et de la transmission de l'information.
+
+\begin{exemple}
+Soit un signal $x_c(t)$ analogique à temps continu (audio, issu d'un capteur de position, de vitesse). On veut effectuer un traitement numérique. En effet, on améliorera le rapport signal sur bruit, et la dispersion technologique des circuits est réduite par rapport à l'analogique.
+\begin{center}
+\begin{tikzpicture}
+  \sbEntree{E}
+  \node[above] at (E){$x_c(t)$};
+  \sbBlocL{CAN}{CAN}{E}
+
+  \sbBloc[5]{num}{
+    \begin{tabular}{c}
+Traitement\\ numérique
+    \end{tabular}
+}{CAN}
+  \sbRelier[10010]{CAN}{num}
+  \sbBloc[5]{CNA}{CNA}{num}
+  \sbRelier[01010]{num}{CNA}
+  \sbSortie{S}{CNA}
+  \sbRelier{CNA}{S}
+  \node[above] at (S){$y_c(t)$};
+\end{tikzpicture}
+\end{center}
+\end{exemple}
+
+La seconde partie de l'UE concerne le transport sur une distance plus ou moins longue des informations numériques.
+
+\begin{center}
+\begin{tikzpicture}
+  \sbEntree{E}
+  \node[above] at (E){$x_c(t)$};
+  \sbBlocL{CAN}{CAN}{E}
+  \sbBlocL{num}{
+    \begin{tabular}{c}
+Codage\\ +\\ modulation
+    \end{tabular}
+}{CAN}
+    \sbBlocL{trans}{Canal}{num}
+  \sbBlocL{demod}{
+    \begin{tabular}{c}
+      Décodage \\+\\ Démodulation
+    \end{tabular}}{trans}
+  \sbBlocL{CNA}{CNA}{demod}
+  \sbSortie{S}{CNA}
+  \sbRelier{CNA}{S}
+  \node[above] at (S){$y_c(t)$};
+\end{tikzpicture}
+\end{center}
+
+Le codage a pour but de mettre en forme le signal numérique pour garantir au maximum une bonne identification à l'arrivée des bits transmis. Et ce malgré une bande passante de canal limitée et bruité.
+
+Il y a donc un compromis à faire entre bande passante et rapport signal sur bruit final. Avant le codage "canal", il y a le codage de source (UE 455), qui compresse le signal mais ajoute également des informations pour identifier les erreurs de transmission à la réception, et pour prévoir leur correction.
+
+\part{Traitement numérique de l'information}
+\chapter{Echantillonnage d'un signal numérique}
+\subfile{chap11.tex}
+\chapter{Exemple de filtre à capacité commutées}
+\subfile{chap12.tex}
+\chapter{Filtre numériques (échantillonnés)}
+\subfile{chap13.tex}
+\chapter{CAN et CNA}
+\subfile{chap14.tex}
+
+\part{Communication numérique}
+\chapter{Introduction}
+\subfile{chap21.tex}
+\chapter{La source de l'information}
+\subfile{chap22.tex}
+\chapter{Choix d'un code en bande de base}
+\subfile{chap23.tex}
+\chapter{Transmission dans un canal en bande de base (non bruité)}
+\subfile{chap24.tex}
+\chapter{Egalisation}
+\subfile{chap25.tex}
+\chapter{Erreur décision et influence du bruit}
+\subfile{chap26.tex}
+\chapter{Modulation numériques}
+\subfile{chap27.tex}
+
+
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

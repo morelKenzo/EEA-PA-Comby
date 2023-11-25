@@ -1,0 +1,83 @@
+\documentclass[../../Cours_M1.tex]{subfiles}
+\newcommand{\nomTD}{TD6 : Introduction aux systèmes de transmission}
+\renewcommand{\nomentete}{UE431 - \nomTD}
+
+
+\begin{document}
+
+\section*{\nomTD}
+
+\subsection*{A. Système linéaire}
+
+\begin{enumerate}\setlength{\itemsep}{10mm}
+\item Définition de la transformée de Fourier :
+\[X(f) = TF\{x(t)\} = \int_{\R} x(t) e^{-j2\pi ft} dt \]
+\[x(t) = TF^{-1}\{X(f)\} = \int_{\R} X(f) e^{j2\pi ft} df \]
+
+Pour $x(t) = A_x\cos(2\pi f_0 t)$, $x(t) = A_x\sin(2\pi f_0 t)$ ou $x(t) = A_x\cos(2\pi f_0 t + \phi)$, on a 
+\[|X(f)| = \frac{A_x}{2}(\delta(f-f_0)+\delta(f+f_0))\]
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\draw [>=latex,->] (-2,0) -- (2,0) node[right]{$f$} ;
+\draw [>=latex,->] (0,0) -- (0,2) node[left]{$|X(f)|$};
+\draw [red] (1,0)node[below]{$f_0$} -- (1,1);
+\draw [red] (-1,0)node[below]{$-f_0$} -- (-1,1);
+\draw [dotted] (-2,1) node[left]{$\frac{A_x}{2}$} -- (2,1);
+
+\draw [>=latex,->] (4,0) -- (8,0) node[right]{$f$} ;
+\draw [>=latex,->] (4,0) -- (4,2) node[left]{$|X(f)|$};
+\draw [red] (5,0)node[below]{$f_0$} -- (5,1);
+\draw [dotted] (4,1) node[left]{$\frac{A_x}{2}$} -- (8,1);
+
+\end{tikzpicture}
+\caption{Représentations bilatérale et monolatérale}
+\end{figure}
+
+\textbf{Remarque :} les expressions de $X(f)$ sont en revanche différentes
+\begin{align*}
+x(t) = A_x\cos(2\pi f_0 t) & \rightarrow X(f) = \frac{A_x}{2}(\delta(f-f_0)+\delta(f+f_0)) \\
+x(t) = A_x\sin(2\pi f_0 t) & \rightarrow X(f) = -\frac{A_x}{2}j(\delta(f-f_0)-\delta(f+f_0)) \\
+x(t) = A_x\cos(2\pi f_0 t + \phi) & \rightarrow X(f) = \frac{A_x}{2}(e^{j\phi}\delta(f-f_0)+e^{-j\phi}\delta(f+f_0))
+\end{align*}
+
+On ne peut pas représenter facilement ces expressions de $X(f)$, c'est pour cela qu'on utilise $|X(f)|$ ou $|X(f)|^2$ (densité spectrale de puissance).
+
+\item $y(t) = (h*x)(t)$ et $Y(f) = H(f) X(f)$.
+\end{enumerate}
+
+\subsection*{B. Système non linéaire}
+
+\begin{enumerate}
+\item On considère deux cas : $u=A$ et $u=-A$.
+
+\textbf{1er cas : } $u = A$
+
+On a $V_A = \frac{A}{2}$ et $V_B = - \frac{A}{2}$. Les diodes $D_1$ et $D_2$ sont donc bloquées et on a $0V$ au point D.
+
+On a alors $v(t) = -2e(t)$.\\
+
+\textbf{2e cas : } $u = - A$ 
+
+Les diodes $D_1$ et $D_3$ sont bloquées.
+
+On a alors $v(t) = 2e(t)$.\\
+
+On peut donc écrire $v(t) = -\frac{2}{A} u(t)e(t) $
+
+Or, on peut décomposer le signal carré $u(t)$ :
+\[u(t) = \skzi \frac{4}{(2k+1)\pi} A \sin ((2k+1)2\pi f_0t)\]
+
+Donc on a le spectre de $u(t)$ :
+\[V(f) = \skzi \frac{4}{(2k+1)\pi} A \frac{1}{2j}(\delta(f-(2k+1)f_0-\delta(f+(2k+1)f_0))\]
+
+Comme $V(f) = -\frac{2}{A}(U*E)(f)$,
+\[V(f) = - \skzi \frac{4}{(2k+1)j\pi} (E(f-(2k+1)f_0-E(f+(2k+1)f_0))\]
+
+On recopie le spectre centré de $|E(f)|$ à $f_0$, $3f_0$, $5f_0$, ...
+
+\item On choisit le filtre passe bande qui sélectionne une bande qui ne contient que le spectre autour de $f_0$. Ainsi, on a transposé l'information autour de $f_0$.
+
+\end{enumerate}
+\end{document}

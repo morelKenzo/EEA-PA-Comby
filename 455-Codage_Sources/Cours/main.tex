@@ -1,0 +1,43 @@
+\documentclass{../../cours}
+\usepackage{../../raccourcis}
+% bug avec minted sinon
+\let\framed\relax \let\endframed\relax
+ \let\shaded\relax \let\endshaded\relax
+ \let\leftbar\relax \let\endleftbar\relax
+ \let\snugshade\relax \let\endsnugshade\relax
+ \usepackage{minted}
+\setminted{frame=lines, framesep=2mm, baselinestretch=1, fontsize=\footnotesize,linenos}
+
+% Mise en page
+\renewcommand{\vec}{\mathbf}
+
+\author{Pierre-Antoine Comby}
+\teacher{Michel Kieffer}
+\module{UE455}
+\title{Codage de source}
+\begin{document}
+\maketitle
+\tableofcontents
+\setcounter{chapter}{-1}
+\chapter{Rappel de probabilité}
+\subfile{chap0_MAN.tex}
+\chapter{Introduction - Motivation}
+\subfile{chap0.tex}
+\chapter{Codage entropique (sans pertes)}
+\subfile{chap1.tex}
+\chapter{Quantification}
+\subfile{chap2.tex}
+\chapter{Codage prédictif}
+\subfile{chap3.tex}
+\chapter{Codage par transformée}
+\subfile{chap4.tex}
+
+\appendix
+\chapter{Implémentation des différents algorithmes}
+\subfile{chapA.tex}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

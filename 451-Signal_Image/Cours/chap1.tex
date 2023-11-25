@@ -1,0 +1,628 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Probabilités}
+\subsection{Évènement}
+\begin{itemize}
+\item La réalisation d'une expérience aléatoire (on ne peux pas prédire avec certitude le résultat) est un \textit{évènement} $\omega$, singleton de $\Omega$ ensembles de tous les évènements.
+  \begin{exemple}[jet de dé]
+    aux évènements    ``Tirer 1, ... ,6 `` on associe $\Omega={\omega_1,...\omega_6}$
+  \end{exemple}
+\item $\mathcal{E} $est une tribu (ou $\sigma$-algèbre) de $\Omega$, tel que:
+  \begin{itemize}
+  \item $\Omega \in \mathcal{E}$
+  \item $\mathcal{E}$ est stable par union , intersection et complémentarité.
+  \end{itemize}
+\end{itemize}
+\subsection{Probabilités}
+\begin{defin}
+  On appelle probabilité :
+  \[
+    P : \begin{cases}
+      \mathcal{E} &\to [0,1]\\
+      E &\mapsto P(E)
+        \end{cases}
+   \]
+   tel que:
+
+   \begin{itemize}
+   \item $    P(\Omega) = 1 $
+   \item $ \forall E_i , i\in \mathbb{I} \text{ , desév disjoint 2 à 2}, \implies
+     P\left(\displaystyle\bigcup_{i\in\mathbb{I}}E_i\right) = \displaystyle\sum_{\mathbb{I}} P(E_i)$
+   \end{itemize}
+
+ \end{defin}
+
+\pagebreak
+ \begin{prop}
+   \begin{itemize}
+   \item  $ P(\bar{E}) = 1-P(E)$
+   \item $(P(\emptyset) = 0)$
+   \item $A \subset B  \implies P(A) \leq P(B)$
+   \item $P(A+B) = P(A)+P(B)-P(A\cap B)$
+   \end{itemize}
+ \end{prop}
+\subsection{Probabilités conditionnelles}
+
+\begin{defin}
+  Soit $A$ et $B$ deux évènements.  On appelle \emph{probabilité conditionnelle} la probabilité de $A$ sachant que  $B$ est réalisé:
+  \[
+    P(A|B) = \frac{P(A\cap B)}{P(B)}
+  \]
+\end{defin}
+\begin{prop}[Formule de Bayès]
+  \[
+    P(A|B) = \frac{P(B|A)P(A)}{P(B)}
+  \]
+\end{prop}
+
+\subsection{Indépendance}
+\begin{defin}
+  Deux évènements $A$ et $B$ sont dits \emph{indépendant} si et seulement si le fait que $A$ est réalisé n'apporte pas d'information sur la réalisaiton de $B$
+    \begin{align*}
+      & P(A|B) = P(A)\\
+      \iff & P(B|A) = P(B)\\
+      \iff & P(A\cap B) = P(A) .P(B)
+    \end{align*}
+\end{defin}
+\begin{defin}
+  Des évènements $(E_i)_{i\in\mathbb{I}}$  sont dits mutuellement indépendants (ou encore indépendants dans leur ensemble), si et seulement si:
+  \[
+  P\left(\displaystyle\bigcap_{i\in\mathbb{I}}E_i\right) = \displaystyle\prod_{\mathbb{I}} P(E_i)
+\]
+\end{defin}
+
+\begin{prop}
+  L'indépendance dans son ensemble implique l'indépendance deux à deux. \\
+  La réciproque n'est pas forcément vraie.
+\end{prop}
+\section{Variable aléatoire réelle et scalaire}
+On se place dans un espace probabilisé $\Omega$ donné.
+\subsection{Généralité et exemple}
+\begin{defin}
+  On appelle \emph{Variable aléatoire} (VA) :
+  \[
+    X :
+    \begin{cases}
+      \Omega \to \R \\
+      \omega \mapsto X(\omega)=x
+    \end{cases}
+  \]
+\end{defin}
+\begin{exemple}
+  \begin{itemize}
+  \item Dé à n faces (discret)
+  \item distance d'une flèche au centre de la cible.
+  \end{itemize}
+\end{exemple}
+\begin{prop}
+  Pour des variables aléatoires continues,
+  \[
+    P(X=x) = 0 , \forall x\in \R
+  \]
+  car $x$ est un point de mesure nulle.
+\end{prop}
+
+
+\subsection{Fonction de répartition}
+
+\begin{defin}
+  On appelle fonction de répatition:
+  \begin{align*}
+    F_X(x) &= P(X\leq x) = P(X \in ]-\infty,x])\\
+           &=P(\{\omega \in \Omega|X(\omega)\le x \})
+  \end{align*}
+\end{defin}
+\begin{prop}
+  \begin{itemize}
+  \item $0 \le F_X(x) \le1$
+  \item $P(a\le X\le b) = F_X(b)-F_X(a)$
+  \item $F_x$ est une fonction :
+    \begin{itemize}
+    \item non décroissante
+    \item continue presque partout
+    \end{itemize}
+  \end{itemize}
+\end{prop}
+
+Une variable aléatoire est complétement caractérisée par sa f.d.r
+\begin{rem}
+  Dans le cas d'une VAD , $F_X$ est en marche d'escalier.
+\end{rem}
+\subsection{Densité de probabilité}
+\begin{defin}
+  On appelle \emph{densité de probabilité} la fonction :
+  \[
+f_X(x) \equals_{\mathcal{D}} \deriv[F_X(x)]{x}
+\]
+Avec la dérivée généralisé au sens des distributions.
+\end{defin}
+\begin{prop}
+  \begin{itemize}
+  \item Les fonction de densité de probabilité et de répartition sont équivalentes pour décrire une variable aléatoire.
+  \item $f_X(x)\ge 0$
+  \item $\displaystyle \int_{-\infty}^{+\infty}f_X(x)\d x = 1$
+  \item $\displaystyle \int_{-\infty}^{x}f_X(\alpha)\d \alpha = F_X(x)$
+  \end{itemize}
+\end{prop}
+
+\begin{rem}
+  Pour les variables aléatoires discrètes, la ddp est une suite d'impulsion de Dirac :
+  \[
+    f_X(x) = \sum_{i\in\mathbb{I}}p_i\delta(x-x_i)
+  \]
+\end{rem}
+
+\begin{exemple}
+  \begin{itemize}
+  \item VAC uniforme sur $[a,b]$:
+    \[
+      f_X(x) = \frac{1}{b-a} \mathbb{1}_{[a,b]}
+    \]
+  \item VAC gaussienne :
+    \[
+      f_X(x) = \frac{1}{\sqrt{2\pi}\sigma} exp\left(\frac{-1}{2}\frac{(x-m_x)^2}{\sigma_X^2}\right)
+    \]
+  \end{itemize}
+\end{exemple}
+
+\subsection{Changement de VA}
+\begin{prop}
+  Soit $g :
+  \begin{cases}
+    \R \to \R \\
+    X \mapsto g(X) = Y
+  \end{cases}$ une fonction homéomorphique\footnotemark \\
+  Alors :
+  \[
+    f_Y(y) = f_X(x) \left|\deriv[x]{y}\right| = f_X(x) \frac{1}{ \left|\deriv[y]{x}\right|}
+  \]
+  Dans le cas ou $g$ n'est pas bijective :
+  \[
+    f_Y(y) = \sum_{x_i|g(x_i)=y}^{}f_X(x) \left|\deriv[x]{y}\right|_{x=x_i}
+  \]
+\end{prop}
+\footnotetext{continue, bijective continue}
+
+\subsection{Expérance, moment et fonction caractéristique}
+\begin{defin}
+  pour $g \R \to\C^p$
+  On appelle \emph{espérance} d'une variable aléatoire la grandeur:
+  \[
+    E(g(X)) = \int_{\R}^{} g(x)f_X(x)\d x
+  \]
+Dans le cas discret on a:
+\[
+  E(g(X)) = \sum_{\mathbb{I}}^{}g(x_i)P(X=x_i)
+\]
+\end{defin}
+\begin{prop}
+  L'espérance est linéaire (sous réserve d'existance):
+  \begin{itemize}
+  \item $E[c]=c$
+  \item $E[cg(x)]=cE[g(x)]$
+  \item $E[g(x)+h(x)] =E[g(x)]+E[h(y)]$
+  \end{itemize}
+\end{prop}
+\begin{rem}
+  On note aussi $E[X]=m_X = m$ ``moyenne de la variable aléatoire''. Si $m$ = 0 on dit que la VA est centrée.
+\end{rem}
+
+\begin{defin}
+  On appelle \emph{momemt d'ordre $k$}:
+  \[
+    m_k = E[X^k]
+  \]
+Le \emph{moment centré d'ordre $k$ :}
+  \[
+    m_k = E[(X-m_X)^k]
+  \]
+
+Le moment $\mu_2$ est aussi appelé la \emph{variance}
+\end{defin}
+\begin{rem}
+  on note $\sigma_x = \sqrt{v_x}$ l'écart type de X. Il mesure la dispersion autour de $m_x$.
+On défini la variable centrée réduite associée à $X$:
+\[
+  X_r = \frac{X-m_X}{\sigma_X}
+\]
+\end{rem}
+\subsection{Fonction caractéristique}
+
+\begin{defin}
+  On appelle fonction caractéristique:
+\[
+  \phi_X(u) = E[exp(juX)] = \int_{-\infty}^{+\infty}
+\]
+\end{defin}
+\begin{prop}
+  \begin{itemize}
+  \item $\phi_X(u)$ existe toujours $|\phi_X(u)|\le\phi_X(0)=1$
+  \item Symétrie hermitienne
+  \item $\phi_X(u)$ est continue même pour des VA discrètes
+  \item On appelle 2ème fonction de répartition $\Psi_X(u)=\ln(\phi_X(u))$
+  \item \[
+      m_k = (-j)^k\left.\deriv[^{k}\phi_X(u)]{u^k}\right|_{u=0}
+    \]
+  \end{itemize}
+\end{prop}
+\section{Couple de variable aléatoire réelles}
+\subsection{Généralité}
+\begin{defin}
+  Un couple de variable aléatoire est défini comme:
+  \[
+    Z
+    \begin{cases}
+      \Omega \to \R^2\\
+      \omega \mapsto Z(\omega) = \vect{X(\omega)\\Y{\omega}}
+    \end{cases}
+  \]
+  On défini également:
+  \[
+    Z^{-1} : \mathcal{D} \mapsto Z^{-1}(\mathcal{D}) = E_D \subset \mathcal{E}
+  \]
+\end{defin}
+\subsection{Fonction de répartition}
+\begin{defin}
+  \begin{itemize}
+  \item fonction de répartition conjointe:
+    \begin{align*}
+      P(X<x;Y<y) &=F_{XY}(x,y)\\
+                 &=P((x,y)\in \mathcal{D})\\
+                 &=F_Z(z)
+    \end{align*}
+  \item fonction de répartition marginale
+    \begin{align*}
+      F_{X}(x)=P(X<x) &= F_{XY}(x,+\infty)\\
+                      &=P((x,y)\in\mathcal{D}_X)
+    \end{align*}
+  \end{itemize}
+\end{defin}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{scope}
+      \draw[-latex] (-1,0) -- (4.1,0);
+      \draw[-latex] (0,-1) -- (0,4.1);
+      \fill[pattern= north east lines] (2,-1) rectangle (4,4);
+      \fill[pattern= north east lines] (-1,2) rectangle (4,4);
+      \draw (-1,2) -- (4,2);
+      \draw (2,-1) -- (2,4);
+      \node at (1,1) {$\mathcal{D}_{xy}$};
+    \end{scope}
+    \begin{scope}[shift={(6,0)}]
+      \draw[-latex] (-1,0) -- (4.1,0);
+      \draw[-latex] (0,-1) -- (0,4.1);
+      \fill[pattern= north east lines] (2,-1) rectangle (4,4);
+      \draw (2,-1) -- (2,4);
+      \node at (1,1) {$\mathcal{D}_x$};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{Représentation des domaines d'existence possible pour $X,Y$}
+\end{figure}
+\subsection{Densité de probabilité}
+\begin{defin}
+  on défini la densité de probabilité conjointe:
+  \[
+    f_{XY} = \derivp[^2F_{XY}(x,y)]{x\partial y }
+  \]
+\end{defin}
+
+\begin{prop}
+  densité de probabilité conjointe et fonction de répartition sont reliées:
+  \[
+    \int_{-\infty}^{x^-}\int_{-\infty}^{y^-} f_{XY}(\alpha,\beta)\d \alpha \d \alpha = F_{XY}(x,y)
+  \]
+
+  et :
+  \[
+    \int_{-\infty}^{x}\int_{\R}^{}f_{XY}(\alpha,\beta)\d \beta = F_{XY}(x,\infty) =F_X(x)
+  \]
+\end{prop}
+\begin{defin}
+  À partir de la fonction de répartion  marginale on peux définir la loi marginale de $X$ :
+  \[
+    f_X(x) = \deriv[F_X(x)]{x} =\int_{\R}^{}f_{XY}(x,y)\d y
+  \]
+  Et alors la loi  conditionelle de $X$ sachant $Y$:
+  \[
+    f_{X|Y}(x) = \frac{f_{XY}(x,y)}{f_{Y(y)}}
+  \]
+\end{defin}
+
+\subsection{Indépendance}
+\begin{defin}
+  On dit que $X$ et $Y$ sont indépendant:
+  \begin{description}
+  \item[$\iff$] $F_{XY}(x,y)=F_X(x)F_Y(y)$
+  \item[$\iff$] $f_{XY}(x,y)=f_X(x)f_Y(y)$
+  \end{description}
+\end{defin}
+\subsection{Changement de VA}
+\begin{prop}
+  On considère :
+  \[
+    g
+    \begin{cases}
+      \R^2 \to \R^2\\
+      Z =(X,Y) \mapsto W =(U,V)=g(X,Y)
+    \end{cases}
+  \]
+  Alors:
+\[
+  f_W(w) = f_Z(z)|J|
+\]
+où :
+\[
+J =
+\begin{pmatrix}
+  \displaystyle\derivp[x]{u} & \displaystyle\derivp[x]{v}\\[1em]
+  \displaystyle\derivp[y]{u} & \displaystyle\derivp[y]{v}
+\end{pmatrix}
+\]
+\end{prop}
+\begin{rem}
+  Il est parfois plus simple de calculer:
+  \[
+|K| =\left|
+\begin{array}{cc}
+  \displaystyle\derivp[x]{u} & \displaystyle\derivp[x]{v}\\[1em]
+  \displaystyle\derivp[y]{u} & \displaystyle\derivp[y]{v}
+\end{array}\right|
+\]
+Au quel cas on a : $f_W(w) = f_Z(z)\frac{1}{|K|}$
+\end{rem}
+\subsection{Espérance et moments-fonction caractéristique}
+Dans la suite on considère la fonction suivante :
+\[
+  g :
+  \begin{cases}
+    \R^2 \to \C^p\\
+Z = (X,Y) \mapsto g(Z) = \vect{g_1(X,Y)\\ \vdots \\ g_p(X,Y)}
+  \end{cases}
+\]
+\begin{thm}[Théorème de transfert]
+  On a :
+  \[
+    E[g(z)] = \iint_{\R^2} g(X,Y)f_{X,Y}(x,y)\d x\d y
+  \]
+\end{thm}
+\begin{prop}
+  Dans le cas de VA indépendante et  pour $g$ séparable on a : $g(X,Y) = g_X(X)g_Y(Y)$ et alors :
+  \[
+    E[g(X,Y)]= E[g_X(X)]E[g_Y(Y)]
+  \]
+\end{prop}
+\begin{defin}
+  On peux également définir les moments d'un couple de VA:
+  \begin{itemize}
+  \item Moment d'ordre 1
+\[
+  E[Z] = m_Z = \vect{m_X\\m_Y}
+\]
+\item Moment d'ordre 2 (Matrice de corrélation)
+\[
+  E[ZZ^T] =E \left[\vect{X^2 & XY \\ XY & Y^2}
+  \right] = \vect{E[X^2] & E[XY] \\ E[XY] & E[Y^2]} = C_{ZZ}
+\]
+\end{itemize}
+\end{defin}
+
+\begin{rem}
+  $C_{ZZ}$ est symétrique positive: $ C_{ZZ}\in S_n^+(\R)$
+\end{rem}
+
+\begin{defin}
+  On appelle matrice de covaraince la matrice de corrélation des variables centrées:
+\[
+  \Sigma_{ZZ}= E[(X-m_x)(Y-m_Y)^T] = \vect{\sigma_x^2 & \rho_{XY}\sigma_X\sigma_Y \\  \rho_{XY}\sigma_X\sigma_Y & \sigma_Y^2}
+\]
+où
+$\rho_{XY} = \frac{E[(X-m_X)(Y-m_y)^T]}{\sigma_x\sigma_y} =E[X_rY_r]$ est le \emph{coefficient de corrélation}
+\end{defin}
+
+
+\begin{prop}
+  \begin{itemize}
+  \item $\Sigma_{ZZ}\in S_n^+$
+  \item $ \rho_{XY} < 1$
+  \item  $\rho_{XY}=1$ ssi $\exists a,b,c \neq 0, aX+bY+c =0$. Les variables sont alignées.
+  \item Si $\rho_{XY}=0$ on dit que les variables sont décoréllées
+  \end{itemize}
+\end{prop}
+
+\begin{thm}
+  L'indépendance de 2 variables aléatoires implique leur non corrélation.
+
+  La réciproque n'est vraie que dans le cas gaussien.
+\end{thm}
+\subsection{Espérance de loi conditionnelle}
+
+\begin{defin}
+  On note
+  \[
+    E[X|Y=y] = \int_{\R}^{}xf_{X|Y=y}(x)\d x = m_X(y)
+  \]
+  \emph{l'espérance conditionnelle} de la VA $X$ sachant $Y=y$
+\end{defin}
+\begin{prop}
+  On a :
+  \[
+    E[m_x(y)] = E[X]
+  \]
+\end{prop}
+\begin{proof}
+  Directement :
+  \begin{align*}
+    E[m_X(y)]&= \int_{\R}^{}m_X(y)f(y)\d y\\
+             &=\int_\R\int_\R x f_{XY}(x,y)\d x\d y\\
+             &=\int_{\R^2}^{}x f_{XY}(x,y)\d x\d y\\
+             &= E[X]
+  \end{align*}
+\end{proof}
+
+\section{Variable aléatoire vectorielle et réelles}
+\subsection{Définition}
+\begin{defin}
+  On généralise la notion de variable aléatoire et de couple de variable aléatoire :
+  \[
+    X :
+    \begin{cases}
+      \Omega \to \R^n\\
+      \omega \mapsto X(\omega) =\vect{X_1\\ \vdots\\ X_n}
+    \end{cases}
+  \]
+\end{defin}
+\subsection{Fonction de répartition}
+\begin{defin}
+  \begin{itemize}
+  \item Fonction de répartition conjointe:(toutes les composantes jouent le même rôle)
+    \[
+      F_{X_1...X_n}(x_1...x_n) = P \left(\bigcap_{i=1}^nX_i<x_i\right)
+    \]
+    \item Fonction de répartition marginale de $X_i$:
+      \[
+        F_{X_i}=P(X_i<x_i)= P\left(X_i<x_i ; \bigcap_{j\neq i}X_j< +\infty \right)
+      \]
+  \end{itemize}
+
+Les propriétés démontrées dans le cas 2 se généralise au cas vectoriel.
+\end{defin}
+\subsection{Densité de Probabilité}
+\begin{defin}
+On défini la densité de probabilité conjointe:
+\[
+  f_X(x) = \derivp[^n]{\vec{x}} F_\vec{X}(\vec{x})
+\]
+Et alors :
+\[
+P(X\in\mathcal{D}) = \int_{\mathcal{D}}f_X(x)\d x = \iint_{\mathcal{D}} ... \int f_{\vec{X}}(\vec{x}) \d \vec{x}
+\]
+\end{defin}
+\begin{defin}
+  On généralise de même les notions de ddp margianle et conditionnelle:
+  \begin{itemize}
+  \item ddp marginale:
+    \[
+      f_{X_i}(x_i)= \frac{\d^n F_{x_i}(x_i)}{\d x_i} = \int_{\R^{n-1}}f_{\vec{X}}(\vec{x})\d x_1 ... \d x_{i-1}\d x_{i+1} ...\d x_n
+    \]
+  \item ddp conditionnelles:
+    On considère $Y$ et $Z$ de VA vectorielles:
+    \[
+      f_{\vec{Y}|\vec{Z}=\vec{z}}(\vec{y}) = \frac{f_{\vec{YZ}}(\vec{y},\vec{z})}{f_{\vec{Z}(z)}}
+    \]
+  \end{itemize}
+\end{defin}
+\subsection{Indépendance}
+\begin{thm}
+  On donne une CNS d'indépencande dans leur ensemble des VA $X_i$:
+  \[
+    F_{\vec{X}}(\vec{x})= \prod_{i=1}^{n}F_{X_i}(x_i) \iff f_{\vec{X}}(\vec{x}) = \prod_{i=1}^{n}f_{X_i}(x_i)
+  \]
+  L'indépendance dans leur ensemble implique l'indépendance 2à2.
+\end{thm}
+\subsection{Changement de variable aléatoire}
+
+\begin{prop}
+  Pour $g
+  \begin{cases}
+    \R^n \to \R^n\\
+    \vec{X} \mapsto g(\vec{X})=\vec{Y}
+  \end{cases}$ On peux définir le changement de variable:
+  \[
+    f_{\vec{Y}(\vec{y}} =f_{\vec{X}}{\vec{x}}|\vec{J}| = f_{\vec{X}}(\vec{x}) \frac{1}{|\vec{K}|}
+  \]
+  où :
+  $\vec{J} = \derivp[\vec{x}]{\vec{y}^T}=x_{i,j}$ et $K = \derivp[\vec{y}]{\vec{x}^T} =y_{j,i}$
+\end{prop}
+
+\subsection{Espérance, moments et fonction caractéristique}
+\begin{thm}[Théorème de transfert]
+  \[
+    E[g(\vec{X})] = \int_{\R^n}^{}g(\vec{X})f_{\vec{X}}(\vec{x})\d\vec{x}
+  \]
+\end{thm}
+
+\begin{defin}
+  \begin{itemize}
+  \item Moment d'ordre 1:
+    \[
+      \vec{m_x}= E[\vec{X}]
+    \]
+  \item Moment d'ordre 2: (matrice de corrélation)
+    \[
+      \vec{C_{XX}}=E[\vec{X}\vec{X}^T]\ge 0
+    \]
+  \item Moment centrée d'ordre 2: (matrice de covariance)
+    \[
+      \vec{\Sigma_{XX}} = E[(\vec{X-m_x})(\vec{Y-m_y})^T]
+    \]
+  \item Fonction caractèristique:
+    \[
+      \phi_{\vec{X}}(\vec{u})= E[e^{j\vec{u}^T\vec{X}}]
+    \]
+  \end{itemize}
+\end{defin}
+\subsection{Va Gaussienne et réelle}
+\begin{defin}
+  On dit que $X = \vec{X_1\\ \vdots\\ X_n}$ est une VA gaussienne:
+  \begin{description}
+  \item[$\iff$] $X_i$ sont gaussiens et indépendants dans leur ensembles
+  \item[$\iff$] $\sum_{i=1}^{n} \alpha_iX_i$ est une gaussienne.
+  \end{description}
+\end{defin}
+
+\renewcommand{\N}{\quad\mathcal{N}}
+\begin{prop}
+  \begin{itemize}
+  \item $\vec{X} \N \implies X_i \N$. La réciproque n'est pas vraie (cf ex 9/10 p 14 du fascicule)
+  \item $\vec{X} \N \implies $ loi conditionnelle gaussienne.
+  \item $X_i \N$ et indépendantes dans leur ensemble $\implies \vec{X} \N$.
+  \item $\vec{X} \N$ et $X_i$ indépendants 2à2 $\implies$ indépendant dans leur ensemble.
+  \item $\vec{X} \N \implies \vec{ Y =AX+B } \N$
+  \end{itemize}
+\end{prop}
+\section{Extension aux VA complexes}
+\begin{defin}
+  On généralise \emph{encore}:
+  \[
+    \vec{Z}
+    \begin{cases}
+      \Omega \to \C^p\\
+      \omega \mapsto \vec{Z}(\omega) = \vec{X}+j\vec{Y}
+    \end{cases}
+  \]
+\end{defin}
+\paragraph{Notation} : $\vec{Z}^\dagger = (\vec{Z}^{*})^T$ transposé conjugué.
+
+\begin{prop}
+  \begin{itemize}
+  \item Fonction de répartition:
+    \[
+      f_{\vec{Z}}(\vec{z})= P(\vec{X}<\vec{x} ; \vec{Y}< \vec{y})
+    \]
+  \item Matrice  de corrélation:
+    \[
+      \vec{C_{zz}} = E[\vec{Z}\vec{Z}^\dagger]
+    \]
+  \item Matrice de covariance:
+    \[
+      \vec{\Sigma_{ZZ}} = E[(\vec{Z-m_z})(\vec{Z-m_z})^\dagger]
+    \]
+  \item Fonction caractéristique:
+    \[
+      \phi_{\vec{Z}}(\vec{u}) = E[e^{j\vec{u}^\dagger \vec{Z}}]
+    \]
+  \item La linéarité de l'espérance donne également:
+    \[
+      E[g(\vec{Z})^*]= E[g(\vec{Z})]^*
+    \]
+  \end{itemize}
+\end{prop}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,118 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\subsection*{Exercice 1 : Analyse et synthèse par une approche (pseudo-)continue}
+On considère la fonction de transfert \[H(p) = \frac{1}{p(1 + \tau p)} \avec \tau = 0,2\]
+La période d'échantillonnage est $T_e = 0,2s$ et l'on souhaite régler le correcteur PI pour satisfaire le cahier des charges suivants en boucle fermée :
+\begin{itemize}
+\item marge de phase de 45 degrés
+\item erreur en vitesse $\epsilon_v$ nulle
+\end{itemize}
+
+\begin{enumerate}
+\item Synthèse d'un correcteur à temps continu
+
+\begin{enumerate}
+\item On considère le BOZ $B_0(p)=\frac{1-e^{-T_ep}}{p}$ que l'on cherche a approché par un retard pur équivalent :
+\begin{align*}
+B_0(p) &= \frac{1-e^{-T_ep}}{p}\\
+&= e^{-\frac{T_ep}{2}}\frac{e^{\frac{T_ep}{2}}-e^{-\frac{T_ep}{2}}}{p}
+\intertext{Or, le développement limité à l'odre 1 $e^{-T_ep} = 1-T_ep$ donne :}
+\tilde{B}_0(p) &= e^{-\frac{T_ep}{2}} \frac{1+\frac{T_ep}{2}- (1-\frac{T_ep}{2})}{p}\\
+& \boxed{\tilde{B}_0(p) = T_e e^{\frac{-T_ep}{2}}}
+\end{align*}
+\bigbreak
+
+\item On se propose de régler le correcteur PI en utilisant le tracé de la fonction de transfert en boucle ouverte du système.\\
+Le correcteur a donc la forme : \[C(p) = K_p(1+\frac{1}{T_ip})\] et on pose \[L(p) = \tilde{B}_0(p)H(p) = \frac{T_e e^{\frac{-T_ep}{2}}}{p(1 + \tau p)}\]
+
+On s'intéresse dans un premier temps à l'erreur en vitesse. On prend donc pour entrée $e(t) = t$ d'où $E(p) = \frac{1}{p^2}$\\
+
+On a donc comme écart $\epsilon(p) = \frac{E(p)}{1+L(p)C(p)}$, et on va appliquer le théorème de la valeur finale :
+\begin{align*}
+\epsilon_v &= \lim_{t \rightarrow \infty}\epsilon(t)\\
+&= \lim_{p \rightarrow 0} p \epsilon(p)\\
+&= \lim_{p \rightarrow 0} p \frac{1}{p^2} \frac{1}{1+L(p)C(p)}\\
+&= \lim_{p \rightarrow 0} \frac{T_ip(1+\tau p)}{T_ip^2(1+\tau p)+T_ee^{\frac{-T_ep}{2}}K_p(1+T_ip)}
+&= 0
+\end{align*}
+L'erreur statique de vitesse est bien nulle avec ce modèle du retard pur pour le BOZ.\\
+
+Intéressons-nous maintenant au réglage du correcteur, on relève le gain lorsque la phase est de -135 degrés et on cherche à annuler ce gain pour imposer le marge de phase à 45 degrés. On relève un gain de -35dB, il faut donc relever le gain de 35dB :
+\[20log(K_p) = 25 \Rightarrow K_p = 10^{\frac{25}{20}} = 18\]
+
+De plus, pour régler $T_i$, on fait en sorte que la phase du correcteur n'influence pas trop celle du système dans la bande passante, donc que la phase du correcteur seul soit à zéro quand celle du système est proche du point critique -1. Il est une bonne approximation de prendre $T_i$ de sorte que $\frac{1}{T_i}$ soit une décade plus tôt que la pulsation de coupure du système ou d'annulation du gain (choix effectué ici). Donc :
+\[\frac{1}{T_i} = \frac{\omega_{0dB}}{10} \Rightarrow T_i = \frac{10}{3} = 3.3s\]
+
+\item On utilise l'approximation $z=e^{pT_e} \approx 1+pT_e$ pour écrire la fonction de transfert en $z$ du correcteur échantillonné, on a donc $p = \frac{z-1}{T_e}$, d'où :\\
+\begin{align*}
+C(p)|_{p = \frac{z-1}{T_e}} &= C(z)\\
+&= K_p(1+ \frac{1}{\frac{T_i}{T_e}(z-1)})\\
+&=K_p\frac{z+\frac{T_e}{T_i}-1}{z-1}
+\end{align*}
+
+La fonction de transfert en $z$ du système + BOZ est :
+\begin{align*}
+T(z) & = (1-z^{-1})Z\{^*L^{-1}\{\frac{H(p)}{p}\}\} \\
+& = \frac{b_1z+b_0}{z^2+a_1z+a_0} \\
+\avec b_0 & = (1-D)\tau - T_eD \\
+b_1 & = T_e + (D-1)\tau \\
+a_0 & = D \\
+a_1 & = -D-1 \\
+D & = e^{-T_e/\tau}
+\end{align*}
+
+\item Déterminons si le système échantillonné est stable si asservi de la sorte (correcteur numérique) :\\
+On peut appliquer le critère de Routh à $1+C(z)T(z)$, avec $T(z)$ la fonction de transfert de l'asservissement échantillonné, CF TD précédent.
+\end{enumerate}
+
+\item Synthèse "pseudo-continue"
+
+\begin{enumerate}
+\item Déterminons la fonction de transfert en $w$ du système échantillonné :
+\begin{align*}
+T(z)|_{z=\frac{1+w}{1-w}} = \tilde{T}(w) &= \frac{b_1\frac{1+w}{1-w}+b_0}{(\frac{1+w}{1-w})^2 + a_1 \frac{1+w}{1-w} + a_0}\\
+&= \frac{b_1(1-w^2)+b_0(1-2w + w^2)}{(w^2+w+1)+a_1(1-w^2)+a_0(1-2w+w^2}\\
+\end{align*}
+\[\boxed{\tilde{T}(w)= \frac{(b_0-b_1)w^2-2b_0w + b_0+b_1}{(1-a_1+a_0)w^2 + 2(1-a_0)w + 1+a_1+a_0}}\]
+
+\noindent Comment se traduit le cahier des charges pour le système transformé ?\\
+\[ z= \frac{1+w}{1-w} \Leftrightarrow w = \frac{z-1}{z+1} \text{ avec } z= e^{T_ep} \]
+La réponse fréquentielle est valable pour $p = j\omega$ avec $\omega \in [0,\frac{\pi}{T_e}]$, donc pour :
+\[w = \frac{e^{j\omega T_e}-1}{e^{j\omega T_e}+1} = \frac{2j\sin(\omega \frac{T_e}{2})}{2\cos(\omega \frac{T_e}{2})} = j\tan(\frac{\omega T_e}{2})\]
+Ainsi, quand $\omega$ varie de 0 à $\frac{\pi}{T_e}$ alors $w$ varie de 0 à l'infini sur l'axe des imaginaires.\\
+On pose donc $w = j\tilde{\omega}$ et $\tilde{\omega}\in[0;+\infty[$ \\
+
+En quoi on répond à la question???
+
+\item On va régler ici le correcteur PI en la variable $w$ :
+On a $C(w) = K_p(1+\frac{1}{T_iw}$ et $\epsilon(w) = \frac{1}{1+C(w)\tilde{T}(w)}E(w)$\\
+On applique une entrée en rampe $t \rightarrow nT_e \rightarrow \frac{T_ez}{(z-1)^2}$, on a donc :
+\begin{align*}
+E(w) = E(z)|_{z=\frac{1+w}{1-w}} &= \frac{T_e(1+w)}{(1-w)(\frac{1+w-1+w}{1-w})^2}\\
+&=\frac{T_e(1-{w}^2)}{4{w}^2}
+\end{align*}
+
+Intéressons nous maintenant à l'écart statique en vitesse avec el théorème de la valeur finale:
+\begin{align*}
+\epsilon_v &= \lim_{z \rightarrow 1} (z-1) E(z)\\
+z \rightarrow 1 &\Leftrightarrow w \rightarrow 0  \text{ car, $z-1 = \frac{2w}{1-w}$}\\
+\epsilon_v &= \lim_{w \rightarrow 0} \frac{2w}{1-w}\epsilon(w)\\
+&= \lim_{w \rightarrow 0} \frac{2w}{1-w}\frac{1}{1+K_p(1+\frac{1}{T_iw}\frac{\beta_2{w}^2+\beta_1 w + \beta_0}{\alpha_2{w}^2+\alpha_1 w + \alpha_0}\frac{T_e(1-{w}^2)}{4{w}^2})}\\
+&= ...\\
+&= 0
+\end{align*}
+
+Caractérisons maintenant le correcteur en fonction du cahier des charges. Comme précedemment on relève le gain lorsque la phase est à -135 degrés et on a : $K_p = 10^{\frac{10}{20}} = 3.3$ et le choix de $T_i$ est le même fait comme précedemment donc : $T_i = \frac{10}{\tilde{\omega}_{0dB}} = 33.3s$\\
+
+\item La transformée en z ainsi, obtenue est :
+\begin{align*}
+C(z) &= C(w)|_{w = \frac{z-1}{z+1}}\\
+&= K_p(1+\frac{z+1}{T_i(z-1)}\\
+&= \frac{C_p}{T_i}\frac{T_iz+1-T_i}{z-1}
+\end{align*}
+\end{enumerate}
+\end{enumerate}
+
+\end{document}

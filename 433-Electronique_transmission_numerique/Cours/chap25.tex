@@ -1,0 +1,105 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\begin{rem}
+  Le role del'égaliseur n'est pas le même en transmission numérique et analogique.
+\end{rem}
+En numérique on utilise un égaliseur pour garantir le respect du critère de nyquist.
+\section{Egaliseur numérique }
+
+On rappele le schéma de chaine de transimission numérique:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    [every node/.style={draw,rectangle,minimum height=4em,node distance=0.5cm,scale=0.8}]
+    \node (CS){\begin{tabular}{c}Codage \\ source\end{tabular}};
+    \node (CC)   [right= of CS]{\begin{tabular}{c}Codage \\ canal\end{tabular}};
+    \node (CBB)  [right= of CC]{\begin{tabular}{c}Emission \\ $G(f)$\end{tabular}};
+    \node (C)    [right= of CBB]{
+      \begin{tabular}{c}
+Canal\\ H(f)
+      \end{tabular}
+};
+    \node (A)    [right= of C][adder]{};
+    \node (Demod)[right= of A]{
+      \begin{tabular}{c}Reception\\ Gr(f)
+      \end{tabular}
+};
+    \node (E)    [right= of Demod]{
+      \begin{tabular}{c}
+Egaliseur \\(E)
+      \end{tabular}
+};
+    \node (Decod)[right= of E]{Detecteur};
+    \tikzset{every node/.style={}}
+    \draw (S) -- (CS) -- (CC) -- (CBB)-- (C) -- (A.1) (A.3) -- (Demod) -- (E) -- (Decod);
+    \draw[latex-] (A.4) -- ++(0,1) node[above]{Bruit};
+  \end{tikzpicture}
+  \caption{Principe d'une chaine de transmission numérique}
+\end{figure}
+\begin{prop}
+
+On considère que le canal de transmission est idéal:
+\[
+  h(t) = K. \delta(t-\tau) \text{ soit } H(f) = K.e^{-2j\pi f\tau}
+\]
+Alors :
+\begin{itemize}
+\item Signal en sortie du canal n'est pas déformé
+\item Si l'impulsion du canal vérifie le critère de Nyquist, en se
+  placant au meme rythme d'échantillonnage T pour ensuite detecter les
+  différents niveau correspondant à un code m-aire.
+\end{itemize}
+\end{prop}
+\begin{rem}
+  Pour un canal quelconque on a le bruit , l'attenuation, une bande limitée... Tout cela peux conduire à une erreur de décodage sur les echantillons.
+
+  On place donc un \emph{egaliseur} pour compenser ces effets dans la chaine de reception du signal.
+\end{rem}
+\section{Réglage de l'égaliseur}
+\begin{rem}
+  Le rôle de l'égaliseur n'est pas le meme suivant le type de transmission (analogique/numérique).
+  \begin{itemize}
+  \item En transmission analogique on veux :
+    \[
+      H(f).E(f) = exp(-2\pi f\tau)
+    \]
+    Pour compenser le retard dans le canal de transmission pour qu'il soit idéal du point de vue du recepteur.
+  \item Pour une transmission numérique :
+
+    Il faut que l'impulsion perçu respecte (après l'égaliseur)le premier critère de Nyquist.
+  \end{itemize}
+\end{rem}
+
+\begin{prop}
+Pour respecter le critère de Nyquist en numérique il faut que:
+  \[
+\sum_{n} G\left(f-\frac{n}{T}\right) \cdot H\left(f-\frac{n}{T}\right) \cdot G_{r}\left(f-\frac{n}{T}\right) \cdot E\left(f-\frac{n}{T}\right)=T
+\]
+\end{prop}
+
+\begin{rem}
+  POur une impulsion issue d'un filtre rectangulaire
+  \[
+G\left(f-\frac{n}{T}\right) . H\left(f-\frac{n}{T}\right) \cdot G_{r}\left(f-\frac{n}{T}\right) \cdot E\left(f-\frac{n}{T}\right)=T \cdot \operatorname{rect}_{1 / T}(f)
+\]
+\end{rem}
+
+\begin{rem}
+  \begin{itemize}
+  \item Comme nous l’avons vu au chapitre précédent, on choisit plutôt
+    un impulsion de Nyquist.
+  \item   L’égaliseur est implémenté numériquement
+    et s’apparente à un filtre numérique.
+  \item   Différentes stratégies
+    d’optimisations sont possibles (Moindres carrés, adaptatifs,
+    etc...).
+\end{itemize}
+\end{rem}
+
+ajout sur le diagramme de l'oeil....
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,173 @@
+\documentclass[main.tex]{subfiles}
+% Relu jusqu'à 3.4 inclus, X 08/02/2015
+% Corrigé jusqu'au 4.3 inclus, A 28/02/2015.
+\newcommand{\Lc}{\mathcal{L}}
+\newcommand{\D}{\mathcal{D}}
+\begin{document}
+\section{Introduction (notations maths)}
+
+\begin{defin}
+  On appelle \emph{champ de vecteur} toute  application de $\R^n \rightarrow \R^n$.
+\end{defin}
+
+\begin{defin}
+Soit $f : \R^n \rightarrow \R^n$ et $g : \R^n \rightarrow \R^n$, on définit le \emph{crochet de Lie} :
+\[ [f,g] :
+  \begin{cases}
+\R^n & \rightarrow \R^n \\ x & \mapsto J_g(x)f(x) - J_f(x)g(x)
+\end{cases}
+\]
+où $J_f$ et $J_g$ sont respectivement les matrices jacobiennes de $f$ et $g$.
+\end{defin}
+
+\begin{prop}[Crochet de Lie]
+Soient $f, g \text{ et }h$ des champs de vecteurs et $\lambda_1, \lambda_2 \in \K, (\K = \R \text{ ou } \C)$.
+Alors
+\begin{align*}
+[\lambda_1 f + \lambda_2 g, h ] =  \lambda_1[f,h] + \lambda_2[g,h] \quad & \text{Bilinéaire} \\
+[f,g] = - [g,f] \quad & \text{Anti-symétrique} \\
+[f,[g,h]] + [h,[f,g]] + [g,[h,f]] = 0 \quad & \text{Identité de Jacobi} \\
+[f,f] = 0 \quad
+\end{align*}
+\end{prop}
+\newpage
+\begin{defin}
+$G$ est une \emph{algèbre de Lie} sur $\K$ si $G$ est un espace vectoriel ayant pour loi interne le crochet de Lie.
+\end{defin}
+
+\begin{rem}
+Cette définition se restreint au cas qui nous intéresse ici, ce n'est pas la définition générale.
+\end{rem}
+
+\begin{rem}
+$\Lc(E)$ est l'algèbre de Lie ayant pour famille génératrice l'ensemble des champs de vecteurs $E$.
+\end{rem}
+
+\underline{Notation} : Crochet de Lie itéré
+
+$ad_f^0 (x) = g(x)$
+
+$ad_f^1 g(x) = [f,g](x)$
+
+$ad_f^k g(x) = [f,ad_f^{k-1}g](x)$
+
+\begin{defin}
+la \emph{dérivée de Lie} d'une fonction $\alpha : \R^n \rightarrow \R$ dans la direction de $f : \R^n \rightarrow \R^n$, notée $L_f\alpha$, est définie par :
+\[L_f \alpha(x) = \sum_{i=1}^n \derivp[\alpha(x)]{x_i}f_i(x) \]
+
+Ainsi,
+\[L_f^k \alpha (x) = J_{L_f^{k-1} \alpha} (x) f(x) = [ \derivp[L_f^{k-1} \alpha(x)]{x_1} \dots\derivp[L_f^{k-1} \alpha(x)]{x_n}] \vect{f_1(x) \\ \vdots \\ f_n(x) } \]
+\end{defin}
+
+\begin{rem}
+\begin{itemize}
+\item $L_f^0(\alpha(x)) = \alpha(x)$
+\item Soient 2 champs de vecteurs $f$ et $g$, alors
+\begin{align*}
+L_g L_f \alpha (x) & = J_{L_f \alpha}(x) g(x) \\
+L_{[f,g]} \alpha(x) & = L_f L_g \alpha(x) - L_gL_f \alpha(x)
+\end{align*}
+\end{itemize}
+\end{rem}
+
+\begin{defin}
+La \emph{dimension} d'un ensemble de champs de vecteurs $E=\{f_1(x) \dots f_n(x)\}$, où $f_i(x) : \R^n \rightarrow \R^n$, est la dimension de l'espace vectoriel $\Delta(x)$ engendré par l'ensemble $E$.
+
+\begin{rem}
+On fait la confusion entre rang et dimension.
+\end{rem}
+\end{defin}
+
+\begin{exemple}
+\[ f_1(x) = \vect{x_1 \\ x_2 \\ 2}, f_2(x) =
+  \begin{bmatrix}
+x_1 & x_3 \\ x_2 & x_3 \\2 & x_3
+\end{bmatrix}
+\text{ et }f_3(x) = \vect{x_2 \\ x_2 \\ 0} \]
+
+Si $x_2 = 0$, alors $\Delta(x) = vect\{( \vect{x_1 \\ 0 \\ 2} ) \} \text{ et }dim=1$.
+
+Si $x_2 \neq 0$, alors $\Delta(x) = vect\{(\vect{x_1 \\ x_2 \\ 2},\vect{1 \\ 1 \\ 0})\} \text{ et }dim=2$.
+\end{exemple}
+
+\section{Commandabilité (atteignabilité, contrôlabilité)}
+
+Soit le système non-linéaire (1) (affine en la commande)
+\[ \dot{x} = f(x) + g(x)u = f(x) + \sum_{i=1}^m g_i(x) u_i, \quad x \in \R^n \text{ et }u \in \R^m \]
+
+\begin{defin}
+Un système est\emph{ commandable} ssi $\forall x \in \R^n, \exists u$ tel que $x$ est atteignable dans un temps fini.
+\end{defin}
+
+\begin{thm}[Théorème de Commandabilité]
+Le système (1) est commandable ssi la sous-algèbre de Lie $\D = \{g_1 \dots g_m, \Lc(E)\}$ avec $E=\{g_1 \dots g_m,f\}$ est de dimension $n$.
+\end{thm}
+
+\begin{exemple}[cas linéaire]
+\[ \dot{x} = Ax + Bu \]
+
+\[ E = \{Ax,B\}, [B,Ax] = AB \]
+\[ [AB,Ax] = A^2B, \dots, A^{n-1}B, \dots \]
+\[ \Lc(E) = vect \{AB,A^2B,\dots\} \]
+
+suivant Cayley Hamilton:
+\[ \D = \{B,vect \{AB,AB^2,\dots,A^{n-1}B\}\}\]
+
+$dim \D = rang (B AB \dots A^{n-1}B)$ théorème de Kalman
+\end{exemple}
+
+\section{Observabilité (distingabilité)}
+Soit le système NL (2) (affine en la commande) :
+\begin{align*}
+\dot{x} & = f(x) + g(x)u \\
+y & = h(x)
+\end{align*}
+
+\begin{defin}
+Un système est \emph{observable} si $\forall x_1,x_2 \in \R^n$ 2 conditions initiales telles que $x_1 \neq x_2$, $\exists$ une commande $u$ admissible telle que les sorties soient distinctes, $\forall t \geq t_0$ ($t_0$ instant initial).
+\end{defin}
+
+\begin{defin}
+$\mathcal{V}$ est \emph{l'espace d'observabilité} constitué de toutes les combinaisons linéaires obtenues à partir des dérivées de Lie $L_f$ et $L_g$ des fonctions $h_j(x),j=1 \dots p$ telles que $y\in\R^p$
+\[ \mathcal{V} = \{h_j,L_fh_j, L_g h_j, L^2_f h_j,\dots L_g L_f h_j, L_f L_g h_j,\dots \}\]
+
+On note $\nabla \mathcal{V}$ l'ensemble des différentielles (gradient) des éléments de $\mathcal{V}$ :
+
+\[ \nabla \mathcal{V} = \{ \nabla h_j, \nabla L_f h_j ... \} \]
+\end{defin}
+
+\begin{thm}[Théorème d'observabilité]
+Le système (2) est localement observable en $x_0$ si $\dim \nabla \mathcal{V}(x_0) = n$ et il est observable si $\forall x \in \R^n, \dim \nabla \mathcal{V}(c) = n$
+\end{thm}
+
+\begin{exemple}[Cas linéaire]
+\begin{align*}
+\dot{x} & = Ax + Bu = f(x) + g(x)u\\
+y & = Cx = h(x)
+\end{align*}
+
+\begin{align*} 
+  \mathcal{O}      =  &\{ h(x), L_fh(x), L_gh,
+                       L^2_fh ,L_g^2h , L_fL_gh ,
+                       L_gL_fh \dots \}                        \\
+\mathcal{O}         = &\{ Cx, C.Ax (=L_fh(x)),                 \\
+                      & C.B (=L_gh), CA^2x (=L^2_fh),             \\
+                      & 0 (=L_g^2h) , 0 (=L_fL_gh) ,              \\
+                      & CAB (=L_gL_fh) \dots \}                   \\
+  \nabla \mathcal{O}     = &\{ C , CA , 0 ,CA^2 , 0 , 0 , 0 \dots \} \\
+\end{align*}
+\[
+\dim \nabla \mathcal{O}  = {\rm rg} \vect{ C \\ CA \\ CA^2 \\ \vdots \\ CA^{n-1}} \quad \text{Critère de Kalman}
+\]
+\end{exemple}
+
+\begin{rem}
+l'action de la commande intervient dans l'observabilité. Cette contrainte est écartée dans le cas linéaire.
+\end{rem}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

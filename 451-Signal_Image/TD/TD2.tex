@@ -1,0 +1,194 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+$(X,Y)$ est un couple de variables aléatoires uniformément réparti sur un disque $D$ centré en 0 et de rayon $R_{max}$.
+\begin{enumerate}
+\item Donner la densité de probabilité conjointe des VA $X$ et $Y$.
+
+Les variables aléatoires $X,Y$ sont uniformément réparties sur le disque donc  $\forall (x,y) \in D$, $f_{XY}(x,y)=A $ constante.
+
+Or, $\int\int_{\mathbb{R}^2} f_{XY}(x,y)dxdy = 1$ donc $\int\int_{D} f_{XY}(x,y)dxdy = 1$ d'où $\pi R_{max}^2A=1$
+\[
+f_{XY}(x,y) =
+\left\{
+\begin{array}{ll}
+	\frac{1}{\pi R_{max}^2} & \si (x,y)\in D \\
+	0 & \sinon
+\end{array}		
+\right. 
+\]
+
+\item Discuter de l'indépendance de $X$ et $Y$. 
+	\begin{itemize}
+	\item Est-ce qu'une information sur $X$ implique une information sur $Y$ ?
+	
+	Pour la réalisation $x_1$ de $X$, on voit que \[y_1\in[y_1^-,y_1^+]=[-\sqrt{R_m^2-x_1^2},\sqrt{R_m^2-x_1^2}]\] Ainsi, $X$ et $Y$ ne peuvent pas être indépendantes.
+
+	\item On sait que : si $X$ et $Y$ sont indépendantes, alors la ddp est séparable.
+	\begin{align*}
+	f_{XY}(x,y) = 
+	\left\{
+	\begin{array}{ll}
+	\frac{1}{\pi R_{max}^2} & \si x^2 + y^2 \leq R_{max}^2 \\
+	0 & \sinon 
+	\end{array}		
+	\right.
+	\end{align*}
+	On ne peut pas l'écrire sous la forme (fonction de $x$) x (fonction de $y$) à  cause de la condition $x^2 + y^2 \leq R_{max}^2$ donc $X$ et $Y$ ne sont pas indépendantes.
+	
+	\item On sait que : si $X$ et $Y$ sont indépendantes, alors $f_{XY}(x,y)=f_X(x)f_Y(y)$. Exhibons un contre-exemple.
+	
+	Prenons un point donné par \[ |x|\leq R_{max},|y|\leq R_{max},\text{ tel que } x^2 + y^2 > R_{max}^2\] (Dans le carré mais pas dans le cercle). Ainsi, $f_{XY}(x,y)=0$ alors que $f_X(x)\neq0$ et $f_Y(y)\neq0$, donc $X$ et $Y$ ne sont pas indépendantes.
+	
+	\item On sait que : si $X$ et $Y$ sont indépendantes, alors $F_{XY}(x,y)=F_X(x)F_Y(y)$.
+	
+	\[F_{XY}(-\frac{R_{max}}{\sqrt{2}},\frac{R_{max}}{\sqrt{2}}) = P(X<-\frac{R_{max}}{\sqrt{2}},Y<\frac{R_{max}}{\sqrt{2}}) = 0\] alors que $F_X(x)\neq0$ et $F_Y(y)\neq0$, donc $X$ et $Y$ ne sont pas indépendantes.
+	\end{itemize}
+	
+	\medskip
+	
+	Valeur moyenne de x : on peut voir que par symétrie par rapport à l'axe des ordonnées, $m_X=0$. (Ne pas oublier de vérifier que l'intégrale existe.)
+	\begin{align*}
+	m_X=E_X[X]& =\int_{\mathbb{R}}xf_X(x)dx=\int_{\mathbb{R}}x (\int_{\mathbb{R}}f_{XY}(x,y)dy) dx \\
+	& = \int\int_{\mathbb{R}^2} x f_{XY}(x,y)dxdy \\
+	& = \int\int_D \frac{x}{\pi R_{max}^2} dxdy = 0
+	\end{align*}
+	
+	Coefficient de corrélation : $\rho_{XY} = \frac{E[(X-m_X)(Y-m_Y)]}{\sigma_X\sigma_Y}$
+	
+	Le coefficient de corrélation détermine le degré de linéarité entre $X$ et $Y$. Ici, il n'y a pas de direction privilégiée, donc $\rho_{XY} = 0$.
+	
+	Par le calcul, $\rho_{XY} = \frac{E[XY]}{\sigma_X\sigma_Y}$ car les moyennes sont nulles.
+	\begin{eqnarray*}
+	E[XY] & = & \int\int_{\mathbb{R}^2} xyf_{XY}(x,y)dxdy  \\
+	& = &  \int\int_{Q_{++}} xyf_{XY}(x,y)dxdy + \int\int_{Q_{+-}} xyf_{XY}(x,y)dxdy \\ & &+ \int\int_{Q_{-+}} xyf_{XY}(x,y)dxdy + \int\int_{Q_{--}} xyf_{XY}(x,y)dxdy \\
+	& = 0	
+	\end{eqnarray*}
+	
+\item $f_X(x) = \int_{\mathbb{R}}f_{XY}(x,y)dy, \forall x \in \mathbb{R}$
+
+	\begin{itemize}
+	\item \[ \forall x / |x| \leq R_{max}, f_X(x) = \int_{-\sqrt{R_{max}^2-x^2}}^{\sqrt{R_{max}^2-x^2}} \frac{1}{\pi R_{max}^2}dy=\frac{2\sqrt{R_{max}^2-x^2}}{\pi R_{max}^2}\]
+
+	\[
+	f_X(x) = 
+	\left\{
+	\begin{array}{ll}
+	\frac{2\sqrt{R_{max}^2-x^2}}{\pi R_{max}^2} &\si |x| < R_{max} \\
+	0 &\sinon
+	\end{array}
+	\right.	
+	\]
+	
+	\item 
+	\begin{align*}
+	P[x\leq X<x+\Delta x] & = f_X(x) \Delta x \\
+	& = P[(X,Y) \in D_x ] \\
+	& = \frac{Aire D_x}{\pi R_{max}^2}
+	\end{align*}
+	\end{itemize}
+	
+On calcule de même $f_Y(y)$ et on remarque que $f_{XY}(x,y) \neq f_X(x)f_Y(y), \forall (x,y) \in D$. 
+
+X et Y ne sont pas indépendantes.
+
+\item On pose $X = R \cos(\Phi)$ et $Y = R \sin(\Phi)$ avec $R\geq 0$ et $Pphi \in ]-\pi,\pi[$.
+
+La répartition est isotrope : $f_{R\Phi}(r,\phi)$ ne dépend pas de $\phi$ si $|\phi|<\pi$.
+Ainsi, 
+\[
+f_{R\Phi}(r,\phi) = 
+\left\{
+\begin{array}{ll}
+0 &\si r \notin [0,R_{max}] \text{ ou } \phi \notin ]-\pi,\pi[ \\
+g_R(r) &\sinon
+\end{array}
+\right. 
+\]
+La fonction est séparable donc $R$ et $\Phi$ sont indépendantes.
+
+Expliciter $f_\Phi(\phi)$.
+\begin{itemize}
+\item On voit que $\Phi$ suit une loi uniforme sur $]-\pi,\pi[$.
+\item 
+\begin{align*} 
+P[\phi \leq \Phi < \phi + \Delta \phi ] & = f_{\Phi}(\phi)\Delta \phi \\
+& = P[(R,\Phi)] \in D_{\phi} = P[(X,Y) \in D_{\phi}] \\
+& = \frac{\frac{\Delta \phi}{2\pi}\pi R_{max}^2}{\pi R_{max}^2} = \frac{\Delta \phi}{2 \pi}
+\end{align*}
+\end{itemize}
+
+Expliciter $f_R(r)$.
+Attention, la loi n'est pas uniforme ! On applique le même raisonnement que ci-dessus avec un domaine $D_r$ en couronne.
+\[
+\left\{
+\begin{array}{ll}
+f_R(r) =  \frac{2r}{R_{max}^2} & \si r \notin [0,R_{max}] \\
+0 &\sinon
+\end{array}
+\right. 
+\]
+
+
+\item En utilisant les formules de changement de variables, on exprime $f_{R\Phi}(r,\phi)$
+\begin{align*}
+f_{R\Phi}(r,\phi) & = f_{XY}(x,y) |J| \text{ avec } |J| =
+\left( 
+\begin{array}{ll} 
+\cos(\phi) & \-r\sin(\phi) \\ 
+\sin(\phi) & r\cos(\phi) 
+\end{array} 
+\right) \\
+f_{R\Phi}(r,\phi) & = 
+\left\{
+\begin{array}{ll}
+f_{XY}(r\cos(\phi),r\sin(\phi))|r| & \si r\in[0,R_{max}[ \text{ et } \phi \in ]-\pi,\pi] \\
+0 & \sinon
+\end{array}
+\right. \\
+\text{ Or, } f_{XY}(x,y) & = 
+\left\{
+\begin{array}{ll}
+\frac{1}{\pi R_{max}^2} & \si x^2 + y^2 \leq R_{max}^2 \\
+0 & \text{ sinon}
+\end{array}
+\right. \\
+\text{Donc } 
+f_{R\Phi}(r,\phi) & =
+\left\{
+\begin{array}{ll}
+\frac{r}{\pi R_{max}^2} & \si r\in[0,R_{max}[ \text{ et } \phi \in ]-\pi,\pi] \\
+0 & \text{ sinon}
+\end{array}
+\right. \\
+\end{align*}
+
+On peut écrire $ f_{R\Phi}(r,\phi) = g_R(r)g_{\Phi}(\phi) $, $ f_{R\Phi}(r,\phi)$ est séparable donc $R$ et $\Phi$ sont indépendantes.
+
+\begin{multicols}{2}
+Si $r\in[0,R_{max}[$, 
+\begin{align*}
+f_R(r) & = \int_{\mathbb{R}} f_{R\Phi}(r,\phi) d\phi \\
+& = \frac{r}{\pi R_{max}^2} \int_{-\pi}^{\pi} d\phi \\
+& = \frac{2r}{R_{max}^2}
+\end{align*}
+
+Si $\phi\in]-\pi,\pi]$,
+\begin{align*}
+f_{\Phi}(\phi) & = \int_{\mathbb{R}} f_{R\Phi}(r,\phi) dr \\
+& = \int_0^{R_{maxint}} \frac{r}{\pi R_{max}^2}dr \\
+& = \frac{1}{2\pi}
+\end{align*}
+\end{multicols}
+
+\item 
+\begin{align*}
+m_R & = E[R] \\
+& = \int_{\mathbb{R}}rf_R(r)dr \\
+& = \int_0^{R_{max}} \frac{2r^2}{R_{max}} dr \\
+& = \frac{2}{3}R_{max}
+\end{align*}
+\end{enumerate}
+
+
+
+\end{document}

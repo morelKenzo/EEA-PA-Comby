@@ -1,0 +1,360 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\emph{le poly distribué est très bien fait, ici il n'y aura que des prise de note et l'essentiel du cours}
+\section{Philosophie et difficultés}
+\subsection{Introduction}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \sbEntree{x}
+    \sbBlocL{H}{H}{x}
+    \sbSumh{sum}{H}
+    \sbRelier{H}{sum}
+    \sbSortie{Y}{sum}
+    \sbRelier{x}{H}
+    \sbRelier{sum}{Y}
+    \sbDecaleNoeudy[-3]{sum}{b}
+    \sbRelier{b}{sum}
+    \node[above] at (b){$b$};
+    \node[left]at(x){$x$};
+    \node[right]at(Y){$y$};
+  \end{tikzpicture}
+  \caption{Modélisation du problème direct}
+\end{figure}
+
+\paragraph{Méthode}
+On fait des hypothèse sur $x$ pour déterminer $\hat{x}$ qui permette de reconstituer un $y$ proche de celui mesuré.
+
+On a une connaissance parfaite des hypothèses que l'on a fait.
+
+\subsection{Problème mal posé}
+\begin{defin}
+  Les \emph{Condition de Hadamard} permettent de savoir si un problème est bien posé.
+  \begin{itemize}
+  \item L'existence d'une solution quelques soit l'ensemble des donneés ${\cal Y} = Im(H)$
+  \item L'unicité: $\Ker(H)=\{0\}$
+  \item Continuité :lorsque l'erreur $\delta y $tend vers 0 ,$\delta x $ tend aussi vers 0.
+  \end{itemize}
+\end{defin}
+\subsection{Discrétisation et linéarisation}
+Pour $x\in\R^M $et $y\in\R^N$ on considère que $H$ est un opérateur linéaire.
+\begin{prop}
+  On note $p=rg(H)$
+  \begin{itemize}
+  \item $ p = N=M$ Alors $H$ bijectif, $\vec{\hat{x}} = H^{-1}\vec{y}$.
+  \item $ p <M$ pas d'unicité mais on a :
+    \[
+      \vec{\hat{x}} =(\vec{H}^T(\vec{HH}^T)^{-1})\vec{y}
+    \]
+  \item $ p>M$ pas d'existance mais on peux trouver l'inverse généralisé
+    \[
+      \vec{\hat{x}} = (\vec{H}^T\vec{H})^{-1}\vec{H}^T\vec{y}
+    \]
+  \end{itemize}
+\end{prop}
+\newcommand{\vertiii}[1]{{\left\vert\kern-0.25ex\left\vert\kern-0.25ex\left\vert #1 
+    \right\vert\kern-0.25ex\right\vert\kern-0.25ex\right\vert}}
+\paragraph{Conditionnement de la matrice}
+En ajoutant une erreur $\delta\vec{x}$ a$\hat{\vec{x}}$ on peux calculer comment la matrice $H$ ``amplifie le bruit''
+
+\begin{defin}
+  À partir de l'inverse généralisé on a :
+  \[
+    \|\delta x \| \leq \vertiii{(\vec{H}^T\vec{H})^{-1}} \vertiii{\vec{H}^T}
+  \]
+  avec $\vertiii{\vec{H}} = \sqrt{\max\{Sp(\vec{H})\}}$
+  Alors on défini le nombre de condition:
+  \[
+    \delta x \le c \delta y
+  \]
+  Avec :
+  \[
+    c =\sqrt{\frac{\lambda_{max}}{\lambda_{min}}}
+  \]
+\end{defin}
+
+
+Si il y a un mauvais conditionnement, le bruit (qui est presente sur toutes les composantes de la base modale) est amplifié de manière disproportionnées sur certaine composantes.
+
+\paragraph{Décomposition en valeur singulière tronquées} On réduit la matrice à ces plus grandes valeurs propres pour réduire le conditionnement
+\[
+  \tilde{\vec{H}}= \vec{U_t\Lambda_tV_t}
+\]
+L'estimateur devient :
+\[
+  \hat{\vec{x}} = (\tilde{\vec{H}^T}\tilde{\vec{H}})^{-1}\tilde{\vec{H}^T}\vec{y}
+\]
+
+\section{Quelques méthode d'inversion classique}
+\subsection{Le filtre de Wiener}
+
+Le principe du filtre de Wiener consiste à déterminer un filtre donc
+d'appliquer une opéartion liénaire invariante afin de séparer le bruit
+des données. Wiener a démontrer que dans le cas d'un signal
+stationnaire on peux trouver un filtre optimum dans le sens ou c'est
+le meilleur filtre qui sépare le bruit de l'objet si on connait
+l'autocorrélation des données $\gamma_{yy}$ et l'intercorrélation entre les
+données et l'objet que l'on cherche $\gamma_{yx}$.
+\begin{prop}[Relation de Wiener Hopf]
+  Pour $p \in\Z $on a :
+  \[
+\sum_{k\in\Z}^{}g(k)\gamma_{yy}(p-k) = \gamma_{xy}(p)
+\]
+Où $g$ est le filtre disctret optimum permettant d'estimer au mieux
+$x$. LE critère choisi est la minimisation de l'espérance du carré de
+l'erreur de prédiction.
+\end{prop}
+\begin{proof}
+  cf. Poly TR
+\end{proof}
+\begin{prop}
+  De facon pratique on détermine lefiltre dans l'espace de fourier:
+  \[
+    G(\nu) = \frac{\Gamma_{xy}(\nu)}{\Gamma_{yy}}
+  \]
+\end{prop}
+\subsection{Estimateur des moindres carrés}
+\begin{prop}
+  L'estimateur des moindres carré cherche à minimiser la norme quadratique:
+  \[
+\hat{\vec{x}}_{MC} = \arg\min \| \vec{y-Hx}\|_2^2 = (\vec{H}^T\vec{H})^{-1}\vec{H}^{T}\vec{y}
+  \]
+\end{prop}
+
+\subsection{Estimateur des moindres carrés régularisé}
+
+\emph{cf. UE 451 et poly}
+
+
+On veux améliorer le conditionnement de la matrice.
+\begin{prop}
+  On modifie la fonction de cout des moindres carrés
+  \[
+    Q_{MCR}= \| \vec{y-Hx}\|_2^2 + \mu \mathcal{R}(\vec{x})
+  \]
+\end{prop}
+
+\subsubsection{Régularisation quadratique}
+Plusieurs régularisation classiques sont possibles:
+
+\begin{itemize}
+\item Rappel à un objet connu
+  \[
+    \mathcal{R}(x) = (\vec{x}-\vec{x}_\infty)^T(\vec{x}-\vec{x}_\infty)
+  \]
+\item Terme séparable
+  \[
+    \mathcal{R}(x) = \vec{x}^T\vec{x}
+  \]
+\item Terme de différences (mesure de régularité)
+  \[
+    \mathcal{R}(x) = \sum_{i}^{}(x_{i+1}-x_i)^2 = \vec{x}^T\vec{D}^T\vec{D}\vec{x}
+  \]
+\end{itemize}
+
+\subsubsection{Régularisation convexe différentiable}
+Pour pénaliser de moins fortes valeurs on peux choisir une autre fonction de cout comme la fonction de Hubert (ou terme $L_2L_1$)
+\begin{defin}
+  On appelle fonction de Huber
+\[\phi_s(\tau) =
+  \begin{cases}
+    \tau^2 & |\tau|< s \\
+    2 s|\tau|-s^2 & |\tau| \ge s
+  \end{cases}
+\]
+Et sa généralisation vectorielle:
+\[
+  \vec{\Phi} = \sum_{}^{}\phi_s(x_n)
+\]
+\end{defin}
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \pgfplotsset{grid style={dotted,gray}}
+    \begin{axis}
+      [axis lines = middle,
+      domain=-2:2,grid,
+      ]
+      \addplot[black,dashed]{x^2};
+      \addplot[black,domain=-0.5:0.5]{x^2};
+      \addplot[black,domain=-2:-0.5]{2*0.5*abs(x)-0.25};
+      \addplot[black,domain=0.5:2]{2*0.5*abs(x)-0.25};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Fonction de Huber (s = 0.5) et quadratique}
+\end{figure}
+Comme précédemment on utilise différente fonction de régularisation.
+\begin{itemize}
+\item Rappel à un objet connu
+  \[
+    \mathcal{R}(x) = \Phi_s(\vec{x}-\vec{x}_\infty)
+  \]
+\item Terme séparable
+  \[
+    \mathcal{R}(x) = \Phi_s(\vec{x})
+  \]
+\item Terme de différences (mesure de régularité)
+  \[
+    \mathcal{R}(x) = \sum_{i}^{} \phi_s(x_{i+1}-x_i) = \Phi_s(\vec{D}\vec{x})
+  \]
+\end{itemize}
+
+\subsection{Application de ces approches au problème de débruitage}
+On souhaite résoudre le problème suivant:
+\[
+\vec{y} =\vec{x}+\vec{b}
+\]
+Avec $\vec{x}$, blanc de variance $\sigma_x$ et $\vec{b}$ centré de
+variance $\sigma_b$.
+\subsubsection{Wiener}
+On a le filtre de wiener:
+\[
+  G(\nu) = \frac{\Gamma_{xy}(\nu)}{\Gamma_{yy}(\nu)} = \frac{1}{1+\frac{\sigma_b^2}{\sigma_x^2}}
+\]
+Dans le cas ou $x$ a une matrice de covariance $\vec{D^T}\vec{D})^{-1}$ on a :
+\[
+G(\nu) = \frac{\Gamma_{xy}(\nu)}{\Gamma_{yy}(\nu)} = \frac{1}{1+\frac{\sigma_b^2}{\sigma_x^2}|D(\nu)|}    
+\]
+Alors :
+\[
+\boxed{\hat{\vec{x}}_{W} =TF^{-1}[G(\nu)Y(\nu)]}
+\]
+\subsubsection{MC et MCR}
+\paragraph{Moindre carrés} Sans régularisation on a $H= I_n$ donc directement
+\[
+\boxed{\hat{\vec{x}}_{MC} = \vec{y}}
+\]
+
+\paragraph{Moindres carrés régularisé} En prenant en compte une
+régularisation on a:
+\[
+  \boxed{\vec{x}_{MCR} = (\vec{I_d}+\mu\vec{D^tD})^{-1}\vec{y}
+  }
+\]
+En utilisant les propriétés sur les matrices circulantes on retrouve
+dans le donmaine de fourier le filtre de Wiener avec $\mu=\frac{\sigma_b^2}{\sigma_x^2}$
+\[
+\boxed{\hat{\vec{x}}_{MCR} =TF^{-1}\left[\frac{Y(\nu)}{1+\mu D(\nu)}\right]}
+\]
+\subsubsection{Ondelette et parcimonie }
+\emph{cf poly.}
+\section{Caractérisation statistique des estimateurs}
+\subsection{Espérance}
+\begin{defin}
+  soit $x$ une VA de densité de probabilité $f$. On note $E[x]$
+  \emph{l'espérance} de $x$:
+  \[
+    E[x] = \int_{x\in\mathcal{X}}^{}xf(x)\d x
+  \]
+\end{defin}
+\subsection{Biais}
+Le biais caractérise les estimateurs
+\begin{defin}
+  Soit $\hat{x}$ un estimateur de $x$. Alors le \emph{biais} s'écrit :
+  \[
+    b(\hat{x}) = E[\hat{x}]-x
+  \]
+\end{defin}
+
+\subsection{Variance}
+La variance est un autre outils pour caractériser les
+estimateurs. elle donne un intervalle de confiance autour de la valeur
+de l'estimateur.
+\begin{defin}
+  On défini la \emph{variance} d'un estimateur comme:
+  \[
+    Var(\hat{x}) = E[(\hat{x}-E[\hat{x}])^2]
+  \]
+\end{defin}
+
+\subsection{Erreur quadratique moyenne}
+L'EQM est un très bon outils pour comparer les estimateurs
+\begin{defin}
+  L'erreur quadratique est défini comme:
+  \[
+    EQM(\hat{x}) = E[(\hat{x}-x)^2]
+  \]
+\end{defin}
+\begin{prop}
+  On a la relation suivante entre biais, variance et EQM :
+  \begin{align*}
+    EQM(\hat{x}) &= E[(\hat{x}-x)^2] \\
+                 &= Var(\hat{x}) + b(\hat{x})^2
+  \end{align*}
+\end{prop}
+\begin{proof}
+\begin{align*}
+    EQM(\hat{x}) &= E[(\hat{x}-x)^2] \\
+                 &= E[(\hat{x}-E[\hat{x}]+E[\hat{x}-x])] \\
+                 &= E[(\hat{x}-E[\hat{x}])^2]+2E[\hat{x}-E[\hat{x}]]+(E[\hat{x}]-x)^2\\
+                 &= Var(\hat{x}) + b(\hat{x})^2
+  \end{align*}
+\end{proof}
+\section{Interprétation bayésienne}
+
+\subsection{Vraisemblance}
+\begin{defin}
+  En choisissant une ddp gaussienne pour le bruit on a:
+  \[
+    f(\vec{y}|\vec{x}) =k_0 \exp\left[ \frac{1}{2\sigma_b^2} \|\vec{y-Hx}\|^2\right]
+  \]
+  Comme en pratique on connais $\vec{y}$ on a une fonction de $\vec{x}$ et $\sigma_b^2$. Que l'on appelle fonction de \emph{vraisemblance}.
+\end{defin}
+\subsection{Loi \emph{a priori} et a \emph{posteriori}}
+
+\begin{defin}
+  \begin{itemize}
+  \item \emph{Loi a priori}
+  \[
+    f(\vec{x}|\sigma_0^2,\sigma_1^2)= k_1 exp\left[\frac{1}{2\sigma_1^2} \|\vec{Dx}\|^2 - \frac{1}{2\sigma_0^2} \|x\|^2\right]
+  \]
+  La matrice $D^tD$ (covariance de $\vec{x}$) n'est pas de rang plein
+  il  faut   ajouter le deuxième terme pour que la gaussienne soit
+  bien multivariée sur $\R^N$.
+\item \emph{Loi a posteriori}
+  À partir de la règle de Bayes:
+  \[
+    f(\vec{x}|\vec{y},\sigma_b,\sigma_1,\sigma_0) = \frac{f(\vec{y}|\vec{x},\sigma_b^2)f(\vec{x}|\sigma_0,\sigma_1)}{f(\vec{y}|\sigma_b^2,\sigma_0^2,\sigma_1^2)}
+    = K f(\vec{y}|\vec{x},\sigma_b^2)f(\vec{x}|\sigma_0,\sigma_1)
+  \]
+  La loi a posteriori rassemble toute l'information que l'on a  sur $\vec{x}$
+\end{itemize}
+\end{defin}
+\subsection{Estimateur du maximum a posteriori}
+Dans le cas gaussien la moyenne, la médiane et le maximum sont
+confondus.
+\begin{defin}
+  On défini le maximum a posteriori comme:
+  \[
+    \hat{\vec{x}}_{MAP} =\arg\max_{x}f(\vec{x}|\vec{y},\sigma_b,\sigma_1,\sigma_0)
+  \]
+\end{defin}
+\begin{prop}[Cas Gaussien]
+  On a :
+  \[
+    \hat{\vec{x}}_{MAP} =\arg\max_{x}K\exp\left[-\frac{1}{2\sigma_b^2}(\|\vec{y-Hx}\|^2+\mu\|\vec{Dx}\|^2+\mu_0\|\vec{x}^2\|)\right]
+  \]
+  Soit encore:
+  \[
+  \hat{\vec{x}}_{MAP} =\arg\min_{x}\|\vec{y-Hx}\|^2+\mu\|\vec{Dx}\|^2+\mu_0\|\vec{x}^2\|
+  \]
+\end{prop}
+\section{Application à un cas simple d'observation multiple}
+\section{Application à la déconvolution problème d'optimisation}
+\section{Application de ma méthodologie bayésienne}
+
+
+
+
+
+
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

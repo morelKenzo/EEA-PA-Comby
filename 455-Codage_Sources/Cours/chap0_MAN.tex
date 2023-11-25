@@ -1,0 +1,83 @@
+\documentclass[main.tex]{subfile}
+\begin{document}
+\newcommand{\X}{\mathcal{X}}
+\section{Rappels mathématiques pour le codage de source}
+
+\paragraph{Signaux et variables aléatoires}
+Les signaux qu'on cherche à compresser (texte, échantillons de voix, musique, images, vidéo...) sont décrits comme des réalisations de suites de variables aléatoires.\\
+
+Une variable aléatoire $X$ est décrite par son domaine $\X$, c'est-à-dire l'ensemble des valeurs que $X$ peut prendre (aussi appelé alphabet).
+
+$\X$ peut être à valeurs discrètes (par exemple singletons $\in\{0,1\}, \quad \{0,\dots 255\}$,  ou triplets $\{(0,0,0)...(255,255,255)\}$ dans le cas de couleurs), ou à valeurs continues ($\in \R$, un intervalle $[a,b]\subset\R$)
+
+\section{Variables aléatoires discrètes}
+
+$X$ est en plus caractérisée par sa \emph{probability mass function} (loi de probabilité) $p_i = Pr(X=i), \quad i \in \X$
+
+Les $p_i$ sont tels que :
+\begin{itemize}
+\item $p_i \geq 0, \quad \forall i \in \X$
+\item $\sum_{i \in \X}p_i = 1$
+\end{itemize}
+
+\medskip
+
+\paragraph{Moyenne de $X$} (ou espérance) : $E(X)=\sum_{i \in \X} i p_i$
+
+\begin{example}
+$\X=\{1,2,3\}$ avec $p=1 = 0.5, p_2=0.25, p_3=0.25$.
+
+On a $E(X) = 1\times0.5 + 2\times0.25 + 3\times0.25 = 1.75$
+\end{example}
+
+\paragraph{Variance de X} : $V(x)=E[(X-E(X))^2] = \sum_{i\in\X} (i-E(x))^2p_i$
+
+\begin{example}[(suite)]
+$\X=\{1,2,3\}$ avec $p=1 = 0.5, p_2=0.25, p_3=0.25$.
+
+On a $V(x) = (1-1.75)^2\times0.5 + (2-1.75)^2\times0.25 + (3-1.75)^2\times0.25=0.69$
+\end{example}
+
+\paragraph{Écart-type de X} $ \sigma(X) = \sqrt{V(X)}$
+
+\medskip
+\begin{example}[Générer des réalisations de VA]
+Génération d'une suite de réalisations d'une VA $X$ tel que $\X=\{0,1\}$ avec $p_0=0.9,\quad p_1=0.1$
+
+\begin{minted}{matlab}
+x=rand(1,10)>0.9
+% rand : generateur de loi uniforme
+% randn : generateur de loi gaussienne
+\end{minted}
+
+\noindent Pour générer une suite de réalisations correspondant aux exemples précédents
+
+\begin{minted}{matlab}
+x=rand(1,10)
+y= (x<0.5) + 2*(x<0.75 & x>0.5) + 3*(x>0.75)
+\end{minted}
+\end{example}
+
+\medskip
+On considère deux variables aléatoires $X_1$ et $X_2$ d'alphabet $\X$.
+
+\paragraph{Indépendance}
+$X_1$ et $X_2$ sont indépendantes si et seulement si \[Pr(X_1=i,X_2=j)=Pr(X_1=i).Pr(X_2=j)\]
+
+Ainsi $E(X_1X_2)=E(X_1).E(X_2)$\\
+
+Dans le cas général,
+\[Pr(X_1=i,X_2=j)=Pr(X_1=i / X_2=j).Pr(X_2=j)=Pr(X_2=j / X_1 =i).Pr(X_1=i)\]
+
+Si $X_1$ et $X_2$ sont indépendants $Pr(X_1=i/X_2=j)=Pr(X_1=i)$ pour tous $i,j$
+
+$\sum_{j\in\X}Pr(X_2=j/X_1=i)=1$ mais $\sum_{i\in\X} Pr(X_2=j/X_1=i)= ?$
+
+\paragraph{Marginalisation}
+
+On suppose connaître $Pr(X_2=j/X_1=i)$ et $Pr(X_1=i)$.
+
+D'après la règle du produit,
+
+\[Pr(X_2=j)=\sum_{i\in\X} Pr(X_2=j,X_1=i) = \sum_{i\in\X} Pr(X_2=j/X_i=i).Pr(X_1=i)\]
+\end{document}
